@@ -20,6 +20,7 @@ def init(data):
     #amt of time in secs for the light to be green
     data.NSTime = 5
     data.EWTime = 5
+    data.yellowTime = 1
     #interval of seconds between each car that enters
     data.EWCarRate = 5
     data.NSCarRate = 2
@@ -59,11 +60,11 @@ def keyPressed(event, data):
     ######
 ####TIMER
     ######
-#tells you if n seconds have passed
-def timerIsNSecs (data, n):
+#returns true every m seconds, staggaring at n
+def timerIsNSecs (data, m, n=0):
     #timerFired goes off 10 times per sec
     firesPerSec = 10 
-    return data.t % (firesPerSec * n) == 0
+    return data.t % (firesPerSec * m) == n*firesPerSec
     
 def inIntersection (data, car):
     return car.x < data.intersecX + data.intersecRad and car.x > data.intersecX - data.intersecRad and car.y < data.intersecY + data.intersecRad and car.y > data.intersecY - data.intersecRad 
@@ -72,15 +73,41 @@ def moveCarsInList (l):
     for car in l:
         car.move()
         
-def decelCarsInList(data, l):
-    for car in l:
-        car.deceler()
+def stopAtIntersection(data, carList):
+    for car in carList:
+        if inIntersection (data, car):
+            ##need to create a better inIntersection so I can decelerate 
+            #naturally instead of instantly
+            car.deceler()
+            car.curSpeed = 0
             
+def changeLights(data):
+    #cycle is the amt of time for the lights to go thru a complete cycle
+    data.cycle = data.NSTime + data.EWTime + 2*data.yellowTime
+    if timerIsNSecs (data, data.cycle, data.NSTime):
+        data.NS = 1
+        data.EW = 0
+    elif timerIsNSecs (data, data.cycle, data.yellowTime + data.NSTime):
+        data.NS = 2
+        data.EW = 0
+    elif timerIsNSecs (data, data.cycle, data.EWTime+ data.yellowTime + \
+                        data.NSTime):
+            data.NS = 0
+            data.EW = 1
+    elif timerIsNSecs (data, data.cycle, data.EWTime+ 2*data.yellowTime + \
+                        data.NSTime):
+            data.NS = 0
+            data.EW = 2
+    
+    
+    
 def timerFired(data):
     data.t += 1
     firesPerSec = 10 
-#will change the hardcoded values later to be in some random range for the acceleration and the speed when creating new car objects
-    if timerIsNSecs (data, data.NSTime):
+#will change the hardcoded values later to be in some random range for the 
+#acceleration and the speed when creating new car objects
+#adding cars 
+    if timerIsNSecs (data, data.NSCarRate):
         car = Car (data, 10, [0,1], 1,1)
         data.carsNS += [car]
     if timerIsNSecs (data, data.SNCarRate):
@@ -92,37 +119,49 @@ def timerFired(data):
     if timerIsNSecs (data, data.WECarRate):
         car = Car (data, 10,[1,0], 1,1)
         data.carsWE += [car]
+#moving cars
     for l in data.allCars:
         moveCarsInList(l)
+        
     
-    for carList in [data.carsNS, data.carsSN, data.carsEW,\
-    data.carsWE]:
+    
+    #slow down the cars for when they get too close to the car in front
+    #but speed them up if they have space
+    for carList in [data.carsWE, data.carsEW,
+    data.carsNS, data.carsSN]:
         for c in range(1, len(carList)):
             if carList[c].isTooClose(carList[c-1]):
-                print (c)
                 carList[c].deceler()
-                print (carList[c].curSpeed)
-    
-    
+            else:
+                carList[c].acceler() 
+        if carList != []:
+            carList[0].acceler()
+                #even if the car is first at red light the
+                # speed will increase but, 
+                #the speed will be reset to 0 in the next lines
+    #make the car at the intersection stop for a red light
     if not data.NS:
-        #slow down the cars if red or orange light
-        for car in data.carsNS:
-            if inIntersection (data, car):
-                decelCarsInList (data, data.carsNS)
-        for car in data.carsSN:
-            if inIntersection (data, car):
-                decelCarsInList (data, data.carsSN)
-        
+        stopAtIntersection (data, data.carsNS)
+        stopAtIntersection (data, data.carsSN)        
     if not data.EW:
-        for car in data.carsEW:
-            if inIntersection (data, car):
-                car.deceler()
-                car.curSpeed = 0
-        for car in data.carsWE:
-            if inIntersection (data, car):
-                car.deceler()
-                car.curSpeed = 0
-    
+        stopAtIntersection (data,data.carsEW)
+        stopAtIntersection (data, data.carsWE)
+        
+    # if data.NS:
+    #     for car in data.carsNS:
+    #         if inIntersection (data, car):
+    #             car.acceler()
+    #             #only make the first car in queue of the intersection move 
+    #             #forward
+    #             break 
+    #     for car in data.carsSN:
+    #         if inIntersection (data, car):
+    #             car.acceler()
+    #             #only make the first car in queue of the intersection move 
+    #             #forward
+    #             break 
+    changeLights (data)
+                
     ####
 ## view
     ####
@@ -180,6 +219,14 @@ def run(width=300, height=300):
                                 fill='white', width=0)
         redrawAll(canvas, data)
         canvas.update()    
+    def inputNSRate ():
+        data.NSCarRate= int(inputNS.get())
+    def inputSNRate ():
+        data.SNCarRate = int(inputSN.get())
+    def inputWERate ():
+        data.WECarRate= int(inputWE.get())
+    def inputEWRate ():
+        data.EWCarRate= int (inputEW.get())
 
     def mousePressedWrapper(event, canvas, data):
         mousePressed(event, data)
@@ -203,10 +250,49 @@ def run(width=300, height=300):
     root = Tk()
     root.resizable(width=False, height=False) # prevents resizing window
     init(data)
+    
+    #elu2 helped me do the buttons and input
+    leftFrame = Frame (root, borderwidth = 2, relief = "solid")
+    
+    NSFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    inputNS = Entry (NSFrame, borderwidth = 2, relief = "solid")
+    buttonNS = Button (NSFrame, command = inputNSRate, width = 20, height = 1,
+        text = "NS rate: secs between cars")
+    SNFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    inputSN = Entry (SNFrame, borderwidth = 2, relief = "solid")
+    buttonSN = Button (SNFrame, command = inputSNRate, width = 20, 
+            height = 1, text = "SN rate: secs between cars")
+    EWFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    inputEW = Entry (EWFrame, borderwidth = 2, relief = "solid")
+    buttonEW = Button (EWFrame, command = inputEWRate, width = 20, height = 1,
+        text = "EW rate: secs between cars")
+    WEFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    inputWE = Entry (WEFrame, borderwidth = 2, relief = "solid")
+    buttonWE = Button (WEFrame, command = inputWERate, width = 20, 
+            height = 1, text = "WE rate: secs between cars")
+            
     # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.configure(bd=0, highlightthickness=0)
-    canvas.pack()
+    canvas.pack(side = RIGHT)
+    
+    #pack the objects nicely on the screen
+    leftFrame.pack (side = LEFT, fill = BOTH)
+    
+    NSFrame.pack (side = TOP)
+    inputNS.pack(side = TOP)
+    buttonNS.pack (side = TOP)
+    SNFrame.pack (side = TOP)
+    inputSN.pack(side = TOP)
+    buttonSN.pack (side = TOP)    
+    EWFrame.pack (side = TOP)
+    inputEW.pack(side = TOP)
+    buttonEW.pack (side = TOP)
+    WEFrame.pack (side = TOP)
+    inputWE.pack(side = TOP)
+    buttonWE.pack (side = TOP)    
+    
+    
     # set up events
     root.bind("<Button-1>", lambda event:
                             mousePressedWrapper(event, canvas, data))
@@ -217,4 +303,4 @@ def run(width=300, height=300):
     root.mainloop()  # blocks until window is closed
     print("bye!")
 
-run(400, 200)
+run(800, 800)

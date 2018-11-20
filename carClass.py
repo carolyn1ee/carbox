@@ -64,7 +64,7 @@ class Car(object):
             self.curSpeed = 0
     #makes the car's speed increase up until the max speed
     def acceler (self):
-        if self.curSpeed <= speedMax - self.accel:
+        if self.curSpeed <= self.speedMax - self.accel:
             self.curSpeed +=  self.accel
         else:
             self.curSpeed = self.speedMax
