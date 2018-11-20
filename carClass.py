@@ -43,16 +43,25 @@ class Car(object):
             self.x = data.width
             self.y = data.height // 2 - data.radius
             self.img =  Car.carImgEW
-            
+        
+        #need to know in advance before the intersection if you are going to 
+        #need to be slowing down once you get closer to intersection
+        self.intersecSlow = False
     #got syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python
     
-    numCarsStopped = 0
     
     # def draw (self, canvas):
     #     canvas.create_image(20, 20, image=self.img)  
-
+    #checks all attributes are the same
+    def __eq__ (self, other):
+        return isinstance (other, Car) and other.curSpeed == self.curSpeed and \
+        self.speedMax == other.speedMax and self.x == other.x and \
+        self.y == other.y and self.accel == other.accel and self.decel == \
+        other.decel
+    
     def __repr__ (self):
-        return str(self.dir)
+        return str(self.dir) + "location: (" + str (self.x) + ", " + \
+            str (self.y) +")" + "speed:" + str (self.curSpeed)
     def move (self):
         self.x += self.curSpeed * self.dir[0]
         self.y += self.curSpeed * self.dir[1]

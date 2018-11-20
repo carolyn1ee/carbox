@@ -17,6 +17,7 @@ from PIL import ImageTk,Image
 
 
 def init(data):
+    #UI will set this but here are some default vals
     #amt of time in secs for the light to be green
     data.NSTime = 5
     data.EWTime = 5
@@ -29,22 +30,28 @@ def init(data):
 
 
      
-    
+    #set car lists
     data.carsSN = []
     data.carsWE = []
     data.carsNS = []
     data.carsEW = []
     data.allCars = [data.carsSN, data.carsNS, data.carsEW, data.carsWE]
+    #intersection:
     #green light means 1 and red light means 0
     data.NS = 1
     data.EW = 0
-    data.totTimeWaiting = 0
     data.t = 0
+    
     data.radius = 20
     data.intersecRad = 40
     #center of the intersection
     data.intersecX = data.width//2
     data.intersecY = data.height//2
+    
+    data.firstCarEW = None
+    data.firstCarWE = None
+    data.firstCarNS = None
+    data.firstCarSN = None
 
 def mousePressed(event, data):
     # use event.x and event.y
@@ -60,15 +67,55 @@ def keyPressed(event, data):
     ######
 ####TIMER
     ######
+    
+##helper f'ns
 #returns true every m seconds, staggaring at n
 def timerIsNSecs (data, m, n=0):
     #timerFired goes off 10 times per sec
     firesPerSec = 10 
     return data.t % (firesPerSec * m) == n*firesPerSec
-    
+
+#returns if the car is in intersection
 def inIntersection (data, car):
     return car.x < data.intersecX + data.intersecRad and car.x > data.intersecX - data.intersecRad and car.y < data.intersecY + data.intersecRad and car.y > data.intersecY - data.intersecRad 
-    
+
+#tells you if a given car is in past the area where the car 
+#needs to slow down in order to not fall into the intersection.
+def inSlowArea (data, car, dir):
+    if car == None:
+        return False
+    if dir == "NS":
+        return car.y >= data.intersecY -data.intersecRad - car.buffer()
+    if dir == "SN":
+        return car.y <= data.intersecY + data.intersecRad + car.buffer()
+    if dir == "EW":
+        return car.x <= data.intersecX + data.intersecRad + car.buffer()
+    if dir == "WE":
+        return car.x >= data.intersecX - data.intersecRad - car.buffer()
+
+
+
+#given direction ("NS" etc) returns the first car object that is in front of the
+# intersection and in front enough that it can stop before intersection
+###resecting a new front of queue too early
+def frontOfQueue (data, carList, dir):
+    if dir == "NS":
+        for car in carList:    
+            if car.y < data.intersecY - data.intersecRad - car.buffer():
+                return car
+    elif dir == "SN":
+        for car in carList:
+            if car.y > data.intersecY + data.intersecRad + car.buffer():
+                return car
+    elif dir == "EW":
+        for car in carList:
+            if car.x > data.intersecX + data.intersecRad + car.buffer():
+                return car
+    elif dir == "WE":
+        for car in carList:
+            if car.x < data.intersecX - data.intersecRad - car.buffer():
+                return car
+                
 def moveCarsInList (l):
     for car in l:
         car.move()
@@ -84,23 +131,23 @@ def stopAtIntersection(data, carList):
 def changeLights(data):
     #cycle is the amt of time for the lights to go thru a complete cycle
     data.cycle = data.NSTime + data.EWTime + 2*data.yellowTime
-    if timerIsNSecs (data, data.cycle, data.NSTime):
+    if timerIsNSecs (data, data.cycle):
         data.NS = 1
         data.EW = 0
-    elif timerIsNSecs (data, data.cycle, data.yellowTime + data.NSTime):
+    elif timerIsNSecs (data, data.cycle, data.NSTime):
         data.NS = 2
         data.EW = 0
-    elif timerIsNSecs (data, data.cycle, data.EWTime+ data.yellowTime + \
+    elif timerIsNSecs (data, data.cycle, data.yellowTime + \
                         data.NSTime):
             data.NS = 0
             data.EW = 1
-    elif timerIsNSecs (data, data.cycle, data.EWTime+ 2*data.yellowTime + \
+    elif timerIsNSecs (data, data.cycle, data.EWTime+ data.yellowTime + \
                         data.NSTime):
             data.NS = 0
             data.EW = 2
     
     
-    
+##actual timer
 def timerFired(data):
     data.t += 1
     firesPerSec = 10 
@@ -126,40 +173,62 @@ def timerFired(data):
     
     
     #slow down the cars for when they get too close to the car in front
-    #but speed them up if they have space
+    #but speed them up if they have space but only speed up if they aren't the 
+    #first car in the intersection
     for carList in [data.carsWE, data.carsEW,
     data.carsNS, data.carsSN]:
         for c in range(1, len(carList)):
             if carList[c].isTooClose(carList[c-1]):
                 carList[c].deceler()
-            else:
+            elif carList [c] != data.firstCarNS and \
+            carList [c] != data.firstCarSN and \
+            carList [c] != data.firstCarEW and\
+            carList [c] != data.firstCarWE:
                 carList[c].acceler() 
         if carList != []:
             carList[0].acceler()
                 #even if the car is first at red light the
                 # speed will increase but, 
                 #the speed will be reset to 0 in the next lines
-    #make the car at the intersection stop for a red light
-    if not data.NS:
-        stopAtIntersection (data, data.carsNS)
-        stopAtIntersection (data, data.carsSN)        
-    if not data.EW:
-        stopAtIntersection (data,data.carsEW)
-        stopAtIntersection (data, data.carsWE)
+
+    #make the 1st car at the intersection notice yellow so that it will slow
+    #when it gets too close
+    if (data.NS == 2 or data.NS == 0):
+        #need to check if you have already set the first car
+        if data.firstCarNS == None:
+            data.firstCarNS = frontOfQueue(data, data.carsNS, "NS")
+        if data.firstCarSN == None: 
+            data.firstCarSN = frontOfQueue(data, data.carsSN, "SN")
+    else: #if green light, set first car to none to show there is no car 
+    #about to go into a red light intersection
+        data.firstCarNS = None
+        data.firstCarSN = None
+        # frontOfQueue(data, data.carsNS, "NS").intersecSlow = True
+        # frontOfQueue(data, data.carsSN, "SN").intersecSlow = True
+    if (data.EW == 2 or data.EW == 0):
+        if data.firstCarEW == None:
+            data.firstCarEW = frontOfQueue(data, data.carsEW, "EW")
+        if data.firstCarWE == None:
+            data.firstCarWE = frontOfQueue(data, data.carsWE, "WE")
+    else:
+        data.firstCarEW = None
+        data.firstCarWE = None
+    
+    #if yellow or red light, slow down the first car before intersection
+    if data.NS == 0 or data.NS == 2:
+        if inSlowArea(data, data.firstCarNS, "NS"):
+            data.firstCarNS.deceler()
+        if inSlowArea (data, data.firstCarSN, "SN"):
+            data.firstCarSN.deceler()
+    if data.EW == 0 or data.EW == 2:
+        if inSlowArea(data, data.firstCarEW, "EW"):
+            data.firstCarEW.deceler()
+        if inSlowArea(data, data.firstCarWE, "WE"):
+            data.firstCarWE.deceler()
+        # stopAtIntersection (data,data.carsEW)
+        # stopAtIntersection (data, data.carsWE)
         
-    # if data.NS:
-    #     for car in data.carsNS:
-    #         if inIntersection (data, car):
-    #             car.acceler()
-    #             #only make the first car in queue of the intersection move 
-    #             #forward
-    #             break 
-    #     for car in data.carsSN:
-    #         if inIntersection (data, car):
-    #             car.acceler()
-    #             #only make the first car in queue of the intersection move 
-    #             #forward
-    #             break 
+   
     changeLights (data)
                 
     ####
@@ -254,23 +323,31 @@ def run(width=300, height=300):
     #elu2 helped me do the buttons and input
     leftFrame = Frame (root, borderwidth = 2, relief = "solid")
     
-    NSFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    carRateFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    NSFrame = Frame (carRateFrame, borderwidth = 2, relief = "solid")
     inputNS = Entry (NSFrame, borderwidth = 2, relief = "solid")
     buttonNS = Button (NSFrame, command = inputNSRate, width = 20, height = 1,
         text = "NS rate: secs between cars")
-    SNFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    SNFrame = Frame (carRateFrame, borderwidth = 2, relief = "solid")
     inputSN = Entry (SNFrame, borderwidth = 2, relief = "solid")
     buttonSN = Button (SNFrame, command = inputSNRate, width = 20, 
             height = 1, text = "SN rate: secs between cars")
-    EWFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    EWFrame = Frame (carRateFrame, borderwidth = 2, relief = "solid")
     inputEW = Entry (EWFrame, borderwidth = 2, relief = "solid")
     buttonEW = Button (EWFrame, command = inputEWRate, width = 20, height = 1,
         text = "EW rate: secs between cars")
-    WEFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
+    WEFrame = Frame (carRateFrame, borderwidth = 2, relief = "solid")
     inputWE = Entry (WEFrame, borderwidth = 2, relief = "solid")
     buttonWE = Button (WEFrame, command = inputWERate, width = 20, 
             height = 1, text = "WE rate: secs between cars")
-            
+    
+    # lightsRateFrame =  Frame (leftFrame, borderwidth = 2, relief = "solid")
+    # NSLight = Frame (lightsRateFrame, borderwidth = 2, relief = "solid")
+    # inputNSLight = Entry (NSLight, borderwidth = 2, relief = "solid")
+    # buttonNS = Button (NSFrame, command = inputNSRate, width = 20, height = 1,
+    #     text = "NS rate: secs between cars")
+    
+    #### working on frame!!!!
     # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.configure(bd=0, highlightthickness=0)
@@ -279,6 +356,7 @@ def run(width=300, height=300):
     #pack the objects nicely on the screen
     leftFrame.pack (side = LEFT, fill = BOTH)
     
+    carRateFrame.pack(side = TOP)
     NSFrame.pack (side = TOP)
     inputNS.pack(side = TOP)
     buttonNS.pack (side = TOP)
