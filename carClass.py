@@ -11,12 +11,13 @@ from PIL import ImageTk,Image
    
 class Car(object):
     #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
-    carImgNS = "imgs/imageCarNS.png"
-    carImgSN = "imgs/imageCarSN.png"
-    carImgEW = "imgs/imageCarEW.png"
-    carImgWE = "imgs/imageCarWE.png"
+    carImgNS = "imgs/imageCarNS.gif"
+    carImgSN = "imgs/imageCarSN.gif"
+    carImgEW = "imgs/imageCarEW.gif"
+    carImgWE = "imgs/imageCarWE.gif"
 
     def __init__(self, data, speedLimit, direction, accel, decel):
+        self.length = 80
         self.speedMax = speedLimit
         self.curSpeed = self.speedMax
         self.dir = direction
@@ -27,22 +28,22 @@ class Car(object):
         if self.dir [0] == 0 and self.dir [1] == 1:
             self.x = data.width // 2 - data.radius
             self.y = 0
-            self.img = Car.carImgNS
+            self.img = PhotoImage(file=Car.carImgNS)
         #SN
         elif self.dir [0] == 0 and self.dir [1] == -1:
             self.x = data.width // 2 + data.radius
             self.y = data.height
-            self.img =  Car.carImgSN
+            self.img =  PhotoImage(file=Car.carImgSN)
         #WE
         elif self.dir [0] == 1 and self.dir [1] == 0:
             self.x = 0
             self.y = data.height // 2 + data.radius
-            self.img =  Car.carImgWE
+            self.img =  PhotoImage(file=Car.carImgWE)
         #EW
         elif self.dir [0] == -1 and self.dir [1] == 0:
             self.x = data.width
             self.y = data.height // 2 - data.radius
-            self.img =  Car.carImgEW
+            self.img =  PhotoImage(file=Car.carImgEW)
         
         #need to know in advance before the intersection if you are going to 
         #need to be slowing down once you get closer to intersection
@@ -50,8 +51,8 @@ class Car(object):
     #got syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python
     
     
-    # def draw (self, canvas):
-    #     canvas.create_image(20, 20, image=self.img)  
+    def draw (self, canvas):
+        canvas.create_image(self.x, self.y, image=self.img)  
     
     #checks all attributes are the same
     def __eq__ (self, other):
@@ -85,4 +86,4 @@ class Car(object):
         return ((other.x-self.x)**2 + (other.y - self.y)**2)**.5 < self.buffer()
         
     def buffer (self):
-        return .5*self.curSpeed**2/self.decel + 40
+        return .5*self.curSpeed**2/self.decel + self.length

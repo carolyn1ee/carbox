@@ -243,13 +243,10 @@ def timerFired(data):
     ####
 
 def drawCarsInList (canvas, data, l):
-    #from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python: image syntax
-    ####WHY NO HAVE MULTIPLE CARS!??!?
+    #from course website: image syntax
     for car in l:
-        #print (car.img)
-        data.img = PhotoImage(file=car.img)
-        #canvas.create_image(car.x, car.y, image=data.img) 
-        canvas.create_oval(car.x - data.radius, car.y -data.radius, car.x +data.radius, car.y+data.radius)
+        car.draw(canvas)
+
 
         
 def stopLightColor (light):
@@ -342,7 +339,7 @@ def run(width=300, height=300):
     root.resizable(width=False, height=False) # prevents resizing window
     init(data)
     
-    #elu2 helped me do the buttons and input
+    #elu2 gave code to do the buttons and input
     leftFrame = Frame (root, borderwidth = 2, relief = "solid")
     
     carRateFrame = Frame (leftFrame, borderwidth = 2, relief = "solid")
