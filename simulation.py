@@ -42,9 +42,9 @@ def init(data):
     data.EW = 0
     data.t = 0
     
-    data.yellowLightImg = PhotoImage(file="imgs/yellowLight.png")
-    data.redLightImg = PhotoImage(file="imgs/redLight.png")
-    data.greenLightImg = PhotoImage(file="imgs/greenLight.png")
+    data.yellowLightImg = PhotoImage(file="imgs/yellowLight.gif")
+    data.redLightImg = PhotoImage(file="imgs/redLight.gif")
+    data.greenLightImg = PhotoImage(file="imgs/greenLight.gif")
 
     
     data.radius = 20
@@ -192,7 +192,10 @@ def timerFired(data):
             carList [c] != data.firstCarEW and\
             carList [c] != data.firstCarWE:
                 carList[c].acceler() 
-        if carList != []:
+        if carList != [] and carList [0] != data.firstCarNS and \
+            carList [0] != data.firstCarSN and \
+            carList [0] != data.firstCarEW and\
+            carList [0] != data.firstCarWE:
             carList[0].acceler()
                 #even if the car is first at red light the
                 # speed will increase but, 
@@ -227,6 +230,7 @@ def timerFired(data):
             data.firstCarNS.deceler()
         if inSlowArea (data, data.firstCarSN, "SN"):
             data.firstCarSN.deceler()
+            print (3)
     if data.EW == 0 or data.EW == 2:
         if inSlowArea(data, data.firstCarEW, "EW"):
             data.firstCarEW.deceler()
@@ -271,25 +275,17 @@ def redrawAll(canvas, data):
     drawCarsInList (canvas,data, data.carsEW)
     drawCarsInList (canvas,data, data.carsWE)
 
+    roadWidth = 100
+    stopLightR = 8
+    canvas.create_image (data.width // 2 - stopLightR, \
+            data.height // 2- roadWidth - stopLightR, \
+            image=stopLightImg(data, data.NS) )
 
     
-    stopLightR = 8
-    #canvas.create_image (data.width // 2 - stopLightR, \
-            # data.height // 2- 50 - stopLightR, \
-            # data.width // 2 + stopLightR,\
-            # data.height // 2 -50 + stopLightR, image=stopLightImg(data, data.NS) )
-    canvas.create_oval (data.width // 2 - stopLightR, \
-            data.height // 2- 50 - stopLightR, \
-            data.width // 2 + stopLightR,\
-            data.height // 2 -50 + stopLightR, \
-            fill = stopLightColor(data.NS))
-    
-    canvas.create_oval (data.width // 2 - 50 - stopLightR, \
-        data.height // 2 - stopLightR, \
-        data.width // 2 - 50 + stopLightR, \
-        data.height // 2 + stopLightR, \
-        fill = stopLightColor (data.EW))
-    
+    canvas.create_image (data.width // 2 - roadWidth - stopLightR, \
+            data.height // 2 - stopLightR, \
+            image=stopLightImg(data, data.EW) )
+   
 
 ####################################
 # use the run function as-is
