@@ -11,10 +11,10 @@ from PIL import ImageTk,Image
    
 class Car(object):
     #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
-    carImgNS = "imageCarNS.png"
-    carImgSN = "imageCarSN.png"
-    carImgEW = "imageCarEW.png"
-    carImgWE = "imageCarWE.png"
+    carImgNS = "imgs/imageCarNS.png"
+    carImgSN = "imgs/imageCarSN.png"
+    carImgEW = "imgs/imageCarEW.png"
+    carImgWE = "imgs/imageCarWE.png"
 
     def __init__(self, data, speedLimit, direction, accel, decel):
         self.speedMax = speedLimit
@@ -52,6 +52,7 @@ class Car(object):
     
     # def draw (self, canvas):
     #     canvas.create_image(20, 20, image=self.img)  
+    
     #checks all attributes are the same
     def __eq__ (self, other):
         return isinstance (other, Car) and other.curSpeed == self.curSpeed and \

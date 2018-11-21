@@ -42,6 +42,11 @@ def init(data):
     data.EW = 0
     data.t = 0
     
+    data.yellowLightImg = PhotoImage(file="imgs/yellowLight.png")
+    data.redLightImg = PhotoImage(file="imgs/redLight.png")
+    data.greenLightImg = PhotoImage(file="imgs/greenLight.png")
+
+    
     data.radius = 20
     data.intersecRad = 40
     #center of the intersection
@@ -87,6 +92,8 @@ def inSlowArea (data, car, dir):
     if dir == "NS":
         return car.y >= data.intersecY -data.intersecRad - car.buffer()
     if dir == "SN":
+        print (data.intersecY + data.intersecRad + car.buffer())
+        print (car.y)
         return car.y <= data.intersecY + data.intersecRad + car.buffer()
     if dir == "EW":
         return car.x <= data.intersecX + data.intersecRad + car.buffer()
@@ -97,7 +104,7 @@ def inSlowArea (data, car, dir):
 
 #given direction ("NS" etc) returns the first car object that is in front of the
 # intersection and in front enough that it can stop before intersection
-###resecting a new front of queue too early
+###reseting a new front of queue too early
 def frontOfQueue (data, carList, dir):
     if dir == "NS":
         for car in carList:    
@@ -201,8 +208,8 @@ def timerFired(data):
             data.firstCarSN = frontOfQueue(data, data.carsSN, "SN")
     else: #if green light, set first car to none to show there is no car 
     #about to go into a red light intersection
-        data.firstCarNS = None
         data.firstCarSN = None
+        data.firstCarNS = None
         # frontOfQueue(data, data.carsNS, "NS").intersecSlow = True
         # frontOfQueue(data, data.carsSN, "SN").intersecSlow = True
     if (data.EW == 2 or data.EW == 0):
@@ -240,7 +247,7 @@ def drawCarsInList (canvas, data, l):
     ####WHY NO HAVE MULTIPLE CARS!??!?
     for car in l:
         #print (car.img)
-        #data.img = PhotoImage(file="imageCarWE.gif")
+        data.img = PhotoImage(file=car.img)
         #canvas.create_image(car.x, car.y, image=data.img) 
         canvas.create_oval(car.x - data.radius, car.y -data.radius, car.x +data.radius, car.y+data.radius)
 
@@ -252,6 +259,13 @@ def stopLightColor (light):
         return 'red'
     else:
         return 'yellow'
+def stopLightImg (data, light):
+    if light == 1:
+        return data.greenLightImg
+    elif light == 0: 
+        return data.redLightImg
+    else:
+        return data.yellowLightImg
         
 def redrawAll(canvas, data):
      
@@ -263,6 +277,10 @@ def redrawAll(canvas, data):
 
     
     stopLightR = 8
+    #canvas.create_image (data.width // 2 - stopLightR, \
+            # data.height // 2- 50 - stopLightR, \
+            # data.width // 2 + stopLightR,\
+            # data.height // 2 -50 + stopLightR, image=stopLightImg(data, data.NS) )
     canvas.create_oval (data.width // 2 - stopLightR, \
             data.height // 2- 50 - stopLightR, \
             data.width // 2 + stopLightR,\
@@ -296,6 +314,10 @@ def run(width=300, height=300):
         data.WECarRate= int(inputWE.get())
     def inputEWRate ():
         data.EWCarRate= int (inputEW.get())
+    def inputNSTime ():
+        data.NSTime = int (inputNSLight.get())    
+    def inputEWTime ():
+        data.EWTime = int (inputEWLight.get())
 
     def mousePressedWrapper(event, canvas, data):
         mousePressed(event, data)
@@ -341,13 +363,16 @@ def run(width=300, height=300):
     buttonWE = Button (WEFrame, command = inputWERate, width = 20, 
             height = 1, text = "WE rate: secs between cars")
     
-    # lightsRateFrame =  Frame (leftFrame, borderwidth = 2, relief = "solid")
-    # NSLight = Frame (lightsRateFrame, borderwidth = 2, relief = "solid")
-    # inputNSLight = Entry (NSLight, borderwidth = 2, relief = "solid")
-    # buttonNS = Button (NSFrame, command = inputNSRate, width = 20, height = 1,
-    #     text = "NS rate: secs between cars")
+    lightsRateFrame =  Frame (leftFrame, borderwidth = 2, relief = "solid")
+    NSLight = Frame (lightsRateFrame, borderwidth = 2, relief = "solid")
+    inputNSLight = Entry (NSLight, borderwidth = 2, relief = "solid")
+    buttonNSLight = Button (NSLight, command = inputNSTime, width = 20, height = 1,
+        text = "Time for NS to be green")
+    EWLight = Frame (lightsRateFrame, borderwidth = 2, relief = "solid")
+    inputEWLight = Entry (EWLight, borderwidth = 2, relief = "solid")
+    buttonEWLight = Button (EWLight, command = inputEWTime, width = 20, height = 1,
+        text = "Time for EW to be green")
     
-    #### working on frame!!!!
     # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.configure(bd=0, highlightthickness=0)
@@ -356,7 +381,7 @@ def run(width=300, height=300):
     #pack the objects nicely on the screen
     leftFrame.pack (side = LEFT, fill = BOTH)
     
-    carRateFrame.pack(side = TOP)
+    carRateFrame.pack(side = TOP, padx = (1,1), pady = (3,3))
     NSFrame.pack (side = TOP)
     inputNS.pack(side = TOP)
     buttonNS.pack (side = TOP)
@@ -368,7 +393,15 @@ def run(width=300, height=300):
     buttonEW.pack (side = TOP)
     WEFrame.pack (side = TOP)
     inputWE.pack(side = TOP)
-    buttonWE.pack (side = TOP)    
+    buttonWE.pack (side = TOP)
+    
+    lightsRateFrame.pack (side = TOP, padx = (1,1), pady = (3,1))
+    NSLight.pack (side = TOP) 
+    inputNSLight.pack (side = TOP)
+    buttonNSLight.pack (side = TOP)
+    EWLight.pack  (side = TOP)
+    inputEWLight.pack (side = TOP)
+    buttonEWLight.pack (side = TOP)
     
     
     # set up events
