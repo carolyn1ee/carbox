@@ -17,7 +17,7 @@ class Car(object):
     carImgWE = "imgs/imageCarWE.gif"
 
     def __init__(self, data, speedLimit, direction, accel, decel):
-        self.length = 80
+        self.length = 40
         self.speedMax = speedLimit
         self.curSpeed = self.speedMax
         self.dir = direction

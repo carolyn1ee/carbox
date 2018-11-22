@@ -2,6 +2,7 @@
 
 from tkinter import *
 from PIL import ImageTk,Image  
+from roads import *
 # root = Tk()  
 # canvas = Canvas(root, width = 300, height = 300)  
 #   
@@ -12,8 +13,9 @@ from PIL import ImageTk,Image
 
 def init(data):
     # load data.xyz as appropriate
-    data.img = ImageTk.PhotoImage(Image.open("imageCarNS.png"))  
-
+    data.intersecRad = 5 
+    data.road = Road (data, [0,1], 30, 10, 30, 90, [], [],\
+                    [])
 
 def mousePressed(event, data):
     # use event.x and event.y
@@ -25,7 +27,10 @@ def keyPressed(event, data):
 
 def redrawAll(canvas, data):
     # canvas.pack()  
-    canvas.create_image(20, 20, anchor=NW, image=data.img)
+    canvas.create_rectangle(0, 0, data.width, data.height,
+                                fill='black', width=0)
+    canvas.create_rectangle (data.road.xF, data.road.yF, data.road.xF +10, data.road.yF +10, fill = "white")
+    data.road.drawRoad(canvas, data)
 
 ####################################
 # use the run function as-is
@@ -35,7 +40,7 @@ def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
         canvas.delete(ALL)
         canvas.create_rectangle(0, 0, data.width, data.height,
-                                fill='white', width=0)
+                                fill='black', width=0)
         redrawAll(canvas, data)
         canvas.update()    
 

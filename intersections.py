@@ -1,10 +1,37 @@
+from simulation import *
+
+        # write out the similarities between intersections and roads
+        # has a list of the intersections that run thru it and can control what cars go thru for each intersection. just makes all the parallel ones go simultaneously. if it is not 4way then teh roads can handle moving the cars right or left. otherwise, the cars are only going to go straight.
 class Intersection (object):
-    def __init__(self, data, listOfConnectedIntersections, x, y, listOfTimings):
-        #list of connections is indexed in same way as list of timings
-        #the first timing is the amount of time that the light is green from 
-        self.listOfConnex = listOfConnectedIntersections
-        self.listOfTimings = listOfTimings
+    def __init__(self, data, roadsNS, roadsEW, x, y, NSTime, EWTime, staggerTime):
+        self.roadsNS = roadsNS
+        self.roadsEW = roadsEW
+        self.NSTime=NSTime
+        self.EWTime = EWTime
         self.x = x
         self.y = y
+        self.cycleLen = NSTime + EWTime + 2*data.yellowTime
+        #sometimes you don't want to start with NS being green. sometimes, want
+        #to stagger the times 
+        self.staggerTime = staggerTime
+    
+    def changeLights (roadsList, light):
+        for road in roadsList:
+            road.Light = light
+    
+    def checkLights (self, data):
+        if timerIsNSecs (data, self.cycle, self.staggerTime):
+            changeLights (roadsNS, 1)
+            changeLights (roadsEW, 0)
+        elif timerIsNSecs (data, self.cycle, self.NSTime + self.staggerTime):
+            changeLights (roadsNS, 2)
+            changeLights (roadsEW, 0)
+        elif timerIsNSecs (data, self.cycle, self.yellowTime + \
+                            self.NSTime + self.staggerTime):
+            changeLights (roadsNS, 0)
+            changeLights (roadsEW, 1)
+        elif timerIsNSecs (data, self.cycle, self.EWTime+ self.yellowTime + \
+                            self.NSTime + self.staggerTime):
+            changeLights (roadsNS, 0)
+            changeLights (roadsEW, 2)
         
-       # write out the similarities between intersections and roads

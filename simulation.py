@@ -74,15 +74,15 @@ def keyPressed(event, data):
     ######
     
 ##helper f'ns
-#returns true every m seconds, staggaring at n
+#returns true every m seconds (m is for mod), staggaring at n
 def timerIsNSecs (data, m, n=0):
     #timerFired goes off 10 times per sec
     firesPerSec = 10 
     return data.t % (firesPerSec * m) == n*firesPerSec
 
 #returns if the car is in intersection
-def inIntersection (data, car):
-    return car.x < data.intersecX + data.intersecRad and car.x > data.intersecX - data.intersecRad and car.y < data.intersecY + data.intersecRad and car.y > data.intersecY - data.intersecRad 
+# def inIntersection (data, car):
+#     return car.x < data.intersecX + data.intersecRad and car.x > data.intersecX - data.intersecRad and car.y < data.intersecY + data.intersecRad and car.y > data.intersecY - data.intersecRad 
 
 #tells you if a given car is in past the area where the car 
 #needs to slow down in order to not fall into the intersection.
@@ -92,8 +92,6 @@ def inSlowArea (data, car, dir):
     if dir == "NS":
         return car.y >= data.intersecY -data.intersecRad - car.buffer()
     if dir == "SN":
-        print (data.intersecY + data.intersecRad + car.buffer())
-        print (car.y)
         return car.y <= data.intersecY + data.intersecRad + car.buffer()
     if dir == "EW":
         return car.x <= data.intersecX + data.intersecRad + car.buffer()
@@ -104,7 +102,6 @@ def inSlowArea (data, car, dir):
 
 #given direction ("NS" etc) returns the first car object that is in front of the
 # intersection and in front enough that it can stop before intersection
-###reseting a new front of queue too early
 def frontOfQueue (data, carList, dir):
     if dir == "NS":
         for car in carList:    
@@ -127,13 +124,7 @@ def moveCarsInList (l):
     for car in l:
         car.move()
         
-def stopAtIntersection(data, carList):
-    for car in carList:
-        if inIntersection (data, car):
-            ##need to create a better inIntersection so I can decelerate 
-            #naturally instead of instantly
-            car.deceler()
-            car.curSpeed = 0
+
             
 def changeLights(data):
     #cycle is the amt of time for the lights to go thru a complete cycle
@@ -146,16 +137,24 @@ def changeLights(data):
         data.EW = 0
     elif timerIsNSecs (data, data.cycle, data.yellowTime + \
                         data.NSTime):
-            data.NS = 0
-            data.EW = 1
+        data.NS = 0
+        data.EW = 1
     elif timerIsNSecs (data, data.cycle, data.EWTime+ data.yellowTime + \
                         data.NSTime):
-            data.NS = 0
-            data.EW = 2
-    
+        data.NS = 0
+        data.EW = 2
+
+#gets rid of the cars that go off screen
+def killCarsOffScreen (data):
+    for carList in data.allCars:
+        for car in carList:
+            if car.x >data.width or car.x<0 or car.y>data.height or car.y<0:
+                carList.remove(car)
     
 ##actual timer
+
 def timerFired(data):
+    killCarsOffScreen(data)
     data.t += 1
     firesPerSec = 10 
 #will change the hardcoded values later to be in some random range for the 
@@ -230,15 +229,11 @@ def timerFired(data):
             data.firstCarNS.deceler()
         if inSlowArea (data, data.firstCarSN, "SN"):
             data.firstCarSN.deceler()
-            print (3)
     if data.EW == 0 or data.EW == 2:
         if inSlowArea(data, data.firstCarEW, "EW"):
             data.firstCarEW.deceler()
         if inSlowArea(data, data.firstCarWE, "WE"):
             data.firstCarWE.deceler()
-        # stopAtIntersection (data,data.carsEW)
-        # stopAtIntersection (data, data.carsWE)
-        
    
     changeLights (data)
                 
@@ -269,14 +264,13 @@ def stopLightImg (data, light):
         return data.yellowLightImg
         
 def redrawAll(canvas, data):
-     
-    drawCarsInList (canvas,data, data.carsNS)
-    drawCarsInList (canvas,data, data.carsSN)
-    drawCarsInList (canvas,data, data.carsEW)
-    drawCarsInList (canvas,data, data.carsWE)
+    drawCarsInList (canvas, data, data.carsNS)
+    drawCarsInList (canvas, data, data.carsSN)
+    drawCarsInList (canvas, data, data.carsEW)
+    drawCarsInList (canvas, data, data.carsWE)
 
     roadWidth = 100
-    stopLightR = 8
+    stopLightR = 60
     canvas.create_image (data.width // 2 - stopLightR, \
             data.height // 2- roadWidth - stopLightR, \
             image=stopLightImg(data, data.NS) )
@@ -296,7 +290,7 @@ def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
         canvas.delete(ALL)
         canvas.create_rectangle(0, 0, data.width, data.height,
-                                fill='white', width=0)
+                                fill='black', width=0)
         redrawAll(canvas, data)
         canvas.update()    
     def inputNSRate ():
