@@ -17,22 +17,18 @@ class Road (object):
     
     #direction can be either [1,0] or [0,1] for whether or not it runs from vert
     #or hor.
-    def __init__ (self, data, dir, xN, yN, xP, yP, lstSRds, lstERds,\
-                    carsListN, carsListP):
+    def __init__ (self, data, dir, xN, yN, xP, yP,\
+                    carsListN, carsListP, speedLimit):
         #location:
         self.xN = xN
         self.yN = yN
         self.xP = xP
         self.yP = yP
         self.dir = dir
-
-        #connex
-        self.lstSRds = lstSRds
-        self.lstERds = lstERds
         #cars inside
         self.carsListN = carsListN
         self.carsListP = carsListP
-        #aesthetics
+        #view
         self.ylowStripsLen = 10
         self.length = ((xN-xP)**2 + (yN-yP)**2)**.5
         #intersection
@@ -40,6 +36,7 @@ class Road (object):
         self.lightP = 0
         self.frontCarN = None
         self.frontCarP = None
+        self.speedLimit = speedLimit
         
 ##timerFiredF'ns:
     def moveCars (self):
@@ -54,28 +51,28 @@ class Road (object):
 #before intersection
     def frontOfQueue (self, data, dir):
         if dir == [0,1]:
-            for car in self.carList:
+            for car in self.carsListP:
                 if car.y < self.yP - data.intersecRad - car.buffer():
                     return car
         elif dir ==[0,-1]:
-            for car in carList:
+            for car in self.carsListN:
                 if car.y > self.yN + data.intersecRad + car.buffer():
                     return car
         elif dir == [-1,0]:
-            for car in carList:
+            for car in self.carsListN:
                 if car.x > self.xN + data.intersecRad + car.buffer():
                     return car
         elif dir == [1,0]:
-            for car in carList:
+            for car in self.carsListP:
                 if car.x < self.xP  - data.intersecRad - car.buffer():
                     return car
        
     def inSlowArea (self, data, car):
         buffer = car.buffer()
-        if self.dir == [1,0]:
+        if self.dir == [0,1]:
             return car.y > self.yP - buffer - data.intersecRad or \
                 car.y < self.yN + buffer + data.intersecRad
-        elif self.dir == [0,1]:
+        elif self.dir == [1,0]:
             return car.x > self.xP - buffer - data.intersecRad or \
                 car.x < self.xN + buffer + data.intersecRad
 
@@ -84,25 +81,25 @@ class Road (object):
         #NS
         if self.dir == [0,1]:
             if self.frontCarN == None:
-                self.frontCarN = self.frontOfQueue (self, data, [0,-1])
+                self.frontCarN = self.frontOfQueue (data, [0,-1])
             if self.frontCarP == None:
-                self.frontCarP = self.frontOfQueue (self, data, [0,1])
+                self.frontCarP = self.frontOfQueue (data, [0,1])
         #EW
         elif self.dir == [1,0]:
             if self.frontCarN == None:
-                self.frontCarN = self.frontOfQueue (self, data, [-1,0])
+                self.frontCarN = self.frontOfQueue (data, [-1,0])
             if self.frontCarP == None:
-                self.frontCarP = self.frontOfQueue (self, data, [1,0])
+                self.frontCarP = self.frontOfQueue (data, [1,0])
     #decelerate car front car if the light is red or yellow
 # maybe you are messing up if you are not setting the front car before 
 #trying to slow down the front car (fix this by checking inSlowArea to make sure
 # your car isn't None.
     def slowFrontIfYellRed(self, data):
-        if self.lightN == 0 or self.lightN == 2:
-            if inSlowArea(self, data, self.frontCarN):
+        if (self.lightN == 0 or self.lightN == 2) and self.carsListN != []:
+            if self.inSlowArea (data, self.frontCarN):
                 self.frontCarN.deceler()
-        if self.lightP == 0 or self.lightP == 2:
-            if inSlowArea(self, data, self.frontCarP):
+        if (self.lightP == 0 or self.lightP == 2) and self.carsListP != []:
+            if self.inSlowArea(data, self.frontCarP):
                 self.frontCarP.deceler()
                 
     def distBtCars (self, car1, car2):
@@ -118,14 +115,14 @@ class Road (object):
                 self.carsListN[c].deceler()
             elif self.carsListN[c] != self.frontCarN:
                 self.carsListN[c].acceler()
-        if self.carsListN [0] != self.frontCarN:
+        if self.carsListN != [] and self.carsListN [0] != self.frontCarN:
             self.carsListN [0].acceler()
         for c in range(1, len(self.carsListP)):
             if isTooClose (self.carsListP [c], self.carsListP [c-1]):
                 self.carsListP[c].deceler()
             elif self.carsListP[c] != self.frontCarP:
                 self.carsListP[c].acceler()
-        if self.carsListP [0] != self.frontCarP:
+        if self.carsListP != [] and self.carsListP [0] != self.frontCarP:
             self.carsListP [0].acceler()
 ###some methods for intersection to call
 # intersection will call on this function in timerFired when the light is green to grab the 
@@ -154,8 +151,32 @@ class Road (object):
     #add a car into the road going from P to N (ie a negative car) but it is
     # entering the positive side of the road.
     def carInP (self, data, curSpeed):
-        car = Car ()
-        self.carsListN += car
+        #vert
+        if self.dir == [0,1]:
+            carDir = [0,-1]
+            carX = self.xN + Car.width
+            carY = self.yP - data.intersecRad
+        #hor
+        elif self.dir == [1,0]:
+            carDir = [-1,0]
+            carY = self.yN - Car.width//2
+            carX = self.xP - data.intersecRad
+        car = Car (data, self.speedLimit, curSpeed, carDir, carX, carY)
+        self.carsListN += [car]
+        
+    def carInN (self, data, curSpeed):
+        #vert
+        if self.dir == [0,1]:
+            carDir = [0,1]
+            carX = self.xP - Car.width//2
+            carY = self.yN + data.intersecRad
+        #hor
+        elif self.dir == [1,0]:
+            carDir = [1,0]
+            carY = self.yN + Car.width
+            carX = self.xN + data.intersecRad
+        car = Car (data, self.speedLimit, curSpeed, carDir, carX, carY)
+        self.carsListP += [car]
 
 #call this in simulation in timerFired
     def timerFiredRoad (self, data):
@@ -186,7 +207,7 @@ class Road (object):
         for car in self.carsListN:
             car.draw(canvas)
         for car in self.carsListP:
-            car.draw()
+            car.draw(canvas)
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)
         self.drawCars (canvas, data)

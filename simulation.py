@@ -216,8 +216,6 @@ def timerFired(data):
     #about to go into a red light intersection
         data.firstCarSN = None
         data.firstCarNS = None
-        # frontOfQueue(data, data.carsNS, "NS").intersecSlow = True
-        # frontOfQueue(data, data.carsSN, "SN").intersecSlow = True
     if (data.EW == 2 or data.EW == 0):
         if data.firstCarEW == None:
             data.firstCarEW = frontOfQueue(data, data.carsEW, "EW")

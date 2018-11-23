@@ -4,55 +4,44 @@ from image_util import *
 from PIL import ImageTk,Image  
 
 
-# root = Tk()      
-# canvas = Canvas(root, width = 300, height = 300)      
-# canvas.pack()   
-
-   
-class Car(object):
-    #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
+    
+class Car(object): 
+    #cite: syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python and from course website
     carImgNS = "imgs/imageCarNS.gif"
     carImgSN = "imgs/imageCarSN.gif"
     carImgEW = "imgs/imageCarEW.gif"
     carImgWE = "imgs/imageCarWE.gif"
-
-    def __init__(self, data, speedLimit, direction, accel, decel):
-        self.length = 40
+    length = 40
+    width = 20
+    #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
+    def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = 1, decel = 1):
+        
         self.speedMax = speedLimit
-        self.curSpeed = self.speedMax
+        self.curSpeed = curSpeed
         self.dir = direction
         self.accel = accel
         self.decel = decel
         self.data = data
+        self.x = x
+        self.y = y
         #NS
-        if self.dir [0] == 0 and self.dir [1] == 1:
-            self.x = data.width // 2 - data.radius
-            self.y = 0
+        if self.dir == [0,1]:
             self.img = PhotoImage(file=Car.carImgNS)
         #SN
-        elif self.dir [0] == 0 and self.dir [1] == -1:
-            self.x = data.width // 2 + data.radius
-            self.y = data.height
-            self.img =  PhotoImage(file=Car.carImgSN)
+        elif self.dir == [0, -1]:
+            self.img = PhotoImage(file=Car.carImgSN)
         #WE
-        elif self.dir [0] == 1 and self.dir [1] == 0:
-            self.x = 0
-            self.y = data.height // 2 + data.radius
-            self.img =  PhotoImage(file=Car.carImgWE)
+        elif self.dir == [1,0]:
+            self.img = PhotoImage(file=Car.carImgWE)
         #EW
-        elif self.dir [0] == -1 and self.dir [1] == 0:
-            self.x = data.width
-            self.y = data.height // 2 - data.radius
-            self.img =  PhotoImage(file=Car.carImgEW)
+        elif self.dir == [-1, 0]:
+            self.img = PhotoImage(file=Car.carImgEW)
         
-        #need to know in advance before the intersection if you are going to 
-        #need to be slowing down once you get closer to intersection
-        self.intersecSlow = False
-    #got syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python
+
     
     
     def draw (self, canvas):
-        canvas.create_image(self.x, self.y, image=self.img)  
+        canvas.create_image(self.x, self.y, anchor = CENTER, image=self.img)  
     
     #checks all attributes are the same
     def __eq__ (self, other):

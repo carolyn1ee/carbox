@@ -37,9 +37,14 @@ class Intersection (object):
                             self.NSTime + self.staggerTime):
             changeLights (roadsNS, 0)
             changeLights (roadsEW, 2)
-            
+    #handle cars coming thru the intersection: 
+    def timerFiredIntersec (self, data):
+        #snag cars coming into intersec
+        #have some way to draw the cars...
             
 ##view
      #draws cars in the intersection   
     def drawIntersecCars ():
-        pass
+        for car in self.carsNS:
+            car.draw(canvas)
+          ###  #etc#######
