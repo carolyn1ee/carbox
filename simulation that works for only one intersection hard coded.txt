@@ -4,7 +4,6 @@ from image_util import *
 from tkinter import *
 import os
 from carClass import *
-from roads import *
 from PIL import ImageTk,Image 
 
         ##for now just making the radius be the buffer (will use some math later to figure out the safe distance a car needs to be)
@@ -14,6 +13,7 @@ from PIL import ImageTk,Image
 ####################################
 # customize these functions
 ####################################
+("Downloads/000_cmu/cs/tp/imageCarWE")
 
 
 def init(data):
@@ -27,9 +27,7 @@ def init(data):
     data.NSCarRate = 2
     data.WECarRate = 3
     data.SNCarRate = 4
-    data.roads = []
-    data.sideRoads = []
-    # adding hardcoded roads: need to have side roads that add cars
+
 
      
     #set car lists
@@ -74,8 +72,6 @@ def keyPressed(event, data):
     ######
 ####TIMER
     ######
-    
-    #need to move cars from one road to another road?????? or make the intersection move the cars???
     
 ##helper f'ns
 #returns true every m seconds (m is for mod), staggaring at n

@@ -12,10 +12,52 @@ from roads import *
 ####################################
 
 def init(data):
+    
+    data.NSTime = 5
+    data.EWTime = 5
+    data.yellowTime = 1
+    #interval of seconds between each car that enters
+    data.EWCarRate = 5
+    data.NSCarRate = 2
+    data.WECarRate = 3
+    data.SNCarRate = 4
+    data.roads = []
+    data.sideRoads = []
+    # adding hardcoded roads: need to have side roads that add cars
+
+     
+    #set car lists
+    data.carsSN = []
+    data.carsWE = []
+    data.carsNS = []
+    data.carsEW = []
+    data.allCars = [data.carsSN, data.carsNS, data.carsEW, data.carsWE]
+    #intersection:
+    #green light means 1 and red light means 0
+    data.NS = 1
+    data.EW = 0
+    data.t = 0
+    
+    data.yellowLightImg = PhotoImage(file="imgs/yellowLight.gif")
+    data.redLightImg = PhotoImage(file="imgs/redLight.gif")
+    data.greenLightImg = PhotoImage(file="imgs/greenLight.gif")
+
+    
+    data.radius = 20
+    data.intersecRad = 40
+    #center of the intersection
+    data.intersecX = data.width//2
+    data.intersecY = data.height//2
+    
+    data.firstCarEW = None
+    data.firstCarWE = None
+    data.firstCarNS = None
+    data.firstCarSN = None
     # load data.xyz as appropriate
     data.intersecRad = 5 
+    data.car = Car (data, 10, [0,1], 1,1)
     data.road = Road (data, [0,1], 30, 10, 30, 90, [], [],\
-                    [])
+                    [data.car],[])
 
 def mousePressed(event, data):
     # use event.x and event.y
@@ -29,8 +71,8 @@ def redrawAll(canvas, data):
     # canvas.pack()  
     canvas.create_rectangle(0, 0, data.width, data.height,
                                 fill='black', width=0)
-    canvas.create_rectangle (data.road.xF, data.road.yF, data.road.xF +10, data.road.yF +10, fill = "white")
-    data.road.drawRoad(canvas, data)
+    #canvas.create_rectangle (data.road.xF, data.road.yF, data.road.xF +10, data.road.yF +10, fill = "white")
+    data.road.drawAllRoad(canvas, data)
 
 ####################################
 # use the run function as-is

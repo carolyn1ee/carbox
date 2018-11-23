@@ -1,7 +1,10 @@
 from simulation import *
 
-        # write out the similarities between intersections and roads
-        # has a list of the intersections that run thru it and can control what cars go thru for each intersection. just makes all the parallel ones go simultaneously. if it is not 4way then teh roads can handle moving the cars right or left. otherwise, the cars are only going to go straight.
+        # has a list of the roads that run thru it and can control what cars go thru for each intersection. just makes all the parallel ones go simultaneously. if it is not 4way then teh roads can handle moving the cars right or left. otherwise, the cars are only going to go straight.
+        
+        # there are only 1 or 2 cars in roadsNS or roads EW....
+        
+        # needs to handle the cars that are going through the intersection
 class Intersection (object):
     def __init__(self, data, roadsNS, roadsEW, x, y, NSTime, EWTime, staggerTime):
         self.roadsNS = roadsNS
@@ -34,4 +37,9 @@ class Intersection (object):
                             self.NSTime + self.staggerTime):
             changeLights (roadsNS, 0)
             changeLights (roadsEW, 2)
-        
+            
+            
+##view
+     #draws cars in the intersection   
+    def drawIntersecCars ():
+        pass
