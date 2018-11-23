@@ -111,14 +111,14 @@ class Road (object):
     #make sure cars have space bt each other by decelerating close cars
     def changeAccelCars (self):
         for c in range(1, len(self.carsListN)):
-            if isTooClose (self.carsListN [c], self.carsListN [c-1]):
+            if self.isTooClose (self.carsListN [c], self.carsListN [c-1]):
                 self.carsListN[c].deceler()
             elif self.carsListN[c] != self.frontCarN:
                 self.carsListN[c].acceler()
         if self.carsListN != [] and self.carsListN [0] != self.frontCarN:
             self.carsListN [0].acceler()
         for c in range(1, len(self.carsListP)):
-            if isTooClose (self.carsListP [c], self.carsListP [c-1]):
+            if self.isTooClose (self.carsListP [c], self.carsListP [c-1]):
                 self.carsListP[c].deceler()
             elif self.carsListP[c] != self.frontCarP:
                 self.carsListP[c].acceler()
@@ -137,13 +137,13 @@ class Road (object):
                 return self.carsListN[0]
         #hor road case
         else:
-            if self.carsListN[0].x< self.xN + data.intersecRad:
+            if self.carsListN[0].x < self.xN + data.intersecRad:
                 return self.carsListN[0]
     def carOutP (self, data):
         #vert road case
         if self.dir == [0,1]:
             if self.carsListP[0].y > self.yN - data.intersecRad:
-                return self.carsListP[0]
+                return self.carsListP[0] 
         #hor road case
         else:
             if self.carsListP[0].x > self.xN - data.intersecRad:
