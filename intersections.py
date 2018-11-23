@@ -26,9 +26,9 @@ class Intersection (Road):
         for road in roadsList:
             #need to check which side of the road is in this intersection
             if road[1] == "P":
-                road.lightP = light
+                road[0].lightP = light
             elif road [1] == "N":
-                road.lightN = light
+                road[0].lightN = light
     
     def checkLights (self, data):
         if timerIsNSecs (data, self.cycle, self.staggerTime):
@@ -50,30 +50,30 @@ class Intersection (Road):
     def pickUpCars (self, data):
         for road in roadsNS:
             if road [1] == "P":
-                if road.lightP == 1:
-                    tmpCar = road.carOutP(data)
+                if road[0].lightP == 1:
+                    tmpCar = road[0].carOutP(data)
                     if tmpCar != None:
                         carsNS += tmpCar
-                        road.carsListP.remove (tmpCar)
+                        road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
-                if road.lightN == 1:
-                    tmpCar = road.carOutN(data)
+                if road[0].lightN == 1:
+                    tmpCar = road[0].carOutN(data)
                     if tmpCar != None:
                         carsSN += tmpCar
-                        road.carsListN.remove (tmpCar)
+                        road[0].carsListN.remove (tmpCar)
         for road in roadsEW:
             if road [1] == "P":
-                if road.lightP == 1:
+                if road[0].lightP == 1:
                     tmpCar = road.carOutP(data)
                     if tmpCar != None:
                         carsWE += tmpCar
-                        road.carsListP.remove (tmpCar)
+                        road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
-                if road.lightN == 1:
-                    tmpCar = road.carOutN(data)
+                if road[0].lightN == 1:
+                    tmpCar = road[0].carOutN(data)
                     if tmpCar != None:
                         carsEW += tmpCar
-                        road.carsListN.remove (tmpCar)
+                        road[0].carsListN.remove (tmpCar)
     def dropOffCars (self, data):
         for road in roadsNS:
             if road[1] =="N":
