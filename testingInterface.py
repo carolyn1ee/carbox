@@ -93,7 +93,7 @@ def timerFired(data):
     data.t += 1
     
     for road in data.roads:
-        road.timerFiredRoad(data)
+        road.timerFiredRoad(data )
     for i in data.intersecs:
         data.intersecs[i].timerFiredIntersec (data)
     

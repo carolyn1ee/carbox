@@ -29,15 +29,24 @@ def mousePressedC (event, data):
     data.tmpEndY = data.tmpStartY
     data.tmpDir = None
 
-def setInOrder (x, y):
-    if x > y:
-        tmp = y
-        y = x
-        x = tmp
+def setBounds(data):
+    print (data.tmpStartX, data.tmpStartY, data.tmpEndX, data.tmpEndY)
+    if data.tmpStartX < 0: data.tmpStartX = 0
+    if data.tmpStartY < 0: data.tmpStartY = 0
+    if data.tmpEndX > data.width: data.tmpEndX = data.width
+    if data.tmpEndY > data.height: data.tmpEndY = data.height
+    print ("Setting bounds")
+
 #makes it so that the start value is less than the end value
 def setTmpsInOrder (data):
-    setInOrder (data.tmpStartX, data.tmpEndX)
-    setInOrder (data.tmpStartY, data.tmpEndY)
+    if data.tmpStartX > data.tmpEndX:
+        tmp = data.tmpEndX
+        data.tmpEndX = data.tmpStartX
+        data.tmpStartX = tmp
+    if data.tmpStartY > data.tmpEndY:
+        tmp = data.tmpEndY
+        data.tmpEndY = data.tmpStartY
+        data.tmpStartY = tmp
 
 def findDir (data):
     if data.tmpDir == "Up" or data.tmpDir == "Down":
@@ -64,6 +73,7 @@ def createIntersection(data, x, y, side, road):
    
 def createRoad (data):
     setTmpsInOrder (data)
+    setBounds (data)
     findDir (data)
     if isASideRoad (data):
         #create some kind of input to allow user to set the time between cars
@@ -117,11 +127,13 @@ def keyPressedC (event, data):
         # create a road
         #4)find if there is already an intersection
         #5)create intersection or add to intersection (this is done in the intersection function)
+        # need to make sure that the road isn't trivial
+       # if data.tmpStartX - data.tmpEndX == data.tmpStartY - data.tmpEndY:
         road = createRoad (data)
         createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
         createIntersection (data, data.tmpEndX, data.tmpEndX, "P", road)
         data.roads += [road]
-        
+    
 ## here is a f'n to call
 # this draws the road you are considering creating as you move your arrow keys along....
 def drawTmp (canvas, data):

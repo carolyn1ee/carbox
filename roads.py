@@ -189,6 +189,7 @@ class Road (object):
             self.frontCarP = None
         self.slowFrontIfYellRed (data)
         self.changeAccelCars ()
+        print (self)
     
         
         
@@ -197,7 +198,6 @@ class Road (object):
         lenOfRoadNeedingStrips = (self.length - 2*data.intersecRad)
         for strip in range \
                 (int(lenOfRoadNeedingStrips//self.ylowStripsLen-1)):
-                    print (strip)
             if strip % 2 == 0:
                 startX = data.intersecRad * self.dir[0] + self.xN + \
                     strip*self.ylowStripsLen * self.dir[0]
