@@ -197,6 +197,7 @@ class Road (object):
         lenOfRoadNeedingStrips = (self.length - 2*data.intersecRad)
         for strip in range \
                 (int(lenOfRoadNeedingStrips//self.ylowStripsLen-1)):
+                    print (strip)
             if strip % 2 == 0:
                 startX = data.intersecRad * self.dir[0] + self.xN + \
                     strip*self.ylowStripsLen * self.dir[0]
@@ -207,6 +208,14 @@ class Road (object):
                 endY = data.intersecRad * self.dir[1] + self.yN + (strip +\
                     1)*self.ylowStripsLen*self.dir[1]
                 canvas.create_line(startX, startY, endX, endY, width= 5, fill = "yellow")
+        canvas.create_line (self.xN + Car.width * self.dir[1], 
+                            self.yN + Car.width * self.dir [0], 
+                            self.xP + Car.width * self.dir[1], 
+                            self.yP + Car.width * self.dir [0], fill = "white")
+        canvas.create_line (self.xN - Car.width * self.dir[1], 
+                            self.yN - Car.width * self.dir [0], 
+                            self.xP - Car.width * self.dir[1], 
+                            self.yP - Car.width * self.dir [0], fill = "white")
     def drawCars (self, canvas, data):
         for car in self.carsListN:
             car.draw(canvas)

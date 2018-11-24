@@ -69,6 +69,10 @@ def createRoad (data):
         #create some kind of input to allow user to set the time between cars
         road = SideRoad (data, dir = data.roadDir, xN = data.tmpStartX,
             yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars=3) 
+            
+            
+            #self, data, dir, xN, yN, xP, yP,\
+                     #speedLimit, secsBtCars, carsListN=[], carsListP=[])
             #if anything goes wrong,
         # it may be bc of ordering of the inputs is messed up and then you have default vals too
     else:

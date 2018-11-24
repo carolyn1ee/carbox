@@ -2,7 +2,7 @@ from roads import *
 #from simulation import *
 class SideRoad (Road):
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                     speedLimit, secsBtCars, carsListN=[], carsListP=[]):
+                      secsBtCars, carsListN=[], carsListP=[], speedLimit = 10):
         super().__init__(data, dir, xN, yN, xP, yP,\
                     carsListN, carsListP, speedLimit)
         self.secsBtCars = secsBtCars

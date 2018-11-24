@@ -24,7 +24,6 @@ class Intersection (Road):
         self.carsWE = []
         self.carsNS = []
         self.carsSN = []
-        self.yay = True
     def changeLights (self, roadsList, light):
         for road in roadsList:
             #need to check which side of the road is in this intersection
@@ -149,7 +148,8 @@ class Intersection (Road):
             #2) accelerate cars
             #3) once cars get out of intersection, send them to next intersection
             
-            
+    def __repr__ (self):
+        return "(" + str(self.x) +"," + str(self.y) +")"
 ##view
      #draws cars in the intersection   
     def drawIntersecCars (self, canvas):
