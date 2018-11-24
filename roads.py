@@ -18,7 +18,7 @@ class Road (object):
     #direction can be either [1,0] or [0,1] for whether or not it runs from vert
     #or hor.
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                    carsListN, carsListP, speedLimit):
+                    carsListN=[], carsListP=[], speedLimit=10):
         #location:
         self.xN = xN
         self.yN = yN

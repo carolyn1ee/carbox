@@ -21,7 +21,7 @@ class Intersection (Road):
         self.carsWE = []
         self.carsNS = []
         self.carsSN = []
-    
+        self.yay = True
     def changeLights (self, roadsList, light):
         for road in roadsList:
             #need to check which side of the road is in this intersection
@@ -149,4 +149,5 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-          ###  #etc#######
+                #draw oval on cars in intersection for debugging purposes
+                #canvas.create_oval (car.x-20, car.y-20, car.x +20, car.y+20, fill = "white")

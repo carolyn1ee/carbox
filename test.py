@@ -1,6 +1,6 @@
 # Updated Animation Starter Code
 
-
+from createStuff import *
 from tkinter import *
 from PIL import ImageTk,Image  
 from roads import *
@@ -11,7 +11,6 @@ from intersections import *
 ####################################
 
 def init(data):
-    # load data.xyz as appropriate
     data.NSTime = 5
     data.EWTime = 5
     data.yellowTime = 1
@@ -22,9 +21,18 @@ def init(data):
     data.SNCarRate = 4
     data.roads = []
     data.sideRoads = []
-    # adding hardcoded roads: need to have side roads that add cars
 
-     
+    #drawing out your custom intersections
+    data.increment = 10
+    data.tmpStartX = 0
+    data.tmpStartY = 0
+    data.tmpEndX = data.tmpStartX
+    data.tmpEndY = data.tmpStartY
+    #only start when user done with drawing
+    data.go = False
+    
+    
+    
     #set car lists
     data.carsSN = []
     data.carsWE = []
@@ -75,8 +83,7 @@ def mousePressed(event, data):
     pass
 
 def keyPressed(event, data):
-    # use event.char and event.keysym
-    pass
+    keyPressedC (event, data)
 
 def timerFired(data):
     data.t += 1
@@ -84,6 +91,7 @@ def timerFired(data):
     for road in [data.road, data.road2, data.road3, data.road4]:
         road.timerFiredRoad(data)
     data.intersection.timerFiredIntersec (data)
+    
 
 def redrawAll(canvas, data):
     canvas.create_rectangle (data.width//2 - data.intersecRad, data.height//2 - data.intersecRad, data.width//2 + data.intersecRad, data.height//2 + data.intersecRad, fill = "white")

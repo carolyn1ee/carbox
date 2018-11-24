@@ -13,9 +13,9 @@ class Car(object):
     carImgWE = "imgs/imageCarWE.gif"
     length = 40
     width = 20
+    
     #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
     def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = 1, decel = 1):
-        
         self.speedMax = speedLimit
         self.curSpeed = curSpeed
         self.dir = direction
@@ -75,4 +75,5 @@ class Car(object):
         return ((other.x-self.x)**2 + (other.y - self.y)**2)**.5 < self.buffer()
         
     def buffer (self):
+        #used some nice physics
         return .5*self.curSpeed**2/self.decel + self.length
