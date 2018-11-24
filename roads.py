@@ -189,7 +189,6 @@ class Road (object):
             self.frontCarP = None
         self.slowFrontIfYellRed (data)
         self.changeAccelCars ()
-        print (self)
     
         
         

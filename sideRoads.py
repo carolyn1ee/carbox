@@ -43,8 +43,7 @@ class SideRoad (Road):
         super().timerFiredRoad (data)
         if data.go:
             self.addCarsPeriodically (data)
-            print ("GOGOGOOGOOOGOGOGOGOO")
-                    
+                                
     def __repr__ (self):
          return "sideRoad start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir)
                       #essentially same as a normal road but creates cars on the edge

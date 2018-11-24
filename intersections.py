@@ -137,6 +137,7 @@ class Intersection (Road):
     
             
     def timerFiredIntersec (self, data):
+        print ("timerFired for intersec")
         self.pickUpCars (data)
         self.dropOffCars(data)
         self.moveCars()
@@ -149,7 +150,8 @@ class Intersection (Road):
             #3) once cars get out of intersection, send them to next intersection
             
     def __repr__ (self):
-        return "(" + str(self.x) +"," + str(self.y) +")"
+        return "(" + str(self.x) +"," + str(self.y) +"), light NS:" +str (self.lightNS) + \
+        "light EW" + str (self.lightEW)
 ##view
      #draws cars in the intersection   
     def drawIntersecCars (self, canvas):

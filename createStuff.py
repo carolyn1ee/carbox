@@ -131,7 +131,7 @@ def keyPressedC (event, data):
        # if data.tmpStartX - data.tmpEndX == data.tmpStartY - data.tmpEndY:
         road = createRoad (data)
         createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
-        createIntersection (data, data.tmpEndX, data.tmpEndX, "P", road)
+        createIntersection (data, data.tmpEndX, data.tmpEndY, "P", road)
         data.roads += [road]
     
 ## here is a f'n to call
