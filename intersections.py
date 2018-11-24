@@ -3,13 +3,16 @@ from roads import *
         # has a list of the roads that run thru it and can control what cars go thru for each intersection. just makes all the parallel ones go simultaneously. if it is not 4way then teh roads can handle moving the cars right or left. otherwise, the cars are only going to go straight.
         
         # there are only 1 or 2 roads in roadsNS or roads EW....
+        #roadsNS is a list of lists where the first element of the list is the road and the second element is which side of the road is in this intersection (P[ositive] or N[egative])
         
         # needs to handle the cars that are going through the intersection: picks them up as they enter intersection and then drops them off as they go into next road.
 class Intersection (Road):
-    def __init__(self, data, roadsNS, roadsEW, x, y, NSTime, EWTime, staggerTime):
+    #optimizer will change the time for the lights
+    def __init__(self, data, x, y, NSTime=4, EWTime=6, staggerTime=1, roadsNS=[],
+                                    roadsEW=[]):
         self.roadsNS = roadsNS
         self.roadsEW = roadsEW
-        self.NSTime=NSTime
+        self.NSTime = NSTime
         self.EWTime = EWTime
         self.x = x
         self.y = y
@@ -27,6 +30,10 @@ class Intersection (Road):
             #need to check which side of the road is in this intersection
             if road[1] == "P":
                 road[0].lightP = light
+                #look at this for debugging: the number of times the
+                # lights are being changed isn't correct -- that is prob why 
+                #the cars aren't able to go thru.
+                #print(9)
             elif road [1] == "N":
                 road[0].lightN = light
     

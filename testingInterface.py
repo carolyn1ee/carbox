@@ -5,7 +5,7 @@ from tkinter import *
 from PIL import ImageTk,Image  
 from roads import *
 from sideRoads import *
-from intersections import *
+from intersections import * 
 ####################################
 # customize these functions
 ####################################
@@ -29,17 +29,17 @@ def init(data):
     data.tmpStartY = 0
     data.tmpEndX = data.tmpStartX
     data.tmpEndY = data.tmpStartY
-    #only start when user done with drawing
+    #only start when user done with drawing when they press space
     data.go = False
     
-    
-    
+    ##this is prob obsolete
     #set car lists
     data.carsSN = []
     data.carsWE = []
     data.carsNS = []
     data.carsEW = []
     data.allCars = [data.carsSN, data.carsNS, data.carsEW, data.carsWE]
+    
     #intersection:
     #green light means 1 and red light means 0
     data.NS = 1
@@ -64,24 +64,27 @@ def init(data):
     # load data.xyz as appropriate
     
     data.intersecRad = 40
-    data.road = SideRoad (data, dir = [0,1], xN = data.width//2,\
-        yN = data.height//2, xP = data.width//2, yP = data.height, 
-        carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 2)
-    data.road2 = SideRoad (data, dir = [0,1], xN = data.width//2,\
-        yN = 0, xP = data.width//2, yP = data.height//2, 
-        carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 4)
-    data.road3 = SideRoad (data, dir = [1,0], xN = 0,\
-        yN = data.height//2, xP = data.width//2, yP = data.height//2, 
-        carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 5)
-    data.road4 = SideRoad (data, dir = [1,0], xN =data.width//2,\
-        yN = data.height//2, xP = data.width, yP = data.height//2, 
-        carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 7)
-    data.intersection = Intersection(data, roadsNS = [[data.road , "N"], [data.road2, "P"]], roadsEW = [[data.road3, "P"], [data.road4, "N"]], x = data.width//2, y = data.height // 2, NSTime = 3, EWTime = 2, staggerTime = 1)
+    
+    # 
+    # data.road = SideRoad (data, dir = [0,1], xN = data.width//2,\
+    #     yN = data.height//2, xP = data.width//2, yP = data.height, 
+    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 2)
+    # data.road2 = SideRoad (data, dir = [0,1], xN = data.width//2,\
+    #     yN = 0, xP = data.width//2, yP = data.height//2, 
+    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 4)
+    # data.road3 = SideRoad (data, dir = [1,0], xN = 0,\
+    #     yN = data.height//2, xP = data.width//2, yP = data.height//2, 
+    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 5)
+    # data.road4 = SideRoad (data, dir = [1,0], xN =data.width//2,\
+    #     yN = data.height//2, xP = data.width, yP = data.height//2, 
+    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 7)
+    # data.intersection = Intersection(data, roadsNS = [[data.road , "N"], [data.road2, "P"]], roadsEW = [[data.road3, "P"], [data.road4, "N"]], x = data.width//2, y = data.height // 2, NSTime = 3, EWTime = 2, staggerTime = 1)
+    
+    
 
     
 def mousePressed(event, data):
-    # use event.x and event.y
-    pass
+    mousePressedC (event, data)
 
 def keyPressed(event, data):
     keyPressedC (event, data)
@@ -89,21 +92,23 @@ def keyPressed(event, data):
 def timerFired(data):
     data.t += 1
     
-    for road in [data.road, data.road2, data.road3, data.road4]:
+    for road in data.roads:
         road.timerFiredRoad(data)
-    data.intersection.timerFiredIntersec (data)
+    for i in data.intersecs:
+        data.intersecs[i].timerFiredIntersec (data)
     
 
 def redrawAll(canvas, data):
     
-    #for i in range (data.width//10):
-        #canvas.create_line()
     canvas.create_rectangle(0, 0, data.width, data.height,
                                 fill='black', width=0)
     #canvas.create_rectangle (data.road.xF, data.road.yF, data.road.xF +10, data.road.yF +10, fill = "white")
-    for road in [data.road, data.road2, data.road3, data.road4]:
+    for road in data.roads:
         road.drawAllRoad(canvas, data)
-    data.intersection.drawIntersecCars(canvas)
+        print (road)
+    for i in data.intersecs:
+        data.intersecs[i].drawIntersecCars(canvas)
+    drawTmp (canvas, data)
 
 ####################################
 # use the run function as-is
@@ -154,21 +159,3 @@ def run(width=300, height=300):
     print("bye!")
 
 run(800, 800)
-
-
-
-
-
-
-
-
-
-
-
-################################################
-
-
-##########3
-###########
-#########
-################################################# Basic Animation Framework ur bad

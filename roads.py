@@ -9,12 +9,6 @@ class Road (object):
     #cars that go towards teh end of the road are going in positive direction
     #so they are carsListP and the opp direction cars are in carsListN
     
-    # #lstSRds is a list of tuples where first element is the roads that 
-    # #connect to the startxf of this road and second element is the side of the 
-    # #connected road that is connected to this road 
-    # i don't think i need list of the roads this connects to because 
-    #intersection should handle that......
-    
     #direction can be either [1,0] or [0,1] for whether or not it runs from vert
     #or hor.
     def __init__ (self, data, dir, xN, yN, xP, yP,\
@@ -221,13 +215,8 @@ class Road (object):
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)
         self.drawCars (canvas, data)
-    
-##controller functions
-# put this somewhere else like in the simulation bc simulation will prob make the roads
-#will use this to snap to the grid of 10 by 10 when creating roads
-    def roundToTen(n):
-        if n%10>=5:
-            return n//10 * 10 + 10
-        else:
-            return n//10 * 10
-    
+
+##
+   
+    def __repr__ (self):
+        return "start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir)

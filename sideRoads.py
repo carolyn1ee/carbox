@@ -6,7 +6,8 @@ class SideRoad (Road):
         super().__init__(data, dir, xN, yN, xP, yP,\
                     carsListN, carsListP, speedLimit)
         self.secsBtCars = secsBtCars
-    
+        self.setExitLights (data)
+
         
     def addCarsPeriodically (self, data):
         if self.dir == [0,1]:
@@ -23,7 +24,21 @@ class SideRoad (Road):
             if self.xP == data.width:
                 if self.timerIsNSecs (data, self.secsBtCars):
                     self.carInP(data, self.speedLimit)  
-                    
+    def setExitLights (self, data):
+        if self.dir == [0,1]:
+            if self.yN == 0:
+                self.lightN = 1
+            if self.yP == data.height:
+                if self.timerIsNSecs (data, self.secsBtCars):
+                    self.lightP = 1
+        if self.dir == [1,0]:
+            if self.xN == 0:
+                if self.timerIsNSecs (data, self.secsBtCars):
+                   self.lightN = 1
+            if self.xP == data.width:
+                if self.timerIsNSecs (data, self.secsBtCars):
+                    self.lightP = 1
+
     def timerFiredRoad (self, data):
         super().timerFiredRoad (data)
         if data.go:
