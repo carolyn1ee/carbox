@@ -31,4 +31,3 @@ class SideIntersection (Intersection):
                 tmpCar = road[0].carOutN(data)
                 if tmpCar != None:
                     road[0].carsListN.remove (tmpCar)
-        print (tryingt o)

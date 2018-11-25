@@ -8,7 +8,7 @@ from roads import *
         # needs to handle the cars that are going through the intersection: picks them up as they enter intersection and then drops them off as they go into next road.
 class Intersection (Road):
     #optimizer will change the time for the lights
-    def __init__(self, data, x, y, NSTime=4, EWTime=6, staggerTime=1, roadsNS=[],
+    def __init__(self, data, x, y, NSTime=7, EWTime=6, staggerTime=1, roadsNS=[],
                                     roadsEW=[]):
         self.roadsNS = roadsNS
         self.roadsEW = roadsEW
@@ -46,7 +46,7 @@ class Intersection (Road):
             self.lightEW = 0
             self.changeLights (self.roadsNS, 1)
             self.changeLights (self.roadsEW, 0)
-            print ("NS")
+            #print ("NS")
         elif self.timerIsNSecs (data, self.cycle, self.NSTime + self.staggerTime):
             self.lightNS = 2
             self.lightEW = 0
@@ -58,14 +58,25 @@ class Intersection (Road):
             self.lightEW = 1
             self.changeLights (self.roadsNS, 0)
             self.changeLights (self.roadsEW, 1)
-            print ("EW")
-        elif self.timerIsNSecs (data, self.cycle, self.EWTime + data.yellowTime + \
-                            self.NSTime + self.staggerTime):
+            #print ("EW")
+        elif self.timerIsNSecs (data, self.cycle, (self.EWTime + data.yellowTime + \
+                            self.NSTime + self.staggerTime) % self.cycle):
             self.lightNS = 0
             self.lightEW = 2
             self.changeLights (self.roadsNS, 0)
             self.changeLights (self.roadsEW, 2)
-            
+    def stopLightImg (self, data, light):
+        if light == 1:
+            return data.greenLightImg
+        elif light == 0: 
+            return data.redLightImg
+        else:
+            return data.yellowLightImg
+    def drawLightNS (self, data, canvas):
+        canvas.create_image (self.x, self.y-40, image = self.stopLightImg (data, self.lightNS))
+    def drawLightEW (self, data, canvas):
+        canvas.create_image (self.x-40, self.y, image = self.stopLightImg (data, self.lightEW))
+
     #handle cars coming thru the intersection:
         #takes cars that are coming into the intersection so that it can deal w/
     def pickUpCars (self, data):
@@ -99,8 +110,8 @@ class Intersection (Road):
         for road in self.roadsNS:
             if road[1] =="N":
                 for car in self.carsNS:
-                    #if out of intersection, get rid of this car and create a new car 
-                    #to stick in the other road
+                    #if out of intersection, get rid of this car and  
+                    #stick it in the other road
                     if car.y >= data.intersecRad + self.y:
                         road[0].carsListP.append (car)
                         road[0].carsListP[-1].speedMax = road[0].speedLimit
@@ -173,4 +184,8 @@ class Intersection (Road):
             for car in carsList:
                 car.draw(canvas)
                 #draw oval on cars in intersection for debugging purposes
-                #canvas.create_oval (car.x-20, car.y-20, car.x +20, car.y+20, fill = "white")
+                canvas.create_oval (car.x-20, car.y-20, car.x +20, car.y+20, fill = "yellow")
+    def drawAllIntersec (self, data, canvas):
+        self.drawIntersecCars (canvas)
+        self.drawLightEW (data, canvas)
+        self.drawLightNS (data, canvas)

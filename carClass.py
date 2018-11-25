@@ -42,7 +42,9 @@ class Car(object):
     
     def draw (self, canvas):
         canvas.create_image(self.x, self.y, anchor = CENTER, image=self.img)  
-    
+    def drawSpesh (self, canvas):
+        canvas.create_oval(self.x - Car.width, self.y-Car.width, self.x+Car.width, self.y +Car.width, fill = "white")  
+
     #checks all attributes are the same
     def __eq__ (self, other):
         return isinstance (other, Car) and other.curSpeed == self.curSpeed and \

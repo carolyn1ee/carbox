@@ -12,7 +12,7 @@ class Road (object):
     #direction can be either [1,0] or [0,1] for whether or not it runs from vert
     #or hor.
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                    carsListN=[], carsListP=[], speedLimit=10):
+                    carsListN=[], carsListP=[], speedLimit=5):
         #location:
         self.xN = xN
         self.yN = yN
@@ -31,6 +31,8 @@ class Road (object):
         self.frontCarN = None
         self.frontCarP = None
         self.speedLimit = speedLimit
+        self.decelN = False
+        self.decelP = False
         
 ##timerFiredF'ns:
     def moveCars (self):
@@ -50,22 +52,22 @@ class Road (object):
         if dir == [0,1]:
             for car in self.carsListP:
                 if car.y < self.yP - data.intersecRad - car.buffer():
-                    print (car)
+                    #print (car)
                     return car
         elif dir ==[0,-1]:
             for car in self.carsListN:
                 if car.y > self.yN + data.intersecRad + car.buffer():
-                    print (car)
+                    #print (car)
                     return car
         elif dir == [-1,0]:
             for car in self.carsListN:
                 if car.x > self.xN + data.intersecRad + car.buffer():
-                    print (car)
+                    #print (car)
                     return car
         elif dir == [1,0]:
             for car in self.carsListP:
                 if car.x < self.xP  - data.intersecRad - car.buffer():
-                    print (car) 
+                    #print (car) 
                     return car
 #checks if it is close enough to the intersection to start to slow down the car
     def inSlowArea (self, data, car):
@@ -73,7 +75,7 @@ class Road (object):
             return False
         buffer = car.buffer()
         if self.dir == [0,1]:
-            print ("slowArea")
+            #print ("slowArea")
             return car.y > self.yP - buffer - data.intersecRad or \
                 car.y < self.yN + buffer + data.intersecRad
                 
@@ -101,12 +103,14 @@ class Road (object):
 # your car isn't None.
     def slowFrontIfYellRed(self, data):
         if (self.lightN == 0 or self.lightN == 2) and self.carsListN != []:
-            if self.inSlowArea (data, self.frontCarN):
+            if self.inSlowArea (data, self.frontCarN) or self.decelN:
+                self.decelN = True
                 self.frontCarN.deceler()
         if (self.lightP == 0 or self.lightP == 2) and self.carsListP != []:
-            if self.inSlowArea(data, self.frontCarP):
+            if self.inSlowArea(data, self.frontCarP) or self.decelP:
+                self.decelP = True
                 self.frontCarP.deceler()
-                
+                #print ("i think im slowing down")
 
         
     #make sure cars have space bt each other by decelerating close cars
@@ -192,8 +196,10 @@ class Road (object):
         # print (self.frontCarN, self.frontCarP, end = "before")
         if self.lightN == 1:
             self.frontCarN = None
+            self.decelN = False
         if self.lightP == 1:
             self.frontCarP = None
+            self.decelN = False
         self.slowFrontIfYellRed (data)
         self.changeAccelCars ()
         # print (self.frontCarN, self.frontCarP)
@@ -227,6 +233,11 @@ class Road (object):
             car.draw(canvas)
         for car in self.carsListP:
             car.draw(canvas)
+        if self.frontCarP != None:
+            self.frontCarP.drawSpesh (canvas)
+        if self.frontCarN != None:
+            self.frontCarN.drawSpesh (canvas)
+
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)
         self.drawCars (canvas, data)

@@ -71,7 +71,7 @@ def createIntersection(data, x, y, side, road):
         data.intersecs[intLoc].roadsNS = data.intersecs[intLoc].roadsNS + [[road, side]]
     elif data.roadDir == [1,0]:
         data.intersecs[intLoc].roadsEW =  data.intersecs[intLoc].roadsEW + [[road, side]]
-    print (data.intersecs)
+    #print (data.intersecs)
    
 def createRoad (data):
     setTmpsInOrder (data)
@@ -80,7 +80,7 @@ def createRoad (data):
     if isASideRoad (data):
         #create some kind of input to allow user to set the time between cars
         road = SideRoad (data, dir = data.roadDir, xN = data.tmpStartX,
-            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars=3) 
+            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars=5) 
             
             
             #self, data, dir, xN, yN, xP, yP,\
@@ -97,11 +97,11 @@ def createRoad (data):
 ########intersections with only three roads should be replaced with 3-way intersecs (eventually)
 def replaceIntersections (data):
     for i in data.intersecs:
-        print (666666666666, data.intersecs[i].countNumRoads ())
+       # print (666666666666, data.intersecs[i].countNumRoads ())
         if data.intersecs[i].countNumRoads () == 1:
             endIntersec = SideIntersection (data, data.intersecs[i])
             data.intersecs[i] = endIntersec 
-            print (99999098098098)
+            #print (99999098098098)
 ## here is a f'n to call
 def keyPressedC (event, data):
     if event.keysym == "Up":
@@ -133,7 +133,7 @@ def keyPressedC (event, data):
         # only starts the cars if we are go
         data.go = True 
         replaceIntersections (data)
-        print (9)
+        #print (9)
 
     if event.keysym == "Return":
         #now need to create the road

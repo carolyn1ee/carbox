@@ -2,7 +2,7 @@ from roads import *
 #from simulation import *
 class SideRoad (Road):
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                      secsBtCars, carsListN=[], carsListP=[], speedLimit = 10):
+                      secsBtCars, carsListN=[], carsListP=[], speedLimit = 5):
         super().__init__(data, dir, xN, yN, xP, yP,\
                     carsListN, carsListP, speedLimit)
         self.secsBtCars = secsBtCars
@@ -42,11 +42,12 @@ class SideRoad (Road):
         
 
     def timerFiredRoad (self, data):
+        self.setExitLights (data)
         super().timerFiredRoad (data)
         if data.go:
             self.addCarsPeriodically (data)
         self.setExitLights (data)
-                                
+ 
     def __repr__ (self):
          return "sideRoad start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir)
                       #essentially same as a normal road but creates cars on the edge

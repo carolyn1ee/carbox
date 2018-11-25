@@ -110,7 +110,7 @@ def redrawAll(canvas, data):
         road.drawAllRoad(canvas, data)
     for i in data.intersecs:
         # print (data.intersecs[i])
-        data.intersecs[i].drawIntersecCars(canvas)
+        data.intersecs[i].drawAllIntersec(data, canvas)
 
 
 ####################################
