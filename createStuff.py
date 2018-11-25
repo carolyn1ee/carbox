@@ -1,7 +1,7 @@
 from roads import *
 from sideRoads import *
 from intersections import *
-
+from sideIntersections import *
 
 
 #has functions for all the things necessary to create your custom roads. so far we don't have intersections that can handle only 3 roads so that's lame but this file should allow you to 
@@ -30,13 +30,13 @@ def mousePressedC (event, data):
     data.tmpDir = None
 
 def setBounds(data):
-    print (data.tmpStartX, data.tmpStartY, data.tmpEndX, data.tmpEndY)
     if data.tmpStartX < 0: data.tmpStartX = 0
     if data.tmpStartY < 0: data.tmpStartY = 0
     if data.tmpEndX > data.width: data.tmpEndX = data.width
     if data.tmpEndY > data.height: data.tmpEndY = data.height
-    print ("Setting bounds")
 
+
+# functions for when you want to create a road
 #makes it so that the start value is less than the end value
 def setTmpsInOrder (data):
     if data.tmpStartX > data.tmpEndX:
@@ -63,13 +63,15 @@ def isASideRoad (data):
 # intersection and puts the road into it.
 #side is  "N" or "P" depending on which side you are sticking in an intersection
 def createIntersection(data, x, y, side, road):
-    if not (x, y) in data.intersecs:
+    intLoc = (x,y)
+    if not (intLoc in data.intersecs):
         intersec = Intersection (data, x=x, y=y)
-        data.intersecs [(x,y)] = intersec
+        data.intersecs [intLoc] = intersec
     if data.roadDir == [0,1]:
-        data.intersecs[(x, y)].roadsNS.append ([road, side])
+        data.intersecs[intLoc].roadsNS = data.intersecs[intLoc].roadsNS + [[road, side]]
     elif data.roadDir == [1,0]:
-        data.intersecs[(x, y)].roadsEW.append ([road, side])
+        data.intersecs[intLoc].roadsEW =  data.intersecs[intLoc].roadsEW + [[road, side]]
+    print (data.intersecs)
    
 def createRoad (data):
     setTmpsInOrder (data)
@@ -89,6 +91,17 @@ def createRoad (data):
         road = Road (data, dir = data.roadDir, xN = data.tmpStartX,
             yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY)
     return road
+
+#makes sure the intersections are the right type once you are done drawing them 
+#the intersections on the end should be replaced with intersections for the end
+########intersections with only three roads should be replaced with 3-way intersecs (eventually)
+def replaceIntersections (data):
+    for i in data.intersecs:
+        print (666666666666, data.intersecs[i].countNumRoads ())
+        if data.intersecs[i].countNumRoads () == 1:
+            endIntersec = SideIntersection (data, data.intersecs[i])
+            data.intersecs[i] = endIntersec 
+            print (99999098098098)
 ## here is a f'n to call
 def keyPressedC (event, data):
     if event.keysym == "Up":
@@ -119,6 +132,9 @@ def keyPressedC (event, data):
     if event.keysym == "space":
         # only starts the cars if we are go
         data.go = True 
+        replaceIntersections (data)
+        print (9)
+
     if event.keysym == "Return":
         #now need to create the road
         #make the start and end be in increasing order
@@ -133,6 +149,8 @@ def keyPressedC (event, data):
         createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
         createIntersection (data, data.tmpEndX, data.tmpEndY, "P", road)
         data.roads += [road]
+        data.tmpStartX = data.tmpEndX
+        data.tmpStartY = data.tmpEndY
     
 ## here is a f'n to call
 # this draws the road you are considering creating as you move your arrow keys along....

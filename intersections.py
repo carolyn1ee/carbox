@@ -17,6 +17,7 @@ class Intersection (Road):
         self.x = x
         self.y = y
         self.cycle = NSTime + EWTime + 2*data.yellowTime
+        
         #sometimes you don't want to start with NS being green. sometimes, want
         #to stagger the times 
         self.staggerTime = staggerTime
@@ -24,6 +25,9 @@ class Intersection (Road):
         self.carsWE = []
         self.carsNS = []
         self.carsSN = []
+        
+        self.lightEW = 0
+        self.lightNS = 0
     def changeLights (self, roadsList, light):
         for road in roadsList:
             #need to check which side of the road is in this intersection
@@ -38,21 +42,30 @@ class Intersection (Road):
     
     def checkLights (self, data):
         if self.timerIsNSecs (data, self.cycle, self.staggerTime):
+            self.lightNS = 1
+            self.lightEW = 0
             self.changeLights (self.roadsNS, 1)
             self.changeLights (self.roadsEW, 0)
             print ("NS")
         elif self.timerIsNSecs (data, self.cycle, self.NSTime + self.staggerTime):
+            self.lightNS = 2
+            self.lightEW = 0
             self.changeLights (self.roadsNS, 2)
             self.changeLights (self.roadsEW, 0)
         elif self.timerIsNSecs (data, self.cycle, data.yellowTime + \
                             self.NSTime + self.staggerTime):
+            self.lightNS = 0
+            self.lightEW = 1
             self.changeLights (self.roadsNS, 0)
             self.changeLights (self.roadsEW, 1)
             print ("EW")
         elif self.timerIsNSecs (data, self.cycle, self.EWTime + data.yellowTime + \
                             self.NSTime + self.staggerTime):
+            self.lightNS = 0
+            self.lightEW = 2
             self.changeLights (self.roadsNS, 0)
             self.changeLights (self.roadsEW, 2)
+            
     #handle cars coming thru the intersection:
         #takes cars that are coming into the intersection so that it can deal w/
     def pickUpCars (self, data):
@@ -137,7 +150,6 @@ class Intersection (Road):
     
             
     def timerFiredIntersec (self, data):
-        print ("timerFired for intersec")
         self.pickUpCars (data)
         self.dropOffCars(data)
         self.moveCars()
@@ -148,10 +160,12 @@ class Intersection (Road):
             #1) move cars
             #2) accelerate cars
             #3) once cars get out of intersection, send them to next intersection
+    def countNumRoads (self):
+        return len(self.roadsEW) + len (self.roadsNS)
             
     def __repr__ (self):
         return "(" + str(self.x) +"," + str(self.y) +"), light NS:" +str (self.lightNS) + \
-        "light EW" + str (self.lightEW)
+        "light EW" + str (self.lightEW) + str (self.roadsNS) +str(self.roadsEW)
 ##view
      #draws cars in the intersection   
     def drawIntersecCars (self, canvas):

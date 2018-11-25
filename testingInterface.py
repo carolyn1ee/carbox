@@ -20,7 +20,9 @@ def init(data):
     data.WECarRate = 3
     data.SNCarRate = 4
     data.roads = []
-    #intersecs is a dictionary with keys = tuple of intersection location and value = intersections. this way you can look up if an intersection already exists  
+    #intersecs is a dictionary with keys = tuple of intersection location and 
+    #value = intersections. this way you can look up if an intersection 
+    #already exists  
     data.intersecs = {}
 
     #drawing out your custom intersections
@@ -91,11 +93,11 @@ def keyPressed(event, data):
 
 def timerFired(data):
     data.t += 1
-    
     for road in data.roads:
         road.timerFiredRoad(data )
     for i in data.intersecs:
         data.intersecs[i].timerFiredIntersec (data)
+    
     
 
 def redrawAll(canvas, data):
@@ -107,7 +109,7 @@ def redrawAll(canvas, data):
     for road in data.roads:
         road.drawAllRoad(canvas, data)
     for i in data.intersecs:
-        print (data.intersecs[i])
+        # print (data.intersecs[i])
         data.intersecs[i].drawIntersecCars(canvas)
 
 

@@ -50,27 +50,33 @@ class Road (object):
         if dir == [0,1]:
             for car in self.carsListP:
                 if car.y < self.yP - data.intersecRad - car.buffer():
+                    print (car)
                     return car
         elif dir ==[0,-1]:
             for car in self.carsListN:
                 if car.y > self.yN + data.intersecRad + car.buffer():
+                    print (car)
                     return car
         elif dir == [-1,0]:
             for car in self.carsListN:
                 if car.x > self.xN + data.intersecRad + car.buffer():
+                    print (car)
                     return car
         elif dir == [1,0]:
             for car in self.carsListP:
                 if car.x < self.xP  - data.intersecRad - car.buffer():
+                    print (car) 
                     return car
-       
+#checks if it is close enough to the intersection to start to slow down the car
     def inSlowArea (self, data, car):
         if car == None:
             return False
         buffer = car.buffer()
         if self.dir == [0,1]:
+            print ("slowArea")
             return car.y > self.yP - buffer - data.intersecRad or \
                 car.y < self.yN + buffer + data.intersecRad
+                
         elif self.dir == [1,0]:
             return car.x > self.xP - buffer - data.intersecRad or \
                 car.x < self.xN + buffer + data.intersecRad
@@ -89,7 +95,7 @@ class Road (object):
                 self.frontCarN = self.frontOfQueue (data, [-1,0])
             if self.frontCarP == None:
                 self.frontCarP = self.frontOfQueue (data, [1,0])
-    #decelerate car front car if the light is red or yellow
+    #decelerate front car if the light is red or yellow
 # maybe you are messing up if you are not setting the front car before 
 #trying to slow down the front car (fix this by checking inSlowArea to make sure
 # your car isn't None.
@@ -183,13 +189,14 @@ class Road (object):
     def timerFiredRoad (self, data):
         self.moveCars()
         self.setFrontCar (data)
+        # print (self.frontCarN, self.frontCarP, end = "before")
         if self.lightN == 1:
             self.frontCarN = None
         if self.lightP == 1:
             self.frontCarP = None
         self.slowFrontIfYellRed (data)
         self.changeAccelCars ()
-    
+        # print (self.frontCarN, self.frontCarP)
         
         
 ##view functions

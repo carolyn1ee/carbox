@@ -24,6 +24,7 @@ class SideRoad (Road):
             if self.xP == data.width:
                 if self.timerIsNSecs (data, self.secsBtCars):
                     self.carInP(data, self.speedLimit)  
+    #allows it to always be green on the sides so the cars can leave
     def setExitLights (self, data):
         if self.dir == [0,1]:
             if self.yN == 0:
@@ -38,11 +39,13 @@ class SideRoad (Road):
             if self.xP == data.width:
                 if self.timerIsNSecs (data, self.secsBtCars):
                     self.lightP = 1
+        
 
     def timerFiredRoad (self, data):
         super().timerFiredRoad (data)
         if data.go:
             self.addCarsPeriodically (data)
+        self.setExitLights (data)
                                 
     def __repr__ (self):
          return "sideRoad start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir)
