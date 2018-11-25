@@ -2,7 +2,7 @@ from roads import *
 from sideRoads import *
 from intersections import *
 from sideIntersections import *
-
+from threeWayIntersec import *
 
 #has functions for all the things necessary to create your custom roads. so far we don't have intersections that can handle only 3 roads so that's lame but this file should allow you to 
 #click and begin a road
@@ -101,7 +101,9 @@ def replaceIntersections (data):
         if data.intersecs[i].countNumRoads () == 1:
             endIntersec = SideIntersection (data, data.intersecs[i])
             data.intersecs[i] = endIntersec 
-            #print (99999098098098)
+        if data.intersecs[i].countNumRoads () == 3:
+            threeInt = ThreeWyIntersec (data, data.intersecs[i])
+            data.intersecs [i] = threeInt
 ## here is a f'n to call
 def keyPressedC (event, data):
     if event.keysym == "Up":

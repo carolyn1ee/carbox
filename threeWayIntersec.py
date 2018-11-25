@@ -1,10 +1,16 @@
 #acts same as intersection but when it has cars, if there is no destination road, 
 #it sends the cars to one of the other roads. 
 from intersections import *
-
+import random
 class ThreeWyIntersec (Intersection):
-    def __init__(self, data, x, y, NSTime=7, EWTime=6, staggerTime=1, 
-    roadsNS=None, roadsEW=None):
+    def __init__(self, data, intersec):
+        x = intersec.x
+        y = intersec.y
+        NSTime = intersec.NSTime
+        EWTime = intersec.EWTime
+        staggerTime = intersec.staggerTime
+        roadsNS = intersec.roadsNS
+        roadsEW = intersec.roadsEW
         super().__init__ (data, x, y, NSTime, EWTime, staggerTime, roadsNS,
                                     roadsEW)
         if len(self.roadsNS) == 1:
@@ -20,12 +26,11 @@ class ThreeWyIntersec (Intersection):
     def pickUpCars (self, data):
         super().pickUpCars (data)
         #mebbe messed up bc tmpCar not defined -- make tmpCar into a data
-        #variable
-        if tmpCar != None:
+        if data.tmpCar != None:
             #if i picked up a car, make it decide which way it wants to turn 
-            tmpCar.t = random.randint (0, 2)
+            data.tmpCar.t = random.randint (0, 2)
             
-    def convertCar (car, dir):
+    def convertCar (self, car, dir):
         car.dir = dir
         if dir == [0,1]:
             imgFil = Car.carImgNS
@@ -59,46 +64,48 @@ class ThreeWyIntersec (Intersection):
                 if road[1] == "N":
                     #go up and drop off the car upwards. only the first car in this list would be far enough up to go out onto the next road
                     # 0 corresponds to going to the left 
-                    turningCar = self.carsListSN[0]
-                    if turningCar.t == 0:
-                        if turningCar.y < self.y - Car.width//2:
-                            convertCar (turningCar, [-1,0])
-                            for road in self.roadsEW:
-                                #need to find the road whose side is providing the left turn
-                                if road[1] == "P":
-                                    road[0].carsListN += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsSN.remove(turningCar)
-                    elif turningCar.t == 1:
-                        if turningCar.y < self.y + Car.width//2:
-                            convertCar (turningCar, [1,0])
-                            for road in self.roadsEW:
-                                #need to find the road whose side is providing the right turn
-                                if road[1] == "N":
-                                    road[0].carsListP += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsSN.remove(turningCar)
+                    if self.carsSN != []:
+                        turningCar = self.carsSN[0]
+                        if turningCar.t == 0:
+                            if turningCar.y < self.y - Car.width//2:
+                                convertCar (turningCar, [-1,0])
+                                for road in self.roadsEW:
+                                    #need to find the road whose side is providing the left turn
+                                    if road[1] == "P":
+                                        road[0].carsListN += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsSN.remove(turningCar)
+                        elif turningCar.t == 1:
+                            if turningCar.y < self.y + Car.width//2:
+                                convertCar (turningCar, [1,0])
+                                for road in self.roadsEW:
+                                    #need to find the road whose side is providing the right turn
+                                    if road[1] == "N":
+                                        road[0].carsListP += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsSN.remove(turningCar)
                 elif road[1] == "P":
                     #then the cars are going down so need to drop them off down
-                    turningCar = self.carsListNS[0]
-                    if turningCar.t == 0:
-                        if turningCar.y > self.y - Car.width//2:
-                            convertCar (turningCar, [-1,0])
-                            for road in self.roadsEW:
-                                #need to find the road whose side is providing the left turn
-                                if road[1] == "P":
-                                    road[0].carsListN += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsNS.remove(turningCar)
-                    elif turningCar.t == 1:
-                        if turningCar.y > self.y + Car.width//2:
-                            convertCar (turningCar, [1,0])
-                            for road in self.roadsEW:
-                                #need to find the road whose side is providing the right turn
-                                if road[1] == "N":
-                                    road[0].carsListP += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsNS.remove(turningCar)
+                    if self.carsNS != []:
+                        turningCar = self.carsNS[0]
+                        if turningCar.t == 0:
+                            if turningCar.y > self.y - Car.width//2:
+                                convertCar (turningCar, [-1,0])
+                                for road in self.roadsEW:
+                                    #need to find the road whose side is providing the left turn
+                                    if road[1] == "P":
+                                        road[0].carsListN += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsNS.remove(turningCar)
+                        elif turningCar.t == 1:
+                            if turningCar.y > self.y + Car.width//2:
+                                convertCar (turningCar, [1,0])
+                                for road in self.roadsEW:
+                                    #need to find the road whose side is providing the right turn
+                                    if road[1] == "N":
+                                        road[0].carsListP += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsNS.remove(turningCar)
                         
         for road in self.roadsEW:
             if not road is self.lonelyRoad:
@@ -108,6 +115,7 @@ class ThreeWyIntersec (Intersection):
                             road[0].carsListP.append (car)
                             road[0].carsListP[-1].speedMax = road[0].speedLimit                                                        
                             self.carsWE.remove(car)
+                            print (9999999999999999999)
                 if road [1] == "P":
                     for car in self.carsEW:
                         if car.x <= -data.intersecRad + self.x:
@@ -118,46 +126,48 @@ class ThreeWyIntersec (Intersection):
                 if road[1] == "N":
                     #going left
                     # 0 corresponds to going to the up 
-                    turningCar = self.carsListEW[0]
-                    if turningCar.t == 0:
-                        if turningCar.x < self.x + Car.width//2:
-                            convertCar (turningCar, [0,-1])
-                            for road in self.roadsNS:
-                                #need to find the road whose side is providing the up turn
-                                if road[1] == "P":
-                                    road[0].carsListN += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsEW.remove(turningCar)
-                    elif turningCar.t == 1:
-                        if turningCar.y < self.x - Car.width//2:
-                            convertCar (turningCar, [0,1])
-                            for road in self.roadsNS:
-                                #need to find the road whose side is providing the right turn
-                                if road[1] == "N":
-                                    road[0].carsListP += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsEW.remove(turningCar)
+                    if self.carsEW != []:
+                        turningCar = self.carsEW[0]
+                        if turningCar.t == 0:
+                            if turningCar.x < self.x + Car.width//2:
+                                self.convertCar (turningCar, [0,-1])
+                                for road in self.roadsNS:
+                                    #need to find the road whose side is providing the up turn
+                                    if road[1] == "P":
+                                        road[0].carsListN += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsEW.remove(turningCar)
+                        elif turningCar.t == 1:
+                            if turningCar.y < self.x - Car.width//2:
+                                self.convertCar (turningCar, [0,1])
+                                for road in self.roadsNS:
+                                    #need to find the road whose side is providing the right turn
+                                    if road[1] == "N":
+                                        road[0].carsListP += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsEW.remove(turningCar)
                 elif road[1] == "P":
                     #then the cars are going down so need to drop them off down
-                    turningCar = self.carsListWE[0]
-                    if turningCar.t == 0:
-                        if turningCar.y > self.y + Car.width//2:
-                            convertCar (turningCar, [0,-1])
-                            for road in self.roadsNS:
-                                #need to find the road whose side is providing the left turn
-                                if road[1] == "P":
-                                    road[0].carsListN += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsWE.remove(turningCar)
-                    elif turningCar.t == 1:
-                        if turningCar.y > self.y - Car.width//2:
-                            convertCar (turningCar, [0,1])
-                            for road in self.roadsNS:
-                                #need to find the road whose side is providing the right turn
-                                if road[1] == "N":
-                                    road[0].carsListP += [turningCar]
-                                    turningCar.speedMax = road[0].speedLimit
-                                    self.carsWE.remove(turningCar)
+                    if self.carsWE != []:
+                        turningCar = self.carsWE[0]
+                        if turningCar.t == 0:
+                            if turningCar.y > self.y + Car.width//2:
+                                self.convertCar (turningCar, [0,-1])
+                                for road in self.roadsNS:
+                                    #need to find the road whose side is providing the left turn
+                                    if road[1] == "P":
+                                        road[0].carsListN += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsWE.remove(turningCar)
+                        elif turningCar.t == 1:
+                            if turningCar.y > self.y - Car.width//2:
+                                self.convertCar (turningCar, [0,1])
+                                for road in self.roadsNS:
+                                    #need to find the road whose side is providing the right turn
+                                    if road[1] == "N":
+                                        road[0].carsListP += [turningCar]
+                                        turningCar.speedMax = road[0].speedLimit
+                                        self.carsWE.remove(turningCar)
                 
                 
                 
