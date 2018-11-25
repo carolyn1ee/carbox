@@ -15,7 +15,8 @@ class Car(object):
     width = 20
     
     #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
-    def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = 1, decel = 1):
+    #t is the random variable that will store which direction this car decides to turn if it gets into an intersection.
+    def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = 1, decel = 1, t = None):
         self.speedMax = speedLimit
         self.curSpeed = curSpeed
         self.dir = direction
@@ -36,6 +37,7 @@ class Car(object):
         #EW
         elif self.dir == [-1, 0]:
             self.img = PhotoImage(file=Car.carImgEW)
+        self.t = t
         
 
     

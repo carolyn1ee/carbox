@@ -1,6 +1,6 @@
 from intersections import *
 # almost exactly the same as the intersection you are replacing but it kills
-# the cars as the go off screen
+# the cars as the go off screen and keeps the light green 
 class SideIntersection (Intersection):
     def __init__(self, data, intersec):
         x = intersec.x

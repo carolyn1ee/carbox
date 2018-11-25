@@ -28,3 +28,5 @@ class SimpleApp(object):
 root = tk.Tk()
 app = SimpleApp(root, 'imgs/imageCarWE.gif')
 root.mainloop()
+
+# https://stackoverflow.com/questions/15736530/python-tkinter-rotate-image-animation

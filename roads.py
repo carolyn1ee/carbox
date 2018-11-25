@@ -177,7 +177,7 @@ class Road (object):
         #vert
         if self.dir == [0,1]:
             carDir = [0,-1]
-            carX = self.xN + Car.width
+            carX = self.xN + Car.width//2
             carY = self.yP - data.intersecRad
         #hor
         elif self.dir == [1,0]:
@@ -197,7 +197,7 @@ class Road (object):
         #hor
         elif self.dir == [1,0]:
             carDir = [1,0]
-            carY = self.yN + Car.width
+            carY = self.yN + Car.width//2
             carX = self.xN + data.intersecRad
         car = Car (data, self.speedLimit, curSpeed, carDir, carX, carY)
         self.carsListP += [car]
