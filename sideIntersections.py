@@ -31,3 +31,10 @@ class SideIntersection (Intersection):
                 tmpCar = road[0].carOutN(data)
                 if tmpCar != None:
                     road[0].carsListN.remove (tmpCar)
+    # just makes all the lights on the side green so the cars can just flow out
+    def checkLights (self, data):
+        self.lightNS = 1
+        self.lightEW = 1
+        for roadList in [self.roadsNS, self.roadsEW]:
+            self.changeLights (roadList, 1)
+

@@ -116,6 +116,7 @@ class Intersection (Road):
                         road[0].carsListP.append (car)
                         road[0].carsListP[-1].speedMax = road[0].speedLimit
                         self.carsNS.remove(car)
+                        print ("a")
             #going up : drop off in P
             if road [1] == "P":
                 for car in self.carsSN:
@@ -123,6 +124,7 @@ class Intersection (Road):
                         road[0].carsListN.append (car)
                         road[0].carsListN[-1].speedMax = road[0].speedLimit
                         self.carsSN.remove(car)
+                        print ("b")
         for road in self.roadsEW:
             if road[1] =="N":
                 for car in self.carsWE:
@@ -130,12 +132,14 @@ class Intersection (Road):
                         road[0].carsListP.append (car)
                         road[0].carsListP[-1].speedMax = road[0].speedLimit                                                        
                         self.carsWE.remove(car)
+                        print ("c")
             if road [1] == "P":
                 for car in self.carsEW:
                     if car.x <= -data.intersecRad + self.x:
                         road[0].carsListN.append (car)
                         road[0].carsListN[-1].speedMax = road[0].speedLimit
                         self.carsEW.remove(car)
+                        print ("d")
                 
     def moveCars (self):
         for carsList in [self.carsEW, self.carsNS, self.carsSN, self.carsWE]:
@@ -182,6 +186,7 @@ class Intersection (Road):
     def drawIntersecCars (self, canvas):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
+                print ("intersec has a car")
                 car.draw(canvas)
                 #draw oval on cars in intersection for debugging purposes
                 canvas.create_oval (car.x-20, car.y-20, car.x +20, car.y+20, fill = "yellow")

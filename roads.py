@@ -74,15 +74,22 @@ class Road (object):
         if car == None:
             return False
         buffer = car.buffer()
-        if self.dir == [0,1]:
-            print (car.y > self.yP - buffer - data.intersecRad or \
-                car.y < self.yN + buffer + data.intersecRad)
-            return car.y > self.yP - buffer - data.intersecRad or \
-                car.y < self.yN + buffer + data.intersecRad
-                
-        elif self.dir == [1,0]:
-            return car.x > self.xP - buffer - data.intersecRad or \
-                car.x < self.xN + buffer + data.intersecRad
+        if car.dir == [0,1]:
+            # print (self.yP -buffer - data.intersecRad)
+            return car.y > self.yP -buffer - data.intersecRad
+        elif car.dir == [0,-1]:
+            return car.y < self.yN + buffer + data.intersecRad
+        elif car.dir == [1, 0]:
+            return car.x > self.xP - buffer - data.intersecRad
+        elif car.dir == [-1,0]:
+            return car.x < self.xN +buffer +data.intersecRad
+        # if self.dir == [0,1]:
+        #     print (car.y > self.yP - car.dir[1]*buffer - car.dir[1]*data.intersecRad)
+        #     return car.y > self.yP - car.dir[1]*buffer - car.dir[1]*data.intersecRad
+        #         
+        # elif self.dir == [1,0]:
+        #     return car.x > self.xP - buffer - data.intersecRad or \
+        #         car.x < self.xN + buffer + data.intersecRad
 
 #control cars
     def setFrontCar(self, data):
@@ -145,20 +152,25 @@ class Road (object):
             #vert road case
             if self.dir == [0,1]:
                 if self.carsListN[0].y < self.yN + data.intersecRad:
+                    print ((99999999999999999999999999))
                     return self.carsListN[0]
             #hor road case
-            else:
+            elif self.dir == [1,0]:
                 if self.carsListN[0].x < self.xN + data.intersecRad:
+                    print (7777777777777777777777777,  self)
+                    #########where did you get a car?!?!??!
                     return self.carsListN[0]
     def carOutP (self, data):
         if self.carsListP != []:
             #vert road case
             if self.dir == [0,1]:
                 if self.carsListP[0].y > self.yP - data.intersecRad:
+                    print (00000000000000000)
                     return self.carsListP[0] 
             #hor road case
             else:
                 if self.carsListP[0].x > self.xP - data.intersecRad:
+                    print (666666666666666)
                     return self.carsListP[0]
     #add a car into the road going from P to N (ie a negative car) but it is
     # entering the positive side of the road.
@@ -175,6 +187,7 @@ class Road (object):
             carX = self.xP - data.intersecRad
         car = Car (data, self.speedLimit, curSpeed, carDir, carX, carY)
         self.carsListN += [car]
+        print ("good grief", self)
         
     def carInN (self, data, curSpeed):
         #vert
@@ -200,7 +213,7 @@ class Road (object):
             self.decelN = False
         if self.lightP == 1:
             self.frontCarP = None
-            self.decelN = False
+            self.decelP = False
         self.slowFrontIfYellRed (data)
         self.changeAccelCars ()
         # print (self.frontCarN, self.frontCarP)
