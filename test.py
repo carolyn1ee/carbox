@@ -101,10 +101,10 @@ def redrawAll(canvas, data):
     canvas.create_rectangle(0, 0, data.width, data.height,
                                 fill='black', width=0)
     #canvas.create_rectangle (data.road.xF, data.road.yF, data.road.xF +10, data.road.yF +10, fill = "white")
+    
+    data.intersection.drawAllIntersec(data, canvas)
     for road in [data.road, data.road2, data.road3, data.road4]:
         road.drawAllRoad(canvas, data)
-    data.intersection.drawIntersecCars(canvas)
-
 ####################################
 # use the run function as-is
 ####################################

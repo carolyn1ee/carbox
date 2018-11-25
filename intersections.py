@@ -82,26 +82,26 @@ class Intersection (Road):
     def pickUpCars (self, data):
         for road in self.roadsNS:
             if road [1] == "P":
-                if road[0].lightP == 1:
+                if road[0].lightP == 1 or road [0].lightP == 2:
                     tmpCar = road[0].carOutP(data)
                     if tmpCar != None:
                         self.carsNS += [tmpCar]
                         road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
-                if road[0].lightN == 1:
+                if road[0].lightN == 1 or road [0].lightN == 2:
                     tmpCar = road[0].carOutN(data)
                     if tmpCar != None:
                         self.carsSN += [tmpCar]
                         road[0].carsListN.remove (tmpCar)
         for road in self.roadsEW:
             if road [1] == "P":
-                if road[0].lightP == 1:
+                if road[0].lightP == 1 or road [0].lightP == 2:
                     tmpCar = road[0].carOutP(data)
                     if tmpCar != None:
                         self.carsWE += [tmpCar]
                         road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
-                if road[0].lightN == 1:
+                if road[0].lightN == 1 or road [0].lightN == 2:
                     tmpCar = road[0].carOutN(data)
                     if tmpCar != None:
                         self.carsEW += [tmpCar]

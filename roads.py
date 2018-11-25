@@ -75,7 +75,8 @@ class Road (object):
             return False
         buffer = car.buffer()
         if self.dir == [0,1]:
-            #print ("slowArea")
+            print (car.y > self.yP - buffer - data.intersecRad or \
+                car.y < self.yN + buffer + data.intersecRad)
             return car.y > self.yP - buffer - data.intersecRad or \
                 car.y < self.yN + buffer + data.intersecRad
                 
@@ -153,11 +154,11 @@ class Road (object):
         if self.carsListP != []:
             #vert road case
             if self.dir == [0,1]:
-                if self.carsListP[0].y > self.yN - data.intersecRad:
+                if self.carsListP[0].y > self.yP - data.intersecRad:
                     return self.carsListP[0] 
             #hor road case
             else:
-                if self.carsListP[0].x > self.xN - data.intersecRad:
+                if self.carsListP[0].x > self.xP - data.intersecRad:
                     return self.carsListP[0]
     #add a car into the road going from P to N (ie a negative car) but it is
     # entering the positive side of the road.
@@ -241,6 +242,7 @@ class Road (object):
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)
         self.drawCars (canvas, data)
+        canvas.create_text (self.xN, self.yN - data.intersecRad, text = "I", fill = "green", font=("Courier", 44))
 
 ##
    

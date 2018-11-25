@@ -14,16 +14,16 @@ class SideRoad (Road):
             if self.yN == 0:
                 if self.timerIsNSecs (data, self.secsBtCars):
                     self.carInN(data, self.speedLimit)
-            if self.yP == data.height:
-                if self.timerIsNSecs (data, self.secsBtCars):
-                    self.carInP(data, self.speedLimit)
-        if self.dir == [1,0]:
-            if self.xN == 0:
-                if self.timerIsNSecs (data, self.secsBtCars):
-                    self.carInN(data, self.speedLimit)
-            if self.xP == data.width:
-                if self.timerIsNSecs (data, self.secsBtCars):
-                    self.carInP(data, self.speedLimit)  
+        #     if self.yP == data.height:
+        #         if self.timerIsNSecs (data, self.secsBtCars):
+        #             self.carInP(data, self.speedLimit)
+        # if self.dir == [1,0]:
+        #     if self.xN == 0:
+        #         if self.timerIsNSecs (data, self.secsBtCars):
+        #             self.carInN(data, self.speedLimit)
+        #     if self.xP == data.width:
+        #         if self.timerIsNSecs (data, self.secsBtCars):
+        #             self.carInP(data, self.speedLimit)  
     #allows it to always be green on the sides so the cars can leave
     def setExitLights (self, data):
         if self.dir == [0,1]:
