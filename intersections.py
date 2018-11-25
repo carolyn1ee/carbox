@@ -3,15 +3,21 @@ from roads import *
         # has a list of the roads that run thru it and can control what cars go thru for each intersection. just makes all the parallel ones go simultaneously. if it is not 4way then teh roads can handle moving the cars right or left. otherwise, the cars are only going to go straight.
         
         # there are only 1 or 2 roads in roadsNS or roads EW....
-        #roadsNS is a list of lists where the first element of the list is the road and the second element is which side of the road is in this intersection (P[ositive] or N[egative])
+        
         
         # needs to handle the cars that are going through the intersection: picks them up as they enter intersection and then drops them off as they go into next road.
 class Intersection (Road):
     #optimizer will change the time for the lights
-    def __init__(self, data, x, y, NSTime=7, EWTime=6, staggerTime=1, roadsNS=[],
-                                    roadsEW=[]):
+    def __init__(self, data, x, y, NSTime=7, EWTime=6, staggerTime=1, roadsNS=None,
+                                        roadsEW=None):
+                                            
+        #roadsNS is a list of lists where the first element of the list is the road and the second element is which side of the road is in this intersection (P[ositive] or N[egative])
         self.roadsNS = roadsNS
         self.roadsEW = roadsEW
+        if self.roadsNS == None:
+            self.roadsNS = []
+        if self.roadsEW == None:
+            self.roadsEW =[]
         self.NSTime = NSTime
         self.EWTime = EWTime
         self.x = x
@@ -186,7 +192,6 @@ class Intersection (Road):
     def drawIntersecCars (self, canvas):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
-                print ("intersec has a car")
                 car.draw(canvas)
                 #draw oval on cars in intersection for debugging purposes
                 canvas.create_oval (car.x-20, car.y-20, car.x +20, car.y+20, fill = "yellow")

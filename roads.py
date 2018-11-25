@@ -12,7 +12,7 @@ class Road (object):
     #direction can be either [1,0] or [0,1] for whether or not it runs from vert
     #or hor.
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                    carsListN=[], carsListP=[], speedLimit=5):
+                    carsListN=None, carsListP=None, speedLimit=5):
         #location:
         self.xN = xN
         self.yN = yN
@@ -22,6 +22,10 @@ class Road (object):
         #cars inside
         self.carsListN = carsListN
         self.carsListP = carsListP
+        if self.carsListN == None:
+            self.carsListN = []
+        if self.carsListP == None:
+            self.carsListP =[]
         #view
         self.ylowStripsLen = 10
         self.length = ((xN-xP)**2 + (yN-yP)**2)**.5
@@ -152,25 +156,20 @@ class Road (object):
             #vert road case
             if self.dir == [0,1]:
                 if self.carsListN[0].y < self.yN + data.intersecRad:
-                    print ((99999999999999999999999999))
                     return self.carsListN[0]
             #hor road case
             elif self.dir == [1,0]:
                 if self.carsListN[0].x < self.xN + data.intersecRad:
-                    print (7777777777777777777777777,  self)
-                    #########where did you get a car?!?!??!
                     return self.carsListN[0]
     def carOutP (self, data):
         if self.carsListP != []:
             #vert road case
             if self.dir == [0,1]:
                 if self.carsListP[0].y > self.yP - data.intersecRad:
-                    print (00000000000000000)
                     return self.carsListP[0] 
             #hor road case
             else:
                 if self.carsListP[0].x > self.xP - data.intersecRad:
-                    print (666666666666666)
                     return self.carsListP[0]
     #add a car into the road going from P to N (ie a negative car) but it is
     # entering the positive side of the road.
@@ -187,7 +186,7 @@ class Road (object):
             carX = self.xP - data.intersecRad
         car = Car (data, self.speedLimit, curSpeed, carDir, carX, carY)
         self.carsListN += [car]
-        print ("good grief", self)
+        print ("good grief", self, self.carsListN)
         
     def carInN (self, data, curSpeed):
         #vert

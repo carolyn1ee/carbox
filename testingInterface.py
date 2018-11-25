@@ -35,12 +35,12 @@ def init(data):
     data.go = False
     
     ##this is prob obsolete
-    #set car lists
-    data.carsSN = []
-    data.carsWE = []
-    data.carsNS = []
-    data.carsEW = []
-    data.allCars = [data.carsSN, data.carsNS, data.carsEW, data.carsWE]
+    # # #set car lists
+    # # data.carsSN = []
+    # # data.carsWE = []
+    # # data.carsNS = []
+    # # data.carsEW = []
+    # # data.allCars = [data.carsSN, data.carsNS, data.carsEW, data.carsWE]
     
     #intersection:
     #green light means 1 and red light means 0
@@ -97,7 +97,9 @@ def timerFired(data):
         road.timerFiredRoad(data )
     for i in data.intersecs:
         data.intersecs[i].timerFiredIntersec (data)
-    
+    # for a in range (len(data.roads)):
+    #     for b in range(a+1, len(data.roads)):
+    #         print( data.roads[a].carsListN is data.roads[b].carsListN, data.roads[a], data.roads[b])
     
 
 def redrawAll(canvas, data):

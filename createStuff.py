@@ -146,11 +146,20 @@ def keyPressedC (event, data):
         # need to make sure that the road isn't trivial
        # if data.tmpStartX - data.tmpEndX == data.tmpStartY - data.tmpEndY:
         road = createRoad (data)
+        print  (road.carsListN)
         createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
         createIntersection (data, data.tmpEndX, data.tmpEndY, "P", road)
         data.roads += [road]
         data.tmpStartX = data.tmpEndX
         data.tmpStartY = data.tmpEndY
+        #for checking the aliasing:
+    # if event.keysym == "p":
+    #     for road in data.roads:
+    #         print  (road.carsListN)
+    #     data.roads[0].carsListN += [1]
+    #     for road in data.roads:
+    #         print  (road.carsListN)
+
     
 ## here is a f'n to call
 # this draws the road you are considering creating as you move your arrow keys along....

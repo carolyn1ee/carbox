@@ -1,5 +1,5 @@
 # Updated Animation Starter Code
-
+#this test is a hardcoded test of the roads that are no longer hard coded
 from createStuff import *
 from tkinter import *
 from PIL import ImageTk,Image  
