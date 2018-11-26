@@ -186,7 +186,6 @@ class Road (object):
             carX = self.xP - data.intersecRad
         car = Car (data, self.speedLimit, curSpeed, carDir, carX, carY)
         self.carsListN += [car]
-        print ("good grief", self, self.carsListN)
         
     def carInN (self, data, curSpeed):
         #vert
@@ -254,7 +253,7 @@ class Road (object):
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)
         self.drawCars (canvas, data)
-        canvas.create_text (self.xN, self.yN - data.intersecRad, text = "I", fill = "green", font=("Courier", 44))
+        
 
 ##
    

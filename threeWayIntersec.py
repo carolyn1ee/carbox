@@ -19,6 +19,7 @@ class ThreeWyIntersec (Intersection):
             duoRoads = self.roadsEW
         if len(self.roadsEW) == 1:
             self.lonelyRoad = roadsEW[0]
+            print (self.lonelyRoad)
             #duoRoads is the list of roads that have a road that is straight
             #across.
             duoRoads = self.roadsNS
@@ -28,7 +29,7 @@ class ThreeWyIntersec (Intersection):
         #mebbe messed up bc tmpCar not defined -- make tmpCar into a data
         if data.tmpCar != None:
             #if i picked up a car, make it decide which way it wants to turn 
-            data.tmpCar.t = random.randint (0, 2)
+            data.tmpCar.t = random.randint (0, 1)
             
     def convertCar (self, car, dir):
         car.dir = dir
@@ -67,8 +68,8 @@ class ThreeWyIntersec (Intersection):
                     if self.carsSN != []:
                         turningCar = self.carsSN[0]
                         if turningCar.t == 0:
-                            if turningCar.y < self.y - Car.width//2:
-                                convertCar (turningCar, [-1,0])
+                            if turningCar.y <= self.y - Car.width//2:
+                                self.convertCar (turningCar, [-1,0])
                                 for road in self.roadsEW:
                                     #need to find the road whose side is providing the left turn
                                     if road[1] == "P":
@@ -76,8 +77,8 @@ class ThreeWyIntersec (Intersection):
                                         turningCar.speedMax = road[0].speedLimit
                                         self.carsSN.remove(turningCar)
                         elif turningCar.t == 1:
-                            if turningCar.y < self.y + Car.width//2:
-                                convertCar (turningCar, [1,0])
+                            if turningCar.y <= self.y + Car.width//2:
+                                self.convertCar (turningCar, [1,0])
                                 for road in self.roadsEW:
                                     #need to find the road whose side is providing the right turn
                                     if road[1] == "N":
@@ -89,8 +90,8 @@ class ThreeWyIntersec (Intersection):
                     if self.carsNS != []:
                         turningCar = self.carsNS[0]
                         if turningCar.t == 0:
-                            if turningCar.y > self.y - Car.width//2:
-                                convertCar (turningCar, [-1,0])
+                            if turningCar.y >= self.y - Car.width//2:
+                                self.convertCar (turningCar, [-1,0])
                                 for road in self.roadsEW:
                                     #need to find the road whose side is providing the left turn
                                     if road[1] == "P":
@@ -98,8 +99,8 @@ class ThreeWyIntersec (Intersection):
                                         turningCar.speedMax = road[0].speedLimit
                                         self.carsNS.remove(turningCar)
                         elif turningCar.t == 1:
-                            if turningCar.y > self.y + Car.width//2:
-                                convertCar (turningCar, [1,0])
+                            if turningCar.y >= self.y + Car.width//2:
+                                self.convertCar (turningCar, [1,0])
                                 for road in self.roadsEW:
                                     #need to find the road whose side is providing the right turn
                                     if road[1] == "N":
@@ -125,11 +126,12 @@ class ThreeWyIntersec (Intersection):
             elif road is self.lonelyRoad:
                 if road[1] == "N":
                     #going left
-                    # 0 corresponds to going to the up 
+                    # 0 corresponds to going to the up
+                    
                     if self.carsEW != []:
                         turningCar = self.carsEW[0]
                         if turningCar.t == 0:
-                            if turningCar.x < self.x + Car.width//2:
+                            if turningCar.x <= self.x + Car.width//2:
                                 self.convertCar (turningCar, [0,-1])
                                 for road in self.roadsNS:
                                     #need to find the road whose side is providing the up turn
@@ -138,7 +140,7 @@ class ThreeWyIntersec (Intersection):
                                         turningCar.speedMax = road[0].speedLimit
                                         self.carsEW.remove(turningCar)
                         elif turningCar.t == 1:
-                            if turningCar.y < self.x - Car.width//2:
+                            if turningCar.x <= self.x - Car.width//2:
                                 self.convertCar (turningCar, [0,1])
                                 for road in self.roadsNS:
                                     #need to find the road whose side is providing the right turn
@@ -150,8 +152,9 @@ class ThreeWyIntersec (Intersection):
                     #then the cars are going down so need to drop them off down
                     if self.carsWE != []:
                         turningCar = self.carsWE[0]
+                        print (turningCar, turningCar.t)
                         if turningCar.t == 0:
-                            if turningCar.y > self.y + Car.width//2:
+                            if turningCar.x >= self.x + Car.width//2:
                                 self.convertCar (turningCar, [0,-1])
                                 for road in self.roadsNS:
                                     #need to find the road whose side is providing the left turn
@@ -160,7 +163,7 @@ class ThreeWyIntersec (Intersection):
                                         turningCar.speedMax = road[0].speedLimit
                                         self.carsWE.remove(turningCar)
                         elif turningCar.t == 1:
-                            if turningCar.y > self.y - Car.width//2:
+                            if turningCar.x >= self.x - Car.width//2:
                                 self.convertCar (turningCar, [0,1])
                                 for road in self.roadsNS:
                                     #need to find the road whose side is providing the right turn

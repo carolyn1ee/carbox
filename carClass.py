@@ -54,9 +54,9 @@ class Car(object):
         self.y == other.y and self.accel == other.accel and self.decel == \
         other.decel
     
-    # def __repr__ (self):
-    #     return str(self.dir) + "location: (" + str (self.x) + ", " + \
-    #         str (self.y) +")" + "speed:" + str (self.curSpeed)
+    def __repr__ (self):
+        return str(self.dir) + "location: (" + str (self.x) + ", " + \
+            str (self.y) +")" + "speed:" + str (self.curSpeed)
     def move (self):
         self.x += self.curSpeed * self.dir[0]
         self.y += self.curSpeed * self.dir[1]

@@ -37,4 +37,8 @@ class SideIntersection (Intersection):
         self.lightEW = 1
         for roadList in [self.roadsNS, self.roadsEW]:
             self.changeLights (roadList, 1)
-
+    def drawLightNS (self,data, canvas):
+        pass
+    def drawLightEW (self, data, canvas):    
+        pass
+        

@@ -148,7 +148,6 @@ def keyPressedC (event, data):
         # need to make sure that the road isn't trivial
        # if data.tmpStartX - data.tmpEndX == data.tmpStartY - data.tmpEndY:
         road = createRoad (data)
-        print  (road.carsListN)
         createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
         createIntersection (data, data.tmpEndX, data.tmpEndY, "P", road)
         data.roads += [road]

@@ -33,6 +33,7 @@ def init(data):
     data.tmpEndY = data.tmpStartY
     #only start when user done with drawing when they press space
     data.go = False
+    data.tmpDir = None
     
     ##this is prob obsolete
     # # #set car lists
