@@ -19,7 +19,6 @@ class ThreeWyIntersec (Intersection):
             duoRoads = self.roadsEW
         if len(self.roadsEW) == 1:
             self.lonelyRoad = roadsEW[0]
-            print (self.lonelyRoad)
             #duoRoads is the list of roads that have a road that is straight
             #across.
             duoRoads = self.roadsNS
@@ -116,7 +115,6 @@ class ThreeWyIntersec (Intersection):
                             road[0].carsListP.append (car)
                             road[0].carsListP[-1].speedMax = road[0].speedLimit                                                        
                             self.carsWE.remove(car)
-                            print (9999999999999999999)
                 if road [1] == "P":
                     for car in self.carsEW:
                         if car.x <= -data.intersecRad + self.x:
@@ -152,7 +150,6 @@ class ThreeWyIntersec (Intersection):
                     #then the cars are going down so need to drop them off down
                     if self.carsWE != []:
                         turningCar = self.carsWE[0]
-                        print (turningCar, turningCar.t)
                         if turningCar.t == 0:
                             if turningCar.x >= self.x + Car.width//2:
                                 self.convertCar (turningCar, [0,-1])
@@ -171,10 +168,6 @@ class ThreeWyIntersec (Intersection):
                                         road[0].carsListP += [turningCar]
                                         turningCar.speedMax = road[0].speedLimit
                                         self.carsWE.remove(turningCar)
-                
-                
-                
-                
                 
     def __repr__ (self):
         return "threeWay " + super().__repr__()

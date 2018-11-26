@@ -42,7 +42,6 @@ class Intersection (Road):
                 #look at this for debugging: the number of times the
                 # lights are being changed isn't correct -- that is prob why 
                 #the cars aren't able to go thru.
-                #print(9)
             elif road [1] == "N":
                 road[0].lightN = light
     
@@ -52,7 +51,6 @@ class Intersection (Road):
             self.lightEW = 0
             self.changeLights (self.roadsNS, 1)
             self.changeLights (self.roadsEW, 0)
-            #print ("NS")
         elif self.timerIsNSecs (data, self.cycle, self.NSTime + self.staggerTime):
             self.lightNS = 2
             self.lightEW = 0
@@ -64,7 +62,6 @@ class Intersection (Road):
             self.lightEW = 1
             self.changeLights (self.roadsNS, 0)
             self.changeLights (self.roadsEW, 1)
-            #print ("EW")
         elif self.timerIsNSecs (data, self.cycle, (self.EWTime + data.yellowTime + \
                             self.NSTime + self.staggerTime) % self.cycle):
             self.lightNS = 0
@@ -189,8 +186,6 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-                #draw oval on cars in intersection for debugging purposes
-                canvas.create_oval (car.x-20, car.y-20, car.x +20, car.y+20, fill = "yellow")
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)
         self.drawLightEW (data, canvas)

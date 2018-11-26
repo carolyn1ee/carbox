@@ -2,8 +2,6 @@ import random
 from tkinter import *
 from image_util import *
 from PIL import ImageTk,Image  
-
-
     
 class Car(object): 
     #cite: syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python and from course website
@@ -39,13 +37,12 @@ class Car(object):
             self.img = PhotoImage(file=Car.carImgEW)
         self.t = t
         
+        self.startTime = None
+        self.totalTime = 0
 
-    
-    
+        
     def draw (self, canvas):
         canvas.create_image(self.x, self.y, anchor = CENTER, image=self.img)  
-    def drawSpesh (self, canvas):
-        canvas.create_oval(self.x - Car.width, self.y-Car.width, self.x+Car.width, self.y +Car.width, fill = "white")  
 
     #checks all attributes are the same
     def __eq__ (self, other):
@@ -67,6 +64,15 @@ class Car(object):
         else:
             self.curSpeed = 0
     #makes the car's speed increase up until the max speed
+    
+    def keepTrackOfTime (self, timer):
+        if self.startTime == None and self.curSpeed == 0:
+            self.startTime = timer
+        elif self.curSpeed != 0 and self.startTime != None:
+            self.totalTime += timer - self.startTime
+            self.startTime = None
+            
+            
     def acceler (self):
         if self.curSpeed <= self.speedMax - self.accel:
             self.curSpeed +=  self.accel

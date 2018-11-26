@@ -1,5 +1,5 @@
 # Updated Animation Starter Code
-
+import time
 from createStuff import *
 from tkinter import *
 from PIL import ImageTk,Image  
@@ -68,51 +68,31 @@ def init(data):
     
     data.intersecRad = 40
     
-    # 
-    # data.road = SideRoad (data, dir = [0,1], xN = data.width//2,\
-    #     yN = data.height//2, xP = data.width//2, yP = data.height, 
-    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 2)
-    # data.road2 = SideRoad (data, dir = [0,1], xN = data.width//2,\
-    #     yN = 0, xP = data.width//2, yP = data.height//2, 
-    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 4)
-    # data.road3 = SideRoad (data, dir = [1,0], xN = 0,\
-    #     yN = data.height//2, xP = data.width//2, yP = data.height//2, 
-    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 5)
-    # data.road4 = SideRoad (data, dir = [1,0], xN =data.width//2,\
-    #     yN = data.height//2, xP = data.width, yP = data.height//2, 
-    #     carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 7)
-    # data.intersection = Intersection(data, roadsNS = [[data.road , "N"], [data.road2, "P"]], roadsEW = [[data.road3, "P"], [data.road4, "N"]], x = data.width//2, y = data.height // 2, NSTime = 3, EWTime = 2, staggerTime = 1)
-    
-    
-
-    
 def mousePressed(event, data):
     mousePressedC (event, data)
 
 def keyPressed(event, data):
     keyPressedC (event, data)
+    if event.keysym == "d":
+        print (SideIntersection.totalTimeWaiting)
+        print (SideIntersection.totalCars)
 
 def timerFired(data):
     data.t += 1
     for road in data.roads:
-        road.timerFiredRoad(data )
+        road.timerFiredRoad(data, time.time())
     for i in data.intersecs:
         data.intersecs[i].timerFiredIntersec (data)
-    # for a in range (len(data.roads)):
-    #     for b in range(a+1, len(data.roads)):
-    #         print( data.roads[a].carsListN is data.roads[b].carsListN, data.roads[a], data.roads[b])
     
 
 def redrawAll(canvas, data):
     
     canvas.create_rectangle(0, 0, data.width, data.height,
                                 fill='black', width=0)
-    #canvas.create_rectangle (data.road.xF, data.road.yF, data.road.xF +10, data.road.yF +10, fill = "white")
     drawTmp (canvas, data)
     for road in data.roads:
         road.drawAllRoad(canvas, data)
     for i in data.intersecs:
-        # print (data.intersecs[i])
         data.intersecs[i].drawAllIntersec(data, canvas)
 
 
