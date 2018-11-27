@@ -32,7 +32,7 @@ class Intersection (Road):
         self.carsNS = []
         self.carsSN = []
         
-        self.lightEW = 0
+        self.lightEW = 1
         self.lightNS = 0
     def changeLights (self, roadsList, light):
         for road in roadsList:

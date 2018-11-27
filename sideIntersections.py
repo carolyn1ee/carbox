@@ -21,14 +21,12 @@ class SideIntersection (Intersection):
                 if tmpCar != None:
                     SideIntersection.totalTimeWaiting += tmpCar.totalTime
                     SideIntersection.totalCars += 1
-                    print (self.totalCars)
                     road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
                 tmpCar = road[0].carOutN(data)
                 if tmpCar != None:
                     SideIntersection.totalTimeWaiting += tmpCar.totalTime
                     SideIntersection.totalCars += 1
-                    print (self.totalCars)
                     road[0].carsListN.remove (tmpCar)
         for road in self.roadsEW:
             if road[1] == "P":
@@ -36,14 +34,12 @@ class SideIntersection (Intersection):
                 if tmpCar != None:
                     SideIntersection.totalTimeWaiting += tmpCar.totalTime
                     SideIntersection.totalCars += 1
-                    print (self.totalCars)
                     road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
                 tmpCar = road[0].carOutN(data)
                 if tmpCar != None:
                     SideIntersection.totalTimeWaiting += tmpCar.totalTime
                     SideIntersection.totalCars += 1
-                    print (self.totalCars)
                     road[0].carsListN.remove (tmpCar)
     # just makes all the lights on the side green so the cars can just flow out
     def checkLights (self, data):
@@ -51,7 +47,6 @@ class SideIntersection (Intersection):
         self.lightEW = 1
         for roadList in [self.roadsNS, self.roadsEW]:
             self.changeLights (roadList, 1)
-    def avgOf
     def drawLightNS (self,data, canvas):
         pass
     def drawLightEW (self, data, canvas):    
