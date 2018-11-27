@@ -29,8 +29,7 @@ class SideRoad (Road):
     def timerFiredRoad (self, data, timer):
         # self.setExitLights (data)
         super().timerFiredRoad (data, timer)
-        if data.go:
-            self.addCarsPeriodically (data)
+        self.addCarsPeriodically (data)
         
  
     def __repr__ (self):

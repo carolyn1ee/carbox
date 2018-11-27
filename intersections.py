@@ -22,7 +22,7 @@ class Intersection (Road):
         self.EWTime = EWTime
         self.x = x
         self.y = y
-        self.cycle = NSTime + EWTime + 2*data.yellowTime
+        self.cycle = self.NSTime + self.EWTime + 2*data.yellowTime
         
         #sometimes you don't want to start with NS being green. sometimes, want
         #to stagger the times 
@@ -46,6 +46,7 @@ class Intersection (Road):
                 road[0].lightN = light
     
     def checkLights (self, data):
+        self.cycle = self.NSTime + self.EWTime + 2*data.yellowTime
         if self.timerIsNSecs (data, self.cycle, self.staggerTime):
             self.lightNS = 1
             self.lightEW = 0
@@ -63,7 +64,7 @@ class Intersection (Road):
             self.changeLights (self.roadsNS, 0)
             self.changeLights (self.roadsEW, 1)
         elif self.timerIsNSecs (data, self.cycle, (self.EWTime + data.yellowTime + \
-                            self.NSTime + self.staggerTime) % self.cycle):
+                            self.NSTime + self.staggerTime)):
             self.lightNS = 0
             self.lightEW = 2
             self.changeLights (self.roadsNS, 0)
@@ -77,9 +78,10 @@ class Intersection (Road):
             return data.yellowLightImg
     def drawLightNS (self, data, canvas):
         canvas.create_image (self.x, self.y-40, image = self.stopLightImg (data, self.lightNS))
+        canvas.create_text (self.x, self.y-40, text = self.NSTime)
     def drawLightEW (self, data, canvas):
         canvas.create_image (self.x-40, self.y, image = self.stopLightImg (data, self.lightEW))
-
+        canvas.create_text (self.x-40, self.y, text = self.EWTime)
     #handle cars coming thru the intersection:
         #takes cars that are coming into the intersection so that it can deal w/
     def pickUpCars (self, data):

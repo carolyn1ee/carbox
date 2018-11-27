@@ -93,15 +93,16 @@ def createRoad (data):
 
 #makes sure the intersections are the right type once you are done drawing them 
 #the intersections on the end should be replaced with intersections for the end
-########intersections with only three roads should be replaced with 3-way intersecs (eventually)
 def replaceIntersections (data):
     for i in data.intersecs:
         if data.intersecs[i].countNumRoads () == 1:
             endIntersec = SideIntersection (data, data.intersecs[i])
             data.intersecs[i] = endIntersec 
-        if data.intersecs[i].countNumRoads () == 3:
+        elif data.intersecs[i].countNumRoads () == 3:
             threeInt = ThreeWyIntersec (data, data.intersecs[i])
             data.intersecs [i] = threeInt
+        elif data.intersecs [i].countNumRoads() == 2:
+            return ("pls make better roads", 5/0)
 ## here is a f'n to call
 def keyPressedC (event, data):
     if event.keysym == "Up":
@@ -129,10 +130,11 @@ def keyPressedC (event, data):
             data.tmpEndX = data.tmpStartX
             data.tmpEndY = data.tmpStartY
         data.tmpEndX += data.increment
-    if event.keysym == "space":
-        # only starts the cars if we are go
-        data.go = True 
-        replaceIntersections (data)
+    # if event.keysym == "space":
+    # #     only starts the cars if we are  go
+    #     data.go = True 
+    #     replaceIntersections (data)
+        
 
     if event.keysym == "Return":
         #now need to create the road
@@ -144,13 +146,14 @@ def keyPressedC (event, data):
         #5)create intersection or add to intersection (this is done in the intersection function)
         # need to make sure that the road isn't trivial
        # if data.tmpStartX - data.tmpEndX == data.tmpStartY - data.tmpEndY:
-        road = createRoad (data)
-        createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
-        createIntersection (data, data.tmpEndX, data.tmpEndY, "P", road)
-        data.roads += [road]
-        data.tmpStartX = data.tmpEndX
-        data.tmpStartY = data.tmpEndY
-    
+        if abs (data.tmpEndX - data.tmpStartX) > 90 or abs (data.tmpEndY - data.tmpStartY) > 90:
+            road = createRoad (data)
+            createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
+            createIntersection (data, data.tmpEndX, data.tmpEndY, "P", road)
+            data.roads += [road]
+            data.tmpStartX = data.tmpEndX
+            data.tmpStartY = data.tmpEndY
+
 ## here is a f'n to call
 # this draws the road you are considering creating as you move your arrow keys along....
 def drawTmp (canvas, data):

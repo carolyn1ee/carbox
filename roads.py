@@ -49,7 +49,7 @@ class Road (object):
     def timerIsNSecs (self, data, m, n=0):
         #timerFired goes off 10 times per sec
         firesPerSec = 10 
-        return data.t % (firesPerSec * m) == n*firesPerSec
+        return data.t % (firesPerSec * m) == (n*firesPerSec) % (firesPerSec * m)
     ##intersections:
 #given direction ("NS" etc) of carlist returns the first car object that is 
 #in front of the intersection and in front enough that it can stop 

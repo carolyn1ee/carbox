@@ -10,13 +10,13 @@ from intersections import *
 # customize these functions
 ####################################
 
-def init(data):
+def init(data, roads, intersecs, set):
     data.yellowTime = 1
-    data.roads = []
+    data.roads = roads
     #intersecs is a dictionary with keys = tuple of intersection location and 
     #value = intersections. this way you can look up if an intersection 
     #already exists  
-    data.intersecs = {}
+    data.intersecs = intersecs
 
     #drawing out your custom intersections
     data.increment = 20
@@ -25,8 +25,9 @@ def init(data):
     data.tmpEndX = data.tmpStartX
     data.tmpEndY = data.tmpStartY
     #only start when user done with drawing when they press space
-    data.go = False
     data.tmpDir = None
+    
+    data.tmpCar = None
     
     #timer
     data.t = 0
@@ -42,25 +43,33 @@ def init(data):
     
     data.intersecRad = 40
     
+    data.set = set
+    
+    
 def mousePressed(event, data):
-    mousePressedC (event, data)
+    if data.set:
+        mousePressedC (event, data)
 def avgTimeSpentWaiting ():
     return SideIntersection.totalTimeWaiting/SideIntersection.totalCars
 
 def keyPressed(event, data):
-    keyPressedC (event, data)
-    if event.keysym == "d":
-        print (SideIntersection.totalTimeWaiting)
-        print (SideIntersection.totalCars)
-        print (avgTimeSpentWaiting())
+    if data.set:
+        keyPressedC (event, data)
+ 
+    # if event.keysym == "d":
+    #     print (SideIntersection.totalTimeWaiting)
+    #     print (SideIntersection.totalCars)
+    #     print (avgTimeSpentWaiting())
+    
 
 def timerFired(data):
-    data.t += 1
-    for road in data.roads:
-        road.timerFiredRoad(data, time.time())
-    for i in data.intersecs:
-        data.intersecs[i].timerFiredIntersec (data)
-    
+    if not data.set:
+        data.t += 1
+        for road in data.roads:
+            road.timerFiredRoad(data, time.time())
+        for i in data.intersecs:
+            data.intersecs[i].timerFiredIntersec (data)
+        
 
 def redrawAll(canvas, data):
     canvas.create_rectangle(0, 0, data.width, data.height,
@@ -68,11 +77,11 @@ def redrawAll(canvas, data):
     drawTmp (canvas, data)
     for road in data.roads:
         road.drawAllRoad(canvas, data)
-    if data.go:
+    if not data.set:
         for i in data.intersecs:
-            data.intersecs[i].drawAllIntersec(data, canvas)
+                data.intersecs[i].drawAllIntersec(data, canvas)
 
-def setTheLights(lights):
+def setTheLights(data, lights):
     j = 0
     for i in data.intersecs:
         data.intersecs[i].NSTime = lights [j][0]
@@ -84,8 +93,9 @@ def setTheLights(lights):
 # use the run function as-is
 ####################################
 
-def run(width=300, height=300):
+def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}):
     def redrawAllWrapper(canvas, data):
+    
         canvas.delete(ALL)
         canvas.create_rectangle(0, 0, data.width, data.height,
                                 fill='white', width=0)
@@ -113,7 +123,9 @@ def run(width=300, height=300):
     data.timerDelay = 100 # milliseconds
     root = Tk()
     root.resizable(width=False, height=False) # prevents resizing window
-    init(data)
+    init(data, roads, intersecs, set)
+    if not data.set:
+        setTheLights(data, lights)
     # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.configure(bd=0, highlightthickness=0)
@@ -126,6 +138,10 @@ def run(width=300, height=300):
     timerFiredWrapper(canvas, data)
     # and launch the app
     root.mainloop()  # blocks until window is closed
+    if not data.set:
+        return (SideIntersection.totalTimeWaiting, SideIntersection.totalCars, avgTimeSpentWaiting())
+    else:
+        replaceIntersections(data)
+        return (data.roads, data.intersecs)
     print("bye!")
 
-run(800, 800)
