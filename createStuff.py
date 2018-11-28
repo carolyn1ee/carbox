@@ -78,10 +78,10 @@ def createRoad (data):
     findDir (data)
     if isASideRoad (data):
         #create some kind of input to allow user to set the time between cars
-        road = SideRoad (data, dir = data.roadDir, xN = data.tmpStartX,
-            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars=5) 
-            
-            
+        ####create nicer input to take in secsBtCars
+        road = SideRoad (data, dir = data.roadDir, xN = data.tmpStartX,\
+            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars = 3)
+            ###### REPLACE 3 WITH: str (input ("how many seconds between cars??")))
             #self, data, dir, xN, yN, xP, yP,\
                      #speedLimit, secsBtCars, carsListN=[], carsListP=[])
             #if anything goes wrong,

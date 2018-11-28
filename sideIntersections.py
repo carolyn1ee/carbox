@@ -14,6 +14,9 @@ class SideIntersection (Intersection):
         staggerTime = intersec.staggerTime
         super().__init__ (data, x, y, NSTime, EWTime, staggerTime, roadsNS,
                                     roadsEW)
+        self.data = data
+    def intersecCopy (self, roads):
+        return SideIntersection (self.data, super().intersecCopy(roads))
     def pickUpCars (self, data):
         for road in self.roadsNS:
             if road [1] == "P":

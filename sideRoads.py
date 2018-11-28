@@ -6,9 +6,13 @@ class SideRoad (Road):
         super().__init__(data, dir, xN, yN, xP, yP,\
                     carsListN, carsListP, speedLimit)
         self.secsBtCars = secsBtCars
-        # self.setExitLights (data)
+    def __hash__ (self):
+            return hash((self.xN, self.yN, self.xP, self.yP, tuple(self.dir), self.secsBtCars))
 
-        
+    def roadCopy (self):
+        return SideRoad (self.data, self.dir, self.xN, self.yN, self.xP, \
+                    self.yP, secsBtCars = self.secsBtCars, carsListN = None, \
+                        carsListP= None, speedLimit = self.speedLimit)
     def addCarsPeriodically (self, data):
         if self.dir == [0,1]:
             if self.yN == 0:
@@ -27,14 +31,13 @@ class SideRoad (Road):
                     self.carInP(data, self.speedLimit)  
 
     def timerFiredRoad (self, data, timer):
-        # self.setExitLights (data)
-        print ("side intersec???")
         super().timerFiredRoad (data, timer)
         self.addCarsPeriodically (data)
-        
- 
+    ####standard f'ns    
+    def __eq__ (self, other):
+        return isinstance(other, SideRoad) and other.xN == self.xN and other.yN == self.yN and other.xP == self.xP and other.yP == self.yP and other.dir == self.dir and other.secsBtCars == self.secsBtCars
     def __repr__ (self):
-         return "sideRoad start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir)
+         return "sideRoad start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir) + super().__repr__()
                       #essentially same as a normal road but creates cars on the edge
     
         

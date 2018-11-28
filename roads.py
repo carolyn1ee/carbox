@@ -39,6 +39,11 @@ class Road (object):
         self.decelP = False
         self.data = data
         
+    ##standard functions:
+    def __eq__ (self, other):
+        return isinstance(other, Road) and other.xN == self.xN and other.yN == self.yN and other.xP == self.xP and other.yP == self.yP and other.dir == self.dir
+    def __repr__ (self):
+        return "start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir) + super().__repr__()
     def copyCarList (self, carList):
         l = []
         for i in carList:
@@ -46,7 +51,9 @@ class Road (object):
         return l
     def roadCopy (self):
         return Road (self.data, self.dir, self.xN, self.yN, self.xP, self.yP,\
-                        carsListN = None, carsListP= None, speedLimit =self.speedLimit)
+                        carsListN = self.carsListN, carsListP = self.carsListP, speedLimit = self.speedLimit)
+    def __hash__(self):
+        return hash((self.xN, self.yN, self.xP, self.yP, tuple(self.dir)))
 ##timerFiredF'ns:
     def moveCars (self, timer):
         for car in self.carsListN:
@@ -202,7 +209,6 @@ class Road (object):
 
 #call this in simulation in timerFired
     def timerFiredRoad (self, data, timer):
-        "road timer fired"
         self.moveCars(timer)
         self.setFrontCar (data)
         if self.lightN == 1:
@@ -213,9 +219,9 @@ class Road (object):
             self.decelP = False
         self.slowFrontIfYellRed (data)
         self.changeAccelCars ()
+        #print (self.lightN, self.lightP)
         
-        
-##view functions
+##view functions    
     def drawRoad(self, canvas, data):
         lenOfRoadNeedingStrips = (self.length - 2*data.intersecRad)
         for strip in range \
@@ -241,8 +247,13 @@ class Road (object):
     def drawCars (self, canvas, data):
         for car in self.carsListN:
             car.draw(canvas)
+            if car is self.frontCarN:
+                canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+
         for car in self.carsListP:
             car.draw(canvas)
+            if car is self.frontCarP:
+                canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
 
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)
@@ -250,6 +261,3 @@ class Road (object):
         
 
 ##
-   
-    def __repr__ (self):
-        return "start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir)

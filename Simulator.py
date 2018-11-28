@@ -66,12 +66,10 @@ def keyPressed(event, data):
 
 def timerFired(data):
     if not data.set:
-        print ("normal timer fired")
         data.t += 1
         for road in data.roads:
-            print ("trying to call road timer???")
+            # timer fires
             road.timerFiredRoad(data, time.time())
-            print (road)
         for i in data.intersecs:
             data.intersecs[i].timerFiredIntersec (data)
         

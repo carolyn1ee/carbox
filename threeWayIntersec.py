@@ -13,7 +13,8 @@ class ThreeWyIntersec (Intersection):
         roadsEW = intersec.roadsEW
         super().__init__ (data, x, y, NSTime, EWTime, staggerTime, roadsNS,
                                     roadsEW)
-        
+        self.data = data
+
         if len(self.roadsNS) == 1:
             #remember that lonelyRoad is a list [road, pos or neg]
             self.lonelyRoad = roadsNS[0]
@@ -23,6 +24,9 @@ class ThreeWyIntersec (Intersection):
             #duoRoads is the list of roads that have a road that is straight
             #across.
             duoRoads = self.roadsNS
+            
+    def intersecCopy (self, roads):
+        return ThreeWyIntersec (self.data, super().intersecCopy(roads))
     
     def pickUpCars (self, data):
         super().pickUpCars (data)

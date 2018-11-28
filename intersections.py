@@ -35,12 +35,28 @@ class Intersection (Road):
         self.lightEW = 1
         self.lightNS = 0
         self.data = data
-    def copyRoadsList (self, roadsList):
+        
+  
+    #creates a set containing 2-tuples to replace a list full of 2-element lists.
+    def listOfListsToSetOfTuples (self, lst):
+        s = set ([])
+        for l in lst:
+            s.add ((l[0], l[1]))
+        return s
+      #copying RoadsList is the list of roads like NS and roads is a list of roads that have already been copied and that i want to alias in. need to find which roads from the aliasing roads that i should put in for say NS. this way, we have same roads across all intersections
+    def copyRoadsList (self, copyingRoadsList, roads):
         l = []
-        for r in roadsList:
-            l += [(r[0].roadCopy(), r[1])]
-    def intersecCopy (self):
-        return Intersection (self.data, self.x, self.y, self.NSTime, self.EWTime, self.staggerTime, self.copyRoadsList(self.roadsNS), self.copyRoadsList(self.roadsEW))
+        copyRoads = self.listOfListsToSetOfTuples (copyingRoadsList)
+        print ("copying Roads list: " + str(copyRoads) +"\n\n\n\n")
+        #print ("big list of roads want to alias" + str(roads) + "\n\n\n\n")
+        for r in roads:
+            if ((r, "P")) in copyRoads:
+                l += [[r, "P"]]
+            if ((r, "N")) in copyRoads:
+                l += [[r, "N"]]
+        return l
+    def intersecCopy (self, roads):
+        return Intersection (self.data, self.x, self.y, self.NSTime, self.EWTime, self.staggerTime, self.copyRoadsList(self.roadsNS, roads), self.copyRoadsList(self.roadsEW, roads))
     def changeLights (self, roadsList, light):
         for road in roadsList:
             #need to check which side of the road is in this intersection
@@ -195,6 +211,7 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
+                canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)
         self.drawLightEW (data, canvas)
