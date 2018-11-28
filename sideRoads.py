@@ -28,6 +28,7 @@ class SideRoad (Road):
 
     def timerFiredRoad (self, data, timer):
         # self.setExitLights (data)
+        print ("side intersec???")
         super().timerFiredRoad (data, timer)
         self.addCarsPeriodically (data)
         

@@ -34,11 +34,12 @@ class Intersection (Road):
         
         self.lightEW = 1
         self.lightNS = 0
-    def copyRoadsList (roadsList):
+        self.data = data
+    def copyRoadsList (self, roadsList):
         l = []
         for r in roadsList:
-            l += [r.copy()]
-    def copy (self):
+            l += [(r[0].roadCopy(), r[1])]
+    def intersecCopy (self):
         return Intersection (self.data, self.x, self.y, self.NSTime, self.EWTime, self.staggerTime, self.copyRoadsList(self.roadsNS), self.copyRoadsList(self.roadsEW))
     def changeLights (self, roadsList, light):
         for road in roadsList:

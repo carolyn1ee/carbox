@@ -50,6 +50,8 @@ def mousePressed(event, data):
     if data.set:
         mousePressedC (event, data)
 def avgTimeSpentWaiting ():
+    if SideIntersection.totalCars == 0:
+        return None
     return SideIntersection.totalTimeWaiting/SideIntersection.totalCars
 
 def keyPressed(event, data):
@@ -64,9 +66,12 @@ def keyPressed(event, data):
 
 def timerFired(data):
     if not data.set:
+        print ("normal timer fired")
         data.t += 1
         for road in data.roads:
+            print ("trying to call road timer???")
             road.timerFiredRoad(data, time.time())
+            print (road)
         for i in data.intersecs:
             data.intersecs[i].timerFiredIntersec (data)
         

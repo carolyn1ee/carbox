@@ -13,6 +13,7 @@ class ThreeWyIntersec (Intersection):
         roadsEW = intersec.roadsEW
         super().__init__ (data, x, y, NSTime, EWTime, staggerTime, roadsNS,
                                     roadsEW)
+        
         if len(self.roadsNS) == 1:
             #remember that lonelyRoad is a list [road, pos or neg]
             self.lonelyRoad = roadsNS[0]

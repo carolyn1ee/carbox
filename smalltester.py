@@ -31,10 +31,5 @@
 # 
 # # https://stackoverflow.com/questions/15736530/python-tkinter-rotate-image-animation
 
-
-
-import random
-l = [[None, None] for i in range (10)]
-print (random.choice ([1,2]))
-l[0][1] = "Hi"
-print (l)
+l = [9]
+print (l.copy())

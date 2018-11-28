@@ -42,11 +42,11 @@ class Road (object):
     def copyCarList (self, carList):
         l = []
         for i in carList:
-            l += [i.copy()]
+            l += [i.carCopy()]
         return l
-    def copy (self):
+    def roadCopy (self):
         return Road (self.data, self.dir, self.xN, self.yN, self.xP, self.yP,\
-                        self.copyCarList(self.carsListN), self.copyCarList(self.carsListP), self.speedLimit)
+                        carsListN = None, carsListP= None, speedLimit =self.speedLimit)
 ##timerFiredF'ns:
     def moveCars (self, timer):
         for car in self.carsListN:
@@ -202,6 +202,7 @@ class Road (object):
 
 #call this in simulation in timerFired
     def timerFiredRoad (self, data, timer):
+        "road timer fired"
         self.moveCars(timer)
         self.setFrontCar (data)
         if self.lightN == 1:

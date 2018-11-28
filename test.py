@@ -77,7 +77,7 @@ def init(data):
         yN = data.height//2, xP = data.width, yP = data.height//2, 
         carsListP = [], carsListN = [], speedLimit = 10, secsBtCars = 7)
     data.intersection = Intersection(data, roadsNS = [[data.road , "N"], [data.road2, "P"]], roadsEW = [[data.road3, "P"], [data.road4, "N"]], x = data.width//2, y = data.height // 2, NSTime = 3, EWTime = 2, staggerTime = 1)
-
+    print (data.intersection)
     
 def mousePressed(event, data):
     # use event.x and event.y

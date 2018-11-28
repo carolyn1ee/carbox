@@ -40,7 +40,7 @@ class Car(object):
         self.startTime = None
         self.totalTime = 0
 
-    def copy (self):
+    def carCopy (self):
         return Car (self.data, self.speedMax, self.curSpeed, self.dir, self.x, self.y, self.accel, self.decel, self.t)
          
     def draw (self, canvas):

@@ -7,14 +7,16 @@ r, i = run(set=True, width=800, height=800, lights = None, roads = [], intersecs
 def copyRoads (roads):
     l = []
     for r in roads:
-        l += [r.copy()]
+        l += [r.roadCopy()]
     return l
 def copyIntersecs (intersecs):
+    l={}
     for r in intersecs:
-        l += [r.copy()]
+        l[r] = intersecs[r].intersecCopy()
     return l
 roads = copyRoads (r)
 intersecs = copyIntersecs (i)
+print (intersecs)
 
 ###create times
 #can make it better by only setting the lights for the nonside intersections
@@ -34,7 +36,6 @@ print (9)
 
 print (000000)
 print (run (set = False, width = 800, height = 800, lights = lights, roads = copyRoads (r), intersecs = copyIntersecs (i)))
-#try running and resetting a debugger????
 # def optimize (runs):
 #     minAvg = 10**99
 #     for r in range (runs):
