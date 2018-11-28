@@ -1,0 +1,90 @@
+Project description:
+Traffic light simulator: simulates cars going through intersection and finds optimal timing for the lights. Optimal timing will minimize values such as the average amount of time spent waiting at an intersection and the number of cars stopped at an intersection. User can add in new intersections that connect to preexisting intersections. Additionally, after running many simulations, the program will show a table of the different values (including how average time each car spent waiting for a light, number of cars stopped at an intersection, maximum amount of time a single car spent waiting for a light) for different timings of the lights.
+Competitive Analysis:
+Other traffic light simulators (https://ieeexplore.ieee.org/document/1371482) are able to do analysis on different traffic patterns such as when more or fewer cars turn left, how many cars come through at a certain and the traffic lights in the simulator are traffic actuated instead of timer based. My simulator will only do timer based simulations and find the ideal timing based off that. Intersections whose lights are timer based are much cheaper to install because the equipment to sense the cars is unnecessary. Unfortunately though, timer based light systems are less efficient than traffic actuated lights since the timer based lights cannot react to different situations. If I have time, it would be nice to make the cars turn.
+        Another traffic simulator(http://www.traffic-simulation.de/) shows the graphics of the cars on a roundabout. It allows the user to decide where to put traffic lights and manually change the lights. The user can also decide the acceleration of the cars, which cars have priority, which direction all the cars turn and the number of cars coming in. My simulator also shows the graphics of the cars. My simulator also takes in the number of cars coming in as input from the user but allows the user to customize the rate of cars coming in from each of the roads, not just the total rate of cars coming in. This allows my simulator to have roads that are busier than others. My simulation does not use a roundabout, nor allow the user to input acceleration for the cars nor allow the cars to turn, nor allow the user to manually change the lights. Instead, the lights are on a timer -- the user can change the rate that the lights change, but also the simulator will be able to find the ideal timing for the lights. 
+
+
+Structural Plan
+Each of the capitalized things will get their own file.
+Simulator:
+CLASS:
+        Car:
+1. Init: Input is a speed (for when it is running at full speed), acceleration/deceleration rates, direction
+2. Keeps track of the location, current speed, total amount of time spent waiting, image of car based off location
+3. Class attribute: keep track of total amount of time cars spend waiting (is this always the same??? How stupid am I?), how many cars have to stop at an intersection
+4. Given a speed and deceleration rates, returns the minimum amount of space that is safe for a particular car to have in front of it
+5. Function: decelerate car
+6. Update the data variable that has all the bad things happening when bad things happen
+CLASS:
+        Intersection:
+1. Keeps track of where itself is and the timing for its specific set of lights, what other intersections this intersection is connected to
+MAIN:
+1. On console: input is the timing set (ie how much time does NS cars have to go before the EW lights turn green), how many cars per minute are entering from each of the four directions, percent of cars at intersection turn onto each street
+2. Timer fired:
+   1. Checks each car to see if it is too close to the car in front-- if it is too close, lowers the current speed of the car. If there is a bigger gap, speed up.
+   2. Checks each car to see if it is thru the intersection or if it is the first car in the intersection that would react to the lights -- being thru the intersection just means that you can keep driving when the light is still yellow and ignore the light.
+      1. If the car is the first one to react in the intersection, need to check if the light is green in that direction. If it isn’t green, need to decelerate and stop.
+   1. Change the lights
+      1. Need to make some time between changing the NS to SW ie there will be some time when no car is moving when changing the lights
+   1. Delete cars that are offscreen and update max time a car has spent waiting variable (ie check if the time this car has waited for longer is longer than the longest waiting time so far).
+1. Data: 
+   1. Needs to have a state which is what light is green or red based off of time.
+   2. List of cars 
+   3. Keep track of all the bad things that can happen (the avg amt of time spent waiting, number of cars that stopped at a light etc)
+1. mousePressed:
+   1. Need to be able to connect and create intersections by clicking on the screen. 
+OPTIMIZER
+
+
+1. Need to make sure that every intersection has at least 2 roads going through
+2. Puts in different values for the timing of the lights and sees how much bad stuff happens. 
+3. Adjusts the timings based off of how much bad stuff happens. 
+4. Finds ideal timing
+5. Shows a table with the list of timings checked and bad things that happened for each timing
+6. Runs the simulation graphic for the ideal timing.
+Finding the ideal timing:
+Some function that returns a number based on how bad some set of lights timing was:
+What makes a timing set bad:
+1. Total number of stops
+2. Average waiting time
+3. Maximum waiting time
+4. Queue lengths (?) or number of times a car stops at an intersection more than one time
+Algorithmic Plan
+
+
+Most likely, the hardest part will be finding the ideal timing because there are infinite timings to check. I will try to find an algorithm to find the ideal timing for one intersection and then apply this algorithm to each intersection in turn. The only problem is that the intersections are connected so the number of cars coming in will depend on the timing from the other intersections. I could also try to start with some set of timings for all of the lights and use backtracking to check if increasing the time a small amount for one light will decrease the overall time or not and then checking if increasing the time for the next light after having increased the time for the first light does any good etc….
+A more basic approach would be to have a finite set of given timings and the optimizer would run through each of those timings and tell you what the optimal one is.
+
+
+
+
+TImeline Plan
+
+
+11/22: allow the user to click on screen to create and connect custom intersections. Keep track of the values that make the timing bad
+11/24: create optimizer file that can run the simulator file and get the badness level
+11/26: have a basic optimizer system that outputs a table and graphs for the badness level for the given set of timings
+11/29: create a strategy for optimizer 
+
+
+Version control Plan
+
+
+Use github: push whenever I get something to work.  
+
+
+
+
+Modules:
+
+
+Just tkinter
+
+
+
+
+Modifications or whatnot:
+
+
+Not going to go all wiggly --- can only go vert or horiz. Intersections can only be three or four roads coming together. Cars don’t turn unless they are at a three-way.
