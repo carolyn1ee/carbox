@@ -40,7 +40,9 @@ class Car(object):
         self.startTime = None
         self.totalTime = 0
 
-        
+    def copy (self):
+        return Car (self.data, self.speedMax, self.curSpeed, self.dir, self.x, self.y, self.accel, self.decel, self.t)
+         
     def draw (self, canvas):
         canvas.create_image(self.x, self.y, anchor = CENTER, image=self.img)  
 

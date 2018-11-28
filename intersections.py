@@ -34,6 +34,12 @@ class Intersection (Road):
         
         self.lightEW = 1
         self.lightNS = 0
+    def copyRoadsList (roadsList):
+        l = []
+        for r in roadsList:
+            l += [r.copy()]
+    def copy (self):
+        return Intersection (self.data, self.x, self.y, self.NSTime, self.EWTime, self.staggerTime, self.copyRoadsList(self.roadsNS), self.copyRoadsList(self.roadsEW))
     def changeLights (self, roadsList, light):
         for road in roadsList:
             #need to check which side of the road is in this intersection
