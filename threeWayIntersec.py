@@ -27,14 +27,16 @@ class ThreeWyIntersec (Intersection):
             
     def intersecCopy (self, roads):
         return ThreeWyIntersec (self.data, super().intersecCopy(roads))
-    
+    def __repr__ (self):
+        return "threeWay " + super().__repr__()
+        
     def pickUpCars (self, data):
         super().pickUpCars (data)
         #mebbe messed up bc tmpCar not defined -- make tmpCar into a data
         if data.tmpCar != None:
             #if i picked up a car, make it decide which way it wants to turn 
             data.tmpCar.t = random.randint (0, 1)
-            
+    
     def convertCar (self, car, dir):
         car.dir = dir
         if dir == [0,1]:
@@ -69,8 +71,9 @@ class ThreeWyIntersec (Intersection):
                 if road[1] == "N":
                     #go up and drop off the car upwards. only the first car in this list would be far enough up to go out onto the next road
                     # 0 corresponds to going to the left 
-                    if self.carsSN != []:
-                        turningCar = self.carsSN[0]
+                    ###if self.carsSN != []:
+                    for car in self.carsSN:
+                        turningCar = car
                         if turningCar.t == 0:
                             if turningCar.y <= self.y - Car.width//2:
                                 self.convertCar (turningCar, [-1,0])
@@ -91,8 +94,9 @@ class ThreeWyIntersec (Intersection):
                                         self.carsSN.remove(turningCar)
                 elif road[1] == "P":
                     #then the cars are going down so need to drop them off down
-                    if self.carsNS != []:
-                        turningCar = self.carsNS[0]
+                    ###if self.carsNS != []:
+                    for car in self.carsNS:
+                        turningCar = car
                         if turningCar.t == 0:
                             if turningCar.y >= self.y - Car.width//2:
                                 self.convertCar (turningCar, [-1,0])
@@ -131,8 +135,9 @@ class ThreeWyIntersec (Intersection):
                     #going left
                     # 0 corresponds to going to the up
                     
-                    if self.carsEW != []:
-                        turningCar = self.carsEW[0]
+                    ###if self.carsEW != []:
+                    for car in self.carsEW:
+                        turningCar = car
                         if turningCar.t == 0:
                             if turningCar.x <= self.x + Car.width//2:
                                 self.convertCar (turningCar, [0,-1])
@@ -153,8 +158,9 @@ class ThreeWyIntersec (Intersection):
                                         self.carsEW.remove(turningCar)
                 elif road[1] == "P":
                     #then the cars are going down so need to drop them off down
-                    if self.carsWE != []:
-                        turningCar = self.carsWE[0]
+                    ## if self.carsWE != []:
+                    for car in self.carsWE:
+                        turningCar = car
                         if turningCar.t == 0:
                             if turningCar.x >= self.x + Car.width//2:
                                 self.convertCar (turningCar, [0,-1])
@@ -174,5 +180,27 @@ class ThreeWyIntersec (Intersection):
                                         turningCar.speedMax = road[0].speedLimit
                                         self.carsWE.remove(turningCar)
                 
-    def __repr__ (self):
-        return "threeWay " + super().__repr__()
+    def drawAllIntersec (self, data, canvas):
+        super().drawAllIntersec(data, canvas)
+        if self.lonelyRoad[0].dir == [1,0] and self.lonelyRoad[1] == "N":
+            xStart = self.x - data.intersecRad//2
+            yStart = self.y + data.intersecRad//2
+            xEnd = xStart
+            yEnd =  yStart - data.intersecRad
+        elif self.lonelyRoad[0].dir == [1,0] and self.lonelyRoad[1] == "P":
+            xStart = self.x + data.intersecRad//2
+            yStart = self.y - data.intersecRad//2
+            xEnd = xStart
+            yEnd =  yStart + data.intersecRad
+        elif self.lonelyRoad[0].dir == [0,1] and self.lonelyRoad[1] == "P":
+            xStart = self.x - data.intersecRad//2
+            yStart = self.y + data.intersecRad//2
+            xEnd = xStart + data.intersecRad
+            yEnd =  yStart 
+        elif self.lonelyRoad[0].dir == [0,1] and self.lonelyRoad[1] == "N":
+            xStart = self.x + data.intersecRad//2
+            yStart = self.y - data.intersecRad//2
+            xEnd = xStart - data.intersecRad
+            yEnd =  yStart 
+        canvas.create_line(xStart, yStart, xEnd, yEnd, fill = "white")
+        

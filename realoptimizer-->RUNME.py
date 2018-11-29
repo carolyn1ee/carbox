@@ -28,7 +28,6 @@ def createTimes (intersecs, lights):
 
 ##run
 
-#look in simulator and see why nothing is drawing like cars or lights
 # print (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs))
 # print (9)
 # 
@@ -42,8 +41,11 @@ def optimize (runs):
     minAvg = 10**99
     for y in range (runs):
         createTimes(i, lights)
+        # print ("ROADS ORIGINAL" + str(r) + "\n\n\n\n")
+        print ("INTERSECS ORIGINAL" + str (i) + "\n\n\n\n\n")
         roads = copyRoads (r)
         intersecs = copyIntersecs (i, roads)
+        
         tmpAvg = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs)) [2]
         if tmpAvg == None:
             print ("you need to let the thing run for a little bit so you get a bit of data" + 42/0)

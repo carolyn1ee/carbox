@@ -6,10 +6,8 @@ from PIL import ImageTk,Image
 from roads import *
 from sideRoads import *
 from intersections import * 
-####################################
-# customize these functions
-####################################
 
+#framework from cs website
 def init(data, roads, intersecs, set):
     data.yellowTime = 1
     data.roads = roads
@@ -72,6 +70,8 @@ def timerFired(data):
             road.timerFiredRoad(data, time.time())
         for i in data.intersecs:
             data.intersecs[i].timerFiredIntersec (data)
+
+        
         
 
 def redrawAll(canvas, data):
@@ -90,7 +90,7 @@ def setTheLights(data, lights):
         data.intersecs[i].NSTime = lights [j][0]
         data.intersecs[i].EWTime = lights [j][1]
         j += 1
-
+    
 
 ####################################
 # use the run function as-is
@@ -123,7 +123,7 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}):
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 100 # milliseconds
+    data.timerDelay = 1 # milliseconds
     root = Tk()
     root.resizable(width=False, height=False) # prevents resizing window
     init(data, roads, intersecs, set)
@@ -140,6 +140,12 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}):
                             keyPressedWrapper(event, canvas, data))
     timerFiredWrapper(canvas, data)
     # and launch the app
+    # def destroy():
+    #     #function to destroy window from https://stackoverflow.com/questions/8009176/function-to-close-the-window-in-tkinter
+    #     root.destroy()
+    root.quit()
+  
+    
     root.mainloop()  # blocks until window is closed
     if not data.set:
         return (SideIntersection.totalTimeWaiting, SideIntersection.totalCars, avgTimeSpentWaiting())

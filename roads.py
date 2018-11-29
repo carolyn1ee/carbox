@@ -51,7 +51,7 @@ class Road (object):
         return l
     def roadCopy (self):
         return Road (self.data, self.dir, self.xN, self.yN, self.xP, self.yP,\
-                        carsListN = self.carsListN, carsListP = self.carsListP, speedLimit = self.speedLimit)
+                        carsListN = None, carsListP = None, speedLimit = self.speedLimit)
     def __hash__(self):
         return hash((self.xN, self.yN, self.xP, self.yP, tuple(self.dir)))
 ##timerFiredF'ns:
@@ -236,14 +236,18 @@ class Road (object):
                 endY = data.intersecRad * self.dir[1] + self.yN + (strip +\
                     1)*self.ylowStripsLen*self.dir[1]
                 canvas.create_line(startX, startY, endX, endY, width= 5, fill = "yellow")
-        canvas.create_line (self.xN + Car.width * self.dir[1], 
-                            self.yN + Car.width * self.dir [0], 
-                            self.xP + Car.width * self.dir[1], 
-                            self.yP + Car.width * self.dir [0], fill = "white")
-        canvas.create_line (self.xN - Car.width * self.dir[1], 
-                            self.yN - Car.width * self.dir [0], 
-                            self.xP - Car.width * self.dir[1], 
-                            self.yP - Car.width * self.dir [0], fill = "white")
+                xCarMargin = Car.width * self.dir[1]
+                yCarMargin = Car.width * self.dir[0]
+                xIntersecMargin = data.intersecRad//2 * self.dir[0]
+                yIntersecMargin = data.intersecRad//2 * self.dir [1]
+        canvas.create_line (self.xN + xCarMargin + xIntersecMargin, 
+                            self.yN + yCarMargin + yIntersecMargin , 
+                            self.xP + xCarMargin - xIntersecMargin, 
+                            self.yP + yCarMargin - yIntersecMargin, fill = "white")
+        canvas.create_line (self.xN - xCarMargin + xIntersecMargin, 
+                            self.yN - yCarMargin + yIntersecMargin, 
+                            self.xP - xCarMargin - xIntersecMargin, 
+                            self.yP - yCarMargin - yIntersecMargin, fill = "white")
     def drawCars (self, canvas, data):
         for car in self.carsListN:
             car.draw(canvas)

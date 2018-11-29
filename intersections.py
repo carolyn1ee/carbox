@@ -47,7 +47,7 @@ class Intersection (Road):
     def copyRoadsList (self, copyingRoadsList, roads):
         l = []
         copyRoads = self.listOfListsToSetOfTuples (copyingRoadsList)
-        print ("copying Roads list: " + str(copyRoads) +"\n\n\n\n")
+        #print ("copying Roads list: " + str(copyRoads) +"\n\n\n\n")
         #print ("big list of roads want to alias" + str(roads) + "\n\n\n\n")
         for r in roads:
             if ((r, "P")) in copyRoads:
@@ -211,7 +211,7 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-                # canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
+                canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)
         self.drawLightEW (data, canvas)
