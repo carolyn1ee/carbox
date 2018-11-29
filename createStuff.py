@@ -30,10 +30,11 @@ def mousePressedC (event, data):
     data.tmpDir = None
 
 def setBounds(data):
-    if data.tmpStartX < 0: data.tmpStartX = 0
-    if data.tmpStartY < 0: data.tmpStartY = 0
-    if data.tmpEndX > data.width: data.tmpEndX = data.width
-    if data.tmpEndY > data.height: data.tmpEndY = data.height
+    #start a bit off screen so that your cars don't pile up
+    if data.tmpStartX < 0: data.tmpStartX = (0 - 100)
+    if data.tmpStartY < 0: data.tmpStartY = (0 - 100)
+    if data.tmpEndX > data.width: data.tmpEndX = (data.width + 100)
+    if data.tmpEndY > data.height: data.tmpEndY = (data.height + 100)
 
 
 # functions for when you want to create a road

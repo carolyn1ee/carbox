@@ -6,6 +6,7 @@ from PIL import ImageTk,Image
 from roads import *
 from sideRoads import *
 from intersections import * 
+from startScreen import *
 
 #framework from cs website
 def init(data, roads, intersecs, set):
@@ -26,23 +27,27 @@ def init(data, roads, intersecs, set):
     data.tmpDir = None
     
     data.tmpCar = None
+    data.crashes = 0 #num times cars run into each other
     
     #timer
     data.t = 0
+    
     
     data.yellowLightImg = PhotoImage(file="imgs/yellowLight.gif")
     data.redLightImg = PhotoImage(file="imgs/redLight.gif")
     data.greenLightImg = PhotoImage(file="imgs/greenLight.gif")
 
-    data.intersecRad = 40
-        #center of the intersection
-    data.intersecX = data.width//2
-    data.intersecY = data.height//2
-    
+    # data.intersecRad = 40
+    #     #center of the intersection
+    # data.intersecX = data.width//2
+    # data.intersecY = data.height//2
+    # 
     data.intersecRad = 40
     
     data.set = set
     
+    data.screen = "startScreen"
+    #screen can also be "setScreen"
     
 def mousePressed(event, data):
     if data.set:
@@ -54,7 +59,10 @@ def avgTimeSpentWaiting ():
 
 def keyPressed(event, data):
     if data.set:
-        keyPressedC (event, data)
+        if data.screen == "startScreen":
+            keyPressedStart (event, data)
+        elif data.screen == "setScreen":
+            keyPressedC (event, data)
  
     # if event.keysym == "d":
     #     print (SideIntersection.totalTimeWaiting)
@@ -80,6 +88,8 @@ def redrawAll(canvas, data):
     drawTmp (canvas, data)
     for road in data.roads:
         road.drawAllRoad(canvas, data)
+    if data.screen == "startScreen" and data.set:
+        redrawAllStart(canvas, data)
     if not data.set:
         for i in data.intersecs:
                 data.intersecs[i].drawAllIntersec(data, canvas)
@@ -125,6 +135,8 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}):
     data.height = height
     data.timerDelay = 1 # milliseconds
     root = Tk()
+    #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python
+    root ["bg"] = "black"
     root.resizable(width=False, height=False) # prevents resizing window
     init(data, roads, intersecs, set)
     if not data.set:

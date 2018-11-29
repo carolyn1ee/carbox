@@ -132,12 +132,14 @@ class Road (object):
 
         
     #make sure cars have space bt each other by decelerating close cars
-    def changeAccelCars (self):
+    def changeAccelCars (self, data):
         for c in range(1, len(self.carsListN)):
             car1 = self.carsListN [c]
             car2 = self.carsListN [c-1]
             if car1.isTooClose (car2):
                 car1.deceler()
+                if car1.hasCrashed(car2):
+                    data.crashes += 1
             elif not(car1 == self.frontCarN):
                 car1.acceler()
         if self.carsListN != [] and not(self.carsListN [0] == self.frontCarN):
@@ -146,6 +148,8 @@ class Road (object):
             car1 = self.carsListP [c]
             car2 = self.carsListP [c-1]
             if car1.isTooClose (car2):
+                if car1.hasCrashed(car2):
+                    data.crashes += 1
                 car1.deceler()
             elif not(car1 == self.frontCarP):
                 car1.acceler()
@@ -218,7 +222,7 @@ class Road (object):
             self.frontCarP = None
             self.decelP = False
         self.slowFrontIfYellRed (data)
-        self.changeAccelCars ()
+        self.changeAccelCars (data)
         #print (self.lightN, self.lightP)
         
 ##view functions    

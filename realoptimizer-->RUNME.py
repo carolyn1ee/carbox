@@ -1,3 +1,4 @@
+#runs the setup and simulatore
 from Simulator import *
 import copy
 import random
@@ -13,9 +14,6 @@ def copyIntersecs (intersecs, roads):
     for r in intersecs:
         l[r] = intersecs[r].intersecCopy(roads)
     return l
-# roads = copyRoads (r)
-# intersecs = copyIntersecs (i, roads)
-# print ("\n\n\nintersections copying result \n" + str(intersecs))
 
 ###create times
 #can make it better by only setting the lights for the nonside intersections
@@ -24,17 +22,9 @@ def createTimes (intersecs, lights):
     for i in range(len(intersecs)):
         lights [i][0] = random.choice ([3, 4, 5, 6])
         lights [i][1] = random.choice ([3, 4, 5, 6])
-# createTimes ()
 
 ##run
 
-# print (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs))
-# print (9)
-# 
-# print (000000)
-# roads = copyRoads (r)
-# intersecs = copyIntersecs (i, roads)
-# print (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs))
 def optimize (runs):
     r, i = run(set=True, width=800, height=800, lights = None, roads = [], intersecs = {})
     lights =  [[None, None] for i in range (len (i))]
@@ -42,7 +32,7 @@ def optimize (runs):
     for y in range (runs):
         createTimes(i, lights)
         # print ("ROADS ORIGINAL" + str(r) + "\n\n\n\n")
-        print ("INTERSECS ORIGINAL" + str (i) + "\n\n\n\n\n")
+        #print ("INTERSECS ORIGINAL" + str (i) + "\n\n\n\n\n")
         roads = copyRoads (r)
         intersecs = copyIntersecs (i, roads)
         

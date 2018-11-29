@@ -89,7 +89,10 @@ class Car(object):
         
     def isTooClose (self, other):
         return ((other.x-self.x)**2 + (other.y - self.y)**2)**.5 < self.buffer()
-        
+    
+    def hasCrashed (self, other):
+        return ((other.x-self.x)**2 + (other.y - self.y)**2)**.5 < Car.width
+    
     def buffer (self):
         #used some nice physics to find out what distance ought to be to 
         #give the car enough space to stop
