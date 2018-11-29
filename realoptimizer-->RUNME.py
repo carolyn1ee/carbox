@@ -26,7 +26,7 @@ def createTimes (intersecs, lights):
 ##run
 
 def optimize (runs):
-    r, i = run(set=True, width=800, height=800, lights = None, roads = [], intersecs = {})
+    r, i, err, errMsg = run(set=True, width=800, height=800, lights = None, roads = [], intersecs = {})
     lights =  [[None, None] for i in range (len (i))]
     minAvg = 10**99
     for y in range (runs):
@@ -36,14 +36,17 @@ def optimize (runs):
         roads = copyRoads (r)
         intersecs = copyIntersecs (i, roads)
         
-        tmpAvg = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs)) [2]
+        tmpAvg = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = err, errorMsg = errMsg)) [2]
         if tmpAvg == None:
+            #####
             print ("you need to let the thing run for a little bit so you get a bit of data" + 42/0)
         if minAvg > tmpAvg:
             minAvg = tmpAvg
             minLights = lights
-    print ("ok look here are your nice nice lights" + str(minLights))
-    print ("here is the minimum avg" + str(minAvg))
+    (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = True, errorMsg = "here is the minimum avg: "+ str(minAvg)+" and this is the timing for the lights on the next screen."))
+    roads = copyRoads (r)
+    intersecs = copyIntersecs (i, roads)
+    (run (set = False, width = 800, height = 800, lights = minLights, roads = roads, intersecs = intersecs, error = False, errorMsg = ""))
     
 optimize (3)
         

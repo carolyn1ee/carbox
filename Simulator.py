@@ -9,7 +9,7 @@ from intersections import *
 from startScreen import *
 
 #framework from cs website
-def init(data, roads, intersecs, set):
+def init(data, roads, intersecs, set, error, errorMsg):
     data.yellowTime = 1
     data.roads = roads
     #intersecs is a dictionary with keys = tuple of intersection location and 
@@ -25,6 +25,7 @@ def init(data, roads, intersecs, set):
     data.tmpEndY = data.tmpStartY
     #only start when user done with drawing when they press space
     data.tmpDir = None
+    data.rate = 4
     
     data.tmpCar = None
     data.crashes = 0 #num times cars run into each other
@@ -32,7 +33,7 @@ def init(data, roads, intersecs, set):
     #timer
     data.t = 0
     
-    
+    #syntax for imgs from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python and from course website
     data.yellowLightImg = PhotoImage(file="imgs/yellowLight.gif")
     data.redLightImg = PhotoImage(file="imgs/redLight.gif")
     data.greenLightImg = PhotoImage(file="imgs/greenLight.gif")
@@ -48,6 +49,9 @@ def init(data, roads, intersecs, set):
     
     data.screen = "startScreen"
     #screen can also be "setScreen"
+    
+    data.error = error
+    data.errorMsg = errorMsg
     
 def mousePressed(event, data):
     if data.set:
@@ -83,16 +87,20 @@ def timerFired(data):
         
 
 def redrawAll(canvas, data):
-    canvas.create_rectangle(0, 0, data.width, data.height,
-                                fill='black', width=0)
-    drawTmp (canvas, data)
-    for road in data.roads:
-        road.drawAllRoad(canvas, data)
-    if data.screen == "startScreen" and data.set:
-        redrawAllStart(canvas, data)
-    if not data.set:
-        for i in data.intersecs:
-                data.intersecs[i].drawAllIntersec(data, canvas)
+    if not data.error:
+        canvas.create_rectangle(0, 0, data.width, data.height,
+                                    fill='black', width=0)
+        drawTmp (canvas, data)
+        for road in data.roads:
+            road.drawAllRoad(canvas, data)
+        if data.screen == "startScreen" and data.set:
+            redrawAllStart(canvas, data)
+        if not data.set:
+            for i in data.intersecs:
+                    data.intersecs[i].drawAllIntersec(data, canvas)
+    else:
+        canvas.create_oval(20, 20, 100,100, fill = "purple")
+        canvas.create_text (data.width//8, data.height//4, text = data.errorMsg, fill = "red", font="Times 20 bold", anchor = "nw")
 
 def setTheLights(data, lights):
     j = 0
@@ -103,17 +111,19 @@ def setTheLights(data, lights):
     
 
 ####################################
-# use the run function as-is
+# use the run function as-is from the 112 website
 ####################################
 
-def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}):
+def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, error = False, errorMsg = ""):
     def redrawAllWrapper(canvas, data):
     
         canvas.delete(ALL)
         canvas.create_rectangle(0, 0, data.width, data.height,
                                 fill='white', width=0)
         redrawAll(canvas, data)
-        canvas.update()    
+        canvas.update()  
+    def inputRate ():
+        data.rate= int(inputRate.get())  
 
     def mousePressedWrapper(event, canvas, data):
         mousePressed(event, data)
@@ -136,15 +146,42 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}):
     data.timerDelay = 1 # milliseconds
     root = Tk()
     #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python
+    #function and button to close window from https://stackoverflow.com/questions/9987624/how-to-close-a-tkinter-window-by-pressing-a-button/9987684
+    def close_window (): 
+        root.destroy()
+    
     root ["bg"] = "black"
     root.resizable(width=False, height=False) # prevents resizing window
-    init(data, roads, intersecs, set)
+    init(data, roads, intersecs, set, error, errorMsg)
+    
+    #button and text syntax from Edward Lu (elu2) 
+    rateFrame = Frame (root, borderwidth = 2, relief = "solid")
+    inputRate = Entry (rateFrame, borderwidth = 2, relief = "solid")
+    buttonRate = Button (rateFrame, command = inputRate, width = 20, height = 1,
+        text = "secs between cars")
+    
+    if data.set:
+        text = "done drawing roads"
+    else:
+        text = "new simulation time"
+    
+    button = Button (rateFrame, text = text, command = close_window)
+    
     if not data.set:
         setTheLights(data, lights)
     # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.configure(bd=0, highlightthickness=0)
-    canvas.pack()
+    
+    canvas.pack(side = RIGHT)
+    if data.set:
+        rateFrame.pack (side = LEFT, fill = Y)
+        inputRate.pack (side = TOP)
+        buttonRate.pack (side = TOP)
+    
+    rateFrame.pack (side = LEFT, fill = Y)
+    button.pack (side = LEFT)
+    
     # set up events
     root.bind("<Button-1>", lambda event:
                             mousePressedWrapper(event, canvas, data))
@@ -163,6 +200,6 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}):
         return (SideIntersection.totalTimeWaiting, SideIntersection.totalCars, avgTimeSpentWaiting())
     else:
         replaceIntersections(data)
-        return (data.roads, data.intersecs)
+        return (data.roads, data.intersecs, data.error, data.errorMsg)
     print("bye!")
 

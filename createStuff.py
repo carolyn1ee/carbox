@@ -78,18 +78,9 @@ def createRoad (data):
     setBounds (data)
     findDir (data)
     if isASideRoad (data):
-        #create some kind of input to allow user to set the time between cars
-        ####create nicer input to take in secsBtCars
         road = SideRoad (data, dir = data.roadDir, xN = data.tmpStartX,\
-            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars = 3)
+            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars = int(data.rate))
             
-            
-            #int (input ("how many seconds between cars??")))
-            ###### REPLACE 3 WITH: int (input ("how many seconds between cars??")))
-            #self, data, dir, xN, yN, xP, yP,\
-                     #speedLimit, secsBtCars, carsListN=[], carsListP=[])
-            #if anything goes wrong,
-        # it may be bc of ordering of the inputs is messed up and then you have default vals too
     else:
         road = Road (data, dir = data.roadDir, xN = data.tmpStartX,
             yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY)
@@ -106,7 +97,10 @@ def replaceIntersections (data):
             threeInt = ThreeWyIntersec (data, data.intersecs[i])
             data.intersecs [i] = threeInt
         elif data.intersecs [i].countNumRoads() == 2:
-            return ("pls make better roads", 5/0)
+            data.errorMsg = "Please draw roads so that every intersection has a 4-way or 3-way"
+            data.error = True
+            print (data.error)
+            #return 5/0
 ## here is a f'n to call
 def keyPressedC (event, data):
     if event.keysym == "Up":
