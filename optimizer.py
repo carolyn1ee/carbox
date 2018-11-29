@@ -51,7 +51,7 @@ def optimize (runs, r, i):
             minAvg = tmpAvg
             minLights = lights
     print ("ok look here are your nice nice lights" + str(minLights))
-    print ("here is the minimum avg" + minAvg)
+    print ("here is the minimum avg" + str(minAvg))
     
 optimize (3, r, i)
         

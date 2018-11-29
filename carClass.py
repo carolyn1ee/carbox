@@ -23,6 +23,7 @@ class Car(object):
         self.data = data
         self.x = x
         self.y = y
+        #cite: syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python and from course website
         #NS
         if self.dir == [0,1]:
             self.img = PhotoImage(file=Car.carImgNS)
@@ -41,8 +42,11 @@ class Car(object):
         self.totalTime = 0
 
     def carCopy (self):
-        return Car (self.data, self.speedMax, self.curSpeed, self.dir, self.x, self.y, self.accel, self.decel, self.t)
+        car = Car (self.data, self.speedMax, self.curSpeed, self.dir, self.x, self.y, self.accel, self.decel, self.t)
+        car.img = self.img
+        return car
          
+    #cite: syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python and from course website
     def draw (self, canvas):
         canvas.create_image(self.x, self.y, anchor = CENTER, image=self.img)  
 
