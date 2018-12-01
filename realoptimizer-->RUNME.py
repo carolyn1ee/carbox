@@ -43,10 +43,10 @@ def optimize (runs):
         if minAvg > tmpAvg:
             minAvg = tmpAvg
             minLights = lights
-    (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = True, errorMsg = "here is the minimum avg: "+ str(minAvg)+" and this is the timing for the lights on the next screen."))
+    (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = True, errorMsg = "here is the minimum avg: "+ str(minAvg)+" and this is the timing \nfor the lights on the next screen."))
     roads = copyRoads (r)
     intersecs = copyIntersecs (i, roads)
-    (run (set = False, width = 800, height = 800, lights = minLights, roads = roads, intersecs = intersecs, error = False, errorMsg = ""))
+    (run (set = False, width = 800, height = 800, lights = minLights, roads = roads, intersecs = intersecs, error = False, errorMsg = "", slow = True))
     
 optimize (3)
         

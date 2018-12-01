@@ -99,7 +99,6 @@ def redrawAll(canvas, data):
             for i in data.intersecs:
                     data.intersecs[i].drawAllIntersec(data, canvas)
     else:
-        canvas.create_oval(20, 20, 100,100, fill = "purple")
         canvas.create_text (data.width//8, data.height//4, text = data.errorMsg, fill = "red", font="Times 20 bold", anchor = "nw")
 
 def setTheLights(data, lights):
@@ -114,7 +113,7 @@ def setTheLights(data, lights):
 # use the run function as-is from the 112 website
 ####################################
 
-def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, error = False, errorMsg = ""):
+def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, error = False, errorMsg = "", slow = False):
     def redrawAllWrapper(canvas, data):
     
         canvas.delete(ALL)
@@ -143,7 +142,8 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 1 # milliseconds
+    if not slow: data.timerDelay = 1 # milliseconds
+    if slow: data.timerDelay = 10
     root = Tk()
     #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python
     #function and button to close window from https://stackoverflow.com/questions/9987624/how-to-close-a-tkinter-window-by-pressing-a-button/9987684
@@ -163,7 +163,7 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     if data.set:
         text = "done drawing roads"
     else:
-        text = "new simulation time"
+        text = "new simulation"
     
     button = Button (rateFrame, text = text, command = close_window)
     

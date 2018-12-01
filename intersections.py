@@ -73,25 +73,20 @@ class Intersection (Road):
         if self.timerIsNSecs (data, self.cycle, self.staggerTime):
             self.lightNS = 1
             self.lightEW = 0
-            self.changeLights (self.roadsNS, 1)
-            self.changeLights (self.roadsEW, 0)
         elif self.timerIsNSecs (data, self.cycle, self.NSTime + self.staggerTime):
             self.lightNS = 2
             self.lightEW = 0
-            self.changeLights (self.roadsNS, 2)
-            self.changeLights (self.roadsEW, 0)
         elif self.timerIsNSecs (data, self.cycle, data.yellowTime + \
                             self.NSTime + self.staggerTime):
             self.lightNS = 0
             self.lightEW = 1
-            self.changeLights (self.roadsNS, 0)
-            self.changeLights (self.roadsEW, 1)
         elif self.timerIsNSecs (data, self.cycle, (self.EWTime + data.yellowTime + \
                             self.NSTime + self.staggerTime)):
             self.lightNS = 0
             self.lightEW = 2
-            self.changeLights (self.roadsNS, 0)
-            self.changeLights (self.roadsEW, 2)
+           
+        self.changeLights (self.roadsNS, self.lightNS)
+        self.changeLights (self.roadsEW, self.lightEW)
     def stopLightImg (self, data, light):
         if light == 1:
             return data.greenLightImg
@@ -211,7 +206,7 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-                canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
+                #canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)
         self.drawLightEW (data, canvas)

@@ -256,7 +256,7 @@ class Road (object):
         for car in self.carsListN:
             car.draw(canvas)
             if car is self.frontCarN:
-                canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+                #canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
 
         for car in self.carsListP:
             car.draw(canvas)
