@@ -143,7 +143,7 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     data.width = width
     data.height = height
     if not slow: data.timerDelay = 1 # milliseconds
-    if slow: data.timerDelay = 10
+    if slow: data.timerDelay = 100
     root = Tk()
     #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python
     #function and button to close window from https://stackoverflow.com/questions/9987624/how-to-close-a-tkinter-window-by-pressing-a-button/9987684
