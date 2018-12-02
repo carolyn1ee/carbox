@@ -129,29 +129,57 @@ class Road (object):
             if self.inSlowArea(data, self.frontCarP) or self.decelP:
                 self.decelP = True
                 self.frontCarP.deceler()
-
-        
+    #let's you know if there are cars all backed up all the way so the intersection doesn't add any more cars in
+    def allFull (self, end, data):
+        if self.dir == [0,1] and end == "P":
+            for car in self.carsListN:
+                if car.y > self.yP - data.intersecRad:
+                    print (True)
+                    return True
+        if self.dir == [0,1] and end == "N":
+            for car in self.carsListP:
+                if car.y < self.yN + data.intersecRad:
+                    print (True)
+                    return True
+        if self.dir == [1,0] and end == "P":
+            for car in self.carsListN:
+                if car.x > self.xP - data.intersecRad:
+                    print (True)
+                    return True
+        if self.dir == [1,0] and end == "N":
+            for car in self.carsListP:
+                if car.x < self.xN + data.intersecRad:
+                    print (True)
+                    return True
+        return False
     #make sure cars have space bt each other by decelerating close cars
     def changeAccelCars (self, data):
         for c in range(1, len(self.carsListN)):
             car1 = self.carsListN [c]
-            car2 = self.carsListN [c-1]
-            if car1.isTooClose (car2):
-                car1.deceler()
-                if car1.hasCrashed(car2):
-                    data.crashes += 1
-            elif not(car1 == self.frontCarN):
+            for lead in range (0, c):
+                car2 = self.carsListN [lead]
+                car1.decelerating = False
+                #checks every car that is in front of this car jic you run over a car....
+                if car1.isTooClose (car2):
+                    car1.deceler()
+                    car1.decelerating = True
+                    if car1.hasCrashed(car2):
+                        data.crashes += 1
+            if not(car1 == self.frontCarN) and not car1.decelerating:
                 car1.acceler()
         if self.carsListN != [] and not(self.carsListN [0] == self.frontCarN):
             self.carsListN [0].acceler()
         for c in range(1, len(self.carsListP)):
             car1 = self.carsListP [c]
-            car2 = self.carsListP [c-1]
-            if car1.isTooClose (car2):
-                if car1.hasCrashed(car2):
-                    data.crashes += 1
-                car1.deceler()
-            elif not(car1 == self.frontCarP):
+            for lead in range (0, c):
+                car2 = self.carsListP [c-1]
+                car1.decelerating = False
+                if car1.isTooClose (car2):
+                    if car1.hasCrashed(car2):
+                        data.crashes += 1
+                    car1.deceler()
+                    car1.decelerating = True
+            if not(car1 == self.frontCarP) and not car1.decelerating:
                 car1.acceler()
         if self.carsListP != [] and not (self.carsListP [0] == self.frontCarP):
             self.carsListP [0].acceler()
@@ -162,25 +190,28 @@ class Road (object):
 #cars (but only if there is a car falling out)) and intersection moves the car
 #to the next road (adds car to next road)
     def carOutN (self, data):
-        if self.carsListN != []:
+        ## if self.carsListN != []:
+        for car in self.carsListN:
             #vert road case
             if self.dir == [0,1]:
-                if self.carsListN[0].y < self.yN + data.intersecRad:
-                    return self.carsListN[0]
+                if car.y < self.yN + data.intersecRad:
+                    return car
             #hor road case
             elif self.dir == [1,0]:
-                if self.carsListN[0].x < self.xN + data.intersecRad:
-                    return self.carsListN[0]
+                if car.x < self.xN + data.intersecRad:
+                    return car
     def carOutP (self, data):
-        if self.carsListP != []:
+        ##if self.carsListP != []:
+        #now is returning any car that isn't too far in the intersection but it should be the first car that is too far anyways
+        for car in self.carsListP:
             #vert road case
             if self.dir == [0,1]:
-                if self.carsListP[0].y > self.yP - data.intersecRad:
-                    return self.carsListP[0] 
+                if car.y > self.yP - data.intersecRad:
+                    return car
             #hor road case
             else:
-                if self.carsListP[0].x > self.xP - data.intersecRad:
-                    return self.carsListP[0]
+                if car.x > self.xP - data.intersecRad:
+                    return car
     #add a car into the road going from P to N (ie a negative car) but it is
     # entering the positive side of the road.
     def carInP (self, data, curSpeed):
@@ -255,13 +286,13 @@ class Road (object):
     def drawCars (self, canvas, data):
         for car in self.carsListN:
             car.draw(canvas)
-            #if car is self.frontCarN:
-                #canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+            if car is self.frontCarN:
+                canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
 
         for car in self.carsListP:
             car.draw(canvas)
-            # if car is self.frontCarP:
-                # canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+            if car is self.frontCarP:
+                canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
 
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)

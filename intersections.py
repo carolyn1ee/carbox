@@ -105,30 +105,36 @@ class Intersection (Road):
     def pickUpCars (self, data):
         for road in self.roadsNS:
             if road [1] == "P":
-                if road[0].lightP == 1 or road [0].lightP == 2:
+                if not road[0].allFull ("P", data) and (road[0].lightP == 1 or\
+                 road [0].lightP == 2):
                     data.tmpCar = road[0].carOutP(data)
                     if data.tmpCar != None:
                         self.carsNS += [data.tmpCar]
                         road[0].carsListP.remove (data.tmpCar)
             elif road [1] == "N":
-                if road[0].lightN == 1 or road [0].lightN == 2:
+                if not road[0].allFull ("N", data) and (road[0].lightN == 1 or \
+                road [0].lightN == 2):
                     data.tmpCar = road[0].carOutN(data)
                     if data.tmpCar != None:
                         self.carsSN += [data.tmpCar]
                         road[0].carsListN.remove (data.tmpCar)
         for road in self.roadsEW:
             if road [1] == "P":
-                if road[0].lightP == 1 or road [0].lightP == 2:
+                if not road[0].allFull ("N", data) and (road[0].lightP == 1 or \
+                road [0].lightP == 2):
                     data.tmpCar = road[0].carOutP(data)
                     if data.tmpCar != None:
                         self.carsWE += [data.tmpCar]
                         road[0].carsListP.remove (data.tmpCar)
             elif road [1] == "N":
-                if road[0].lightN == 1 or road [0].lightN == 2:
+                if not road[0].allFull ("N", data) and (road[0].lightN == 1 or \
+                road [0].lightN == 2):
                     data.tmpCar = road[0].carOutN(data)
                     if data.tmpCar != None:
                         self.carsEW += [data.tmpCar]
                         road[0].carsListN.remove (data.tmpCar)
+            ######reading the fullness from the wrong road-- reading fullness from the road it is coming from not the road it is coming to
+            ###may have issues because the road will continue to try to accelerate the front car....
     def dropOffCars (self, data):
         for road in self.roadsNS:
             if road[1] =="N":

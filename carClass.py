@@ -41,6 +41,7 @@ class Car(object):
         self.startTime = None
         self.totalTime = 0
 
+        self.decelerating = False
     def carCopy (self):
         car = Car (self.data, self.speedMax, self.curSpeed, self.dir, self.x, self.y, self.accel, self.decel, self.t)
         car.img = self.img

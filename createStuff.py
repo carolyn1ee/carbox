@@ -99,8 +99,6 @@ def replaceIntersections (data):
         elif data.intersecs [i].countNumRoads() == 2:
             data.errorMsg = "Please draw roads so that every intersection has a 4-way or 3-way"
             data.error = True
-            print (data.error)
-            #return 5/0
 ## here is a f'n to call
 def keyPressedC (event, data):
     if event.keysym == "Up":
@@ -144,7 +142,8 @@ def keyPressedC (event, data):
         #5)create intersection or add to intersection (this is done in the intersection function)
         # need to make sure that the road isn't trivial
        # if data.tmpStartX - data.tmpEndX == data.tmpStartY - data.tmpEndY:
-        if abs (data.tmpEndX - data.tmpStartX) > 90 or abs (data.tmpEndY - data.tmpStartY) > 90:
+       #make sure that your roads aren't too short
+        if abs (data.tmpEndX - data.tmpStartX) > 150 or abs (data.tmpEndY - data.tmpStartY) > 150:
             road = createRoad (data)
             createIntersection (data, data.tmpStartX, data.tmpStartY, "N", road)
             createIntersection (data, data.tmpEndX, data.tmpEndY, "P", road)
