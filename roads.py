@@ -13,7 +13,7 @@ class Road (object):
     #direction can be either [1,0] or [0,1] for whether or not it runs from vert
     #or hor.
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                        carsListN=None, carsListP=None, speedLimit=3):
+                        carsListN=None, carsListP=None, speedLimit=1):
         #location:
         self.xN = xN
         self.yN = yN
@@ -44,7 +44,7 @@ class Road (object):
     def __eq__ (self, other):
         return isinstance(other, Road) and other.xN == self.xN and other.yN == self.yN and other.xP == self.xP and other.yP == self.yP and other.dir == self.dir
     def __repr__ (self):
-        return "start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir) + super().__repr__()
+        return "start: (" + str (self.xN )+ ", " + str(self.yN) + "); end: (" + str(self.xP) + ", " + str(self.yP) + "), direction: " + str(self.dir) + "NCARSLIST" + str (self.carsListN) + "PCARSLIST" + str (self.carsListP) + "\n\n"
     def copyCarList (self, carList):
         l = []
         for i in carList:
@@ -67,7 +67,7 @@ class Road (object):
             car.keepTrackOfTime(timer)
     def timerIsNSecs (self, data, m, n=0):
         #timerFired goes off 10 times per sec
-        firesPerSec = 10 
+        firesPerSec = 50 
         return data.t % (firesPerSec * m) == (n*firesPerSec) % (firesPerSec * m)
     ##intersections:
 #given direction ("NS" etc) of carlist returns the first car object that is 
@@ -331,18 +331,18 @@ class Road (object):
             color = "blue"
         for car in self.carsListN:
             car.draw(canvas)
-            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
+            #canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
             # if car is self.frontCarN:
             #     canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
-            if not car.movable:
-                canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
+            # if not car.movable:
+                #canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
         for car in self.carsListP:
             car.draw(canvas)
-            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
+            #canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
             # if car is self.frontCarP:
             #     canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
-            if not car.movable:
-                canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
+            # if not car.movable:
+                # canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
                 
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)

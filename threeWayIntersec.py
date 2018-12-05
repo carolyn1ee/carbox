@@ -28,7 +28,7 @@ class ThreeWyIntersec (Intersection):
     def intersecCopy (self, roads):
         return ThreeWyIntersec (self.data, super().intersecCopy(roads))
     def __repr__ (self):
-        return "threeWay " + super().__repr__() +"\n\n"
+        return "threeWay " + super().__repr__()
         
     def roadFromListInDir (self, roadsList, dir, curRoadsList, curRoad):
         if curRoad == self.lonelyRoad:

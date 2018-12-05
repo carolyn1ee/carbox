@@ -1,3 +1,0 @@
-# carbox
-
-Run realOptimizer -- >RUNME

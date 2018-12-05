@@ -32,12 +32,14 @@ def optimize (runs):
     for y in range (runs):
         createTimes(i, lights)
         #print ("ROADS ORIGINAL" + str(r) + "\n\n\n\n")
-        print ("INTERSECS ORIGINAL" + str (i) + "\n\n\n\n\n")
+        print ("INTERSECS ORIGINAL" + str (i) + "\n\n\n\n\n\n\n\n\n\n")
         roads = copyRoads (r)
         intersecs = copyIntersecs (i, roads)
-        print ("NEW INTERSECS" + str(intersecs) + "\n\n\n\n") 
+        print ("NEW INTERSECS" + str(intersecs) + "\n\n\n\n\n\n\n\n\n\n")
         
         tmpAvg = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = err, errorMsg = errMsg)) [2]
+        print ("AFTER SIMULATION" + str(intersecs) + "\n\n\n\n\n\n\n\n\n\n")
+        
         if tmpAvg == None:
             #####
             print ("you need to let the thing run for a little bit so you get a bit of data" + 42/0)

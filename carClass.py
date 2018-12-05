@@ -14,7 +14,7 @@ class Car(object):
     
     #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
     #t is the random variable that will store which direction this car decides to turn if it gets into an intersection.
-    def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = 1, decel = 1, t = 0):
+    def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = .2, decel = .2, t = 0):
         self.speedMax = speedLimit
         self.curSpeed = curSpeed
         self.dir = direction
@@ -64,21 +64,19 @@ class Car(object):
     
     def __repr__ (self):
         return str(self.dir) + "location: (" + str (self.x) + ", " + \
-            str (self.y) +")" + "speed:" + str (self.curSpeed)
+            str (self.y) +")" + "\n"
     def move (self):
         self.x += self.curSpeed * self.dir[0]
         self.y += self.curSpeed * self.dir[1]
     #makes the car decelerate up until stopped
     def deceler (self):
-        if self.curSpeed >= self.decel:
-            self.curSpeed -= self.decel
-        else:
+        self.curSpeed -= self.decel
+        if self.curSpeed < 0:
             self.curSpeed = 0
     #makes the car's speed increase up until the max speed
     def acceler (self):
-        if self.curSpeed <= self.speedMax - self.accel:
-            self.curSpeed +=  self.accel
-        else:
+        self.curSpeed +=  self.accel
+        if self.curSpeed > self.speedMax:
             self.curSpeed = self.speedMax
             
     def keepTrackOfTime (self, timer):
