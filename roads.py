@@ -149,22 +149,22 @@ class Road (object):
         margin = 100 #need a bit more room for the cars coming in to stop
         if self.dir == [0,1] and end == "P":
             for car in self.carsListN:
-                if car.y > self.yP - data.intersecRad - margin and car.curSpeed == 0:
+                if car.y > self.yP - data.intersecRad - margin and car.curSpeed < car.speedMax:
                     car.color = "purple"
                     return True
         if self.dir == [0,1] and end == "N":
             for car in self.carsListP:
-                if car.y < self.yN + data.intersecRad+margin and car.curSpeed == 0:
+                if car.y < self.yN + data.intersecRad+margin and car.curSpeed < car.speedMax:
                     car.color = "purple"
                     return True
         if self.dir == [1,0] and end == "P":
             for car in self.carsListN:
-                if car.x > self.xP - data.intersecRad-margin and car.curSpeed == 0:
+                if car.x > self.xP - data.intersecRad-margin and car.curSpeed < car.speedMax:
                     car.color = "purple"
                     return True
         if self.dir == [1,0] and end == "N":
             for car in self.carsListP:
-                if car.x < self.xN + data.intersecRad+margin and car.curSpeed == 0:
+                if car.x < self.xN + data.intersecRad+margin and car.curSpeed < car.speedMax:
                     car.color = "purple"
                     return True
         return False

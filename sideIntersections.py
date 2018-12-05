@@ -54,4 +54,6 @@ class SideIntersection (Intersection):
         pass
     def drawLightEW (self, data, canvas):    
         pass
+    def __repr__ (self):
+        return "sideIntersection " + super().__repr__() + "\n\n"
         

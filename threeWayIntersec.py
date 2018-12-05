@@ -28,7 +28,7 @@ class ThreeWyIntersec (Intersection):
     def intersecCopy (self, roads):
         return ThreeWyIntersec (self.data, super().intersecCopy(roads))
     def __repr__ (self):
-        return "threeWay " + super().__repr__()
+        return "threeWay " + super().__repr__() +"\n\n"
         
     def roadFromListInDir (self, roadsList, dir, curRoadsList, curRoad):
         if curRoad == self.lonelyRoad:
@@ -56,6 +56,7 @@ class ThreeWyIntersec (Intersection):
                         # print (futureRoad[0].allFull (d, data), d, futureRoad)
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True #allow car to move into intersec
+                            tmpCar.color = "grey"
                             self.carsNS += [tmpCar]
                             road[0].carsListP.remove (tmpCar)
                         else: #if the futureRoad is full
@@ -74,6 +75,7 @@ class ThreeWyIntersec (Intersection):
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True
                             self.carsSN += [tmpCar]
+                            tmpCar.color = "grey"
                             road[0].carsListN.remove (tmpCar)
                         else:
                             tmpCar.movable = False
@@ -93,6 +95,7 @@ class ThreeWyIntersec (Intersection):
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True
                             self.carsWE += [tmpCar]
+                            tmpCar.color = "grey"
                             road[0].carsListP.remove (tmpCar)
                         else:
                             tmpCar.movable = False
@@ -110,6 +113,7 @@ class ThreeWyIntersec (Intersection):
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True
                             self.carsEW += [tmpCar]
+                            tmpCar.color = "grey"
                             road[0].carsListN.remove (tmpCar)
                         else:
                             tmpCar.movable = False

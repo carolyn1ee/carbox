@@ -31,10 +31,11 @@ def optimize (runs):
     minAvg = 10**99
     for y in range (runs):
         createTimes(i, lights)
-        # print ("ROADS ORIGINAL" + str(r) + "\n\n\n\n")
-        #print ("INTERSECS ORIGINAL" + str (i) + "\n\n\n\n\n")
+        #print ("ROADS ORIGINAL" + str(r) + "\n\n\n\n")
+        print ("INTERSECS ORIGINAL" + str (i) + "\n\n\n\n\n")
         roads = copyRoads (r)
         intersecs = copyIntersecs (i, roads)
+        print ("NEW INTERSECS" + str(intersecs) + "\n\n\n\n") 
         
         tmpAvg = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = err, errorMsg = errMsg)) [2]
         if tmpAvg == None:
