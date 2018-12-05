@@ -142,7 +142,7 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     data = Struct()
     data.width = width
     data.height = height
-    if not slow: data.timerDelay = 1 # milliseconds
+    if not slow: data.timerDelay = 50 # milliseconds
     if slow: data.timerDelay = 100
     root = Tk()
     #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python

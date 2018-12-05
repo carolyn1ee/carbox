@@ -1,4 +1,5 @@
 from carClass import *
+import random
 class Road (object):
     #yP is the lower (more positive end). xP is the rightmost part 
         # (more positive). 
@@ -12,7 +13,7 @@ class Road (object):
     #direction can be either [1,0] or [0,1] for whether or not it runs from vert
     #or hor.
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                        carsListN=None, carsListP=None, speedLimit=5):
+                        carsListN=None, carsListP=None, speedLimit=3):
         #location:
         self.xN = xN
         self.yN = yN
@@ -73,17 +74,28 @@ class Road (object):
     def frontOfQueue (self, data, dir):
         if dir == [0,1]:
             for car in self.carsListP:
+                if not car.movable:
+                    return car
                 if car.y < self.yP - data.intersecRad - car.buffer():
                     return car
         elif dir ==[0,-1]:
+            for car in self.carsListN:
+                if not car.movable:
+                    return car
             for car in self.carsListN:
                 if car.y > self.yN + data.intersecRad + car.buffer():
                     return car
         elif dir == [-1,0]:
             for car in self.carsListN:
+                if not car.movable:
+                    return car
+            for car in self.carsListN:
                 if car.x > self.xN + data.intersecRad + car.buffer():
                     return car
         elif dir == [1,0]:
+            for car in self.carsListP:
+                if not car.movable:
+                    return car
             for car in self.carsListP:
                 if car.x < self.xP  - data.intersecRad - car.buffer():
                     return car
@@ -131,25 +143,26 @@ class Road (object):
                 self.frontCarP.deceler()
     #let's you know if there are cars all backed up all the way so the intersection doesn't add any more cars in
     def allFull (self, end, data):
+        margin = 100 #need a bit more room for the cars coming in to stop
         if self.dir == [0,1] and end == "P":
             for car in self.carsListN:
-                if car.y > self.yP - data.intersecRad:
-                    print (True)
+                if car.y > self.yP - data.intersecRad - margin:
+                    car.color = "purple"
                     return True
         if self.dir == [0,1] and end == "N":
             for car in self.carsListP:
-                if car.y < self.yN + data.intersecRad:
-                    print (True)
+                if car.y < self.yN + data.intersecRad+margin:
+                    car.color = "purple"
                     return True
         if self.dir == [1,0] and end == "P":
             for car in self.carsListN:
-                if car.x > self.xP - data.intersecRad:
-                    print (True)
+                if car.x > self.xP - data.intersecRad-margin:
+                    car.color = "purple"
                     return True
         if self.dir == [1,0] and end == "N":
             for car in self.carsListP:
-                if car.x < self.xN + data.intersecRad:
-                    print (True)
+                if car.x < self.xN + data.intersecRad+margin:
+                    car.color = "purple"
                     return True
         return False
     #make sure cars have space bt each other by decelerating close cars
@@ -194,23 +207,37 @@ class Road (object):
         for car in self.carsListN:
             #vert road case
             if self.dir == [0,1]:
+                if not car.movable:
+                    return car
                 if car.y < self.yN + data.intersecRad:
+                    car.t = random.randint (0,1)#assign a turning direction 
+                    #even if not in a threeway
                     return car
             #hor road case
             elif self.dir == [1,0]:
+                if not car.movable:
+                    return car
                 if car.x < self.xN + data.intersecRad:
+                    car.t = random.randint (0,1)
                     return car
     def carOutP (self, data):
         ##if self.carsListP != []:
-        #now is returning any car that isn't too far in the intersection but it should be the first car that is too far anyways
+        #now is returning any car that isn't too far in the intersection
+        # but it should be the first car that is too far anyways
         for car in self.carsListP:
             #vert road case
             if self.dir == [0,1]:
+                if not car.movable: #if the car had gotten stuck by intersection, need to make sure it is given the opportunity to get out of the intersection
+                    return car
                 if car.y > self.yP - data.intersecRad:
+                    car.t = random.randint (0,1) 
                     return car
             #hor road case
-            else:
+            elif self.dir == [1,0]:
+                if not car.movable:
+                    return car
                 if car.x > self.xP - data.intersecRad:
+                    car.t = random.randint (0,1)
                     return car
     #add a car into the road going from P to N (ie a negative car) but it is
     # entering the positive side of the road.
@@ -284,16 +311,25 @@ class Road (object):
                             self.xP - xCarMargin - xIntersecMargin, 
                             self.yP - yCarMargin - yIntersecMargin, fill = "white")
     def drawCars (self, canvas, data):
+        if self.dir == [0,1]:
+            color = "red"
+        else:
+            color = "blue"
         for car in self.carsListN:
             car.draw(canvas)
+            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = color)
             if car is self.frontCarN:
                 canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
-
+            if not car.movable:
+                canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
         for car in self.carsListP:
             car.draw(canvas)
+            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = color)
             if car is self.frontCarP:
                 canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
-
+            if not car.movable:
+                canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
+                
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)
         self.drawCars (canvas, data)

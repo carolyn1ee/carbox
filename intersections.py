@@ -100,19 +100,27 @@ class Intersection (Road):
     def drawLightEW (self, data, canvas):
         canvas.create_image (self.x-40, self.y, image = self.stopLightImg (data, self.lightEW))
         canvas.create_text (self.x-40, self.y, text = self.EWTime)
+     #returns the road in the roadsList that isn't the nonroad   
+    def otherRoad (self, roadsList, nonRoad):
+        for road in roadsList:
+            if road != nonRoad:
+                return road
+                 
     #handle cars coming thru the intersection:
         #takes cars that are coming into the intersection so that it can deal w/
     def pickUpCars (self, data):
         for road in self.roadsNS:
             if road [1] == "P":
-                if not road[0].allFull ("P", data) and (road[0].lightP == 1 or\
+                #check the road that is in the same direction but not this road isn't full
+                ## just em make a function that returns a undamaged list without a given element...
+                if not self.otherRoad(self.roadsNS, road)[0].allFull ("P", data) and (road[0].lightP == 1 or\
                  road [0].lightP == 2):
                     data.tmpCar = road[0].carOutP(data)
                     if data.tmpCar != None:
                         self.carsNS += [data.tmpCar]
                         road[0].carsListP.remove (data.tmpCar)
             elif road [1] == "N":
-                if not road[0].allFull ("N", data) and (road[0].lightN == 1 or \
+                if not self.otherRoad(self.roadsNS, road)[0].allFull ("N", data) and (road[0].lightN == 1 or\
                 road [0].lightN == 2):
                     data.tmpCar = road[0].carOutN(data)
                     if data.tmpCar != None:
@@ -120,14 +128,14 @@ class Intersection (Road):
                         road[0].carsListN.remove (data.tmpCar)
         for road in self.roadsEW:
             if road [1] == "P":
-                if not road[0].allFull ("N", data) and (road[0].lightP == 1 or \
+                if not self.otherRoad(self.roadsEW, road)[0].allFull ("N", data) and (road[0].lightP == 1 or\
                 road [0].lightP == 2):
                     data.tmpCar = road[0].carOutP(data)
                     if data.tmpCar != None:
                         self.carsWE += [data.tmpCar]
                         road[0].carsListP.remove (data.tmpCar)
             elif road [1] == "N":
-                if not road[0].allFull ("N", data) and (road[0].lightN == 1 or \
+                if not self.otherRoad(self.roadsEW, road)[0].allFull ("N", data) and (road[0].lightN == 1 or\
                 road [0].lightN == 2):
                     data.tmpCar = road[0].carOutN(data)
                     if data.tmpCar != None:
@@ -135,6 +143,8 @@ class Intersection (Road):
                         road[0].carsListN.remove (data.tmpCar)
             ######reading the fullness from the wrong road-- reading fullness from the road it is coming from not the road it is coming to
             ###may have issues because the road will continue to try to accelerate the front car....
+            
+            ###may have issues because threeway doesnt have an opposite car
     def dropOffCars (self, data):
         for road in self.roadsNS:
             if road[1] =="N":
@@ -182,6 +192,7 @@ class Intersection (Road):
                 car1.acceler()
         if carsList != []:
             carsList[0].acceler()
+            print (980988898797686765876587659876979877989)
     def changeAccelAllCars (self):
         self.changeAccelCarsH (self.carsEW)
         self.changeAccelCarsH (self.carsWE)
@@ -212,7 +223,8 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-                #canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
+                canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
+                
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)
         self.drawLightEW (data, canvas)

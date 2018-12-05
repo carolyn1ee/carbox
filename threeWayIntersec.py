@@ -30,12 +30,99 @@ class ThreeWyIntersec (Intersection):
     def __repr__ (self):
         return "threeWay " + super().__repr__()
         
+    def roadFromListInDir (self, roadsList, dir, curRoadsList, curRoad):
+        if curRoad == self.lonelyRoad:
+            for road in roadsList:
+                if road[1] == dir:
+                    return road
+        else: 
+            return (self.otherRoad (curRoadsList, curRoad))
+##all i wanted was to stop the roads from picking up the cars when there isn't any room for the cars to go to...
     def pickUpCars (self, data):
-        super().pickUpCars (data)
+        for road in self.roadsNS:
+            if road [1] == "P":
+                tmpCar = road[0].carOutP(data)
+                if tmpCar != None:
+                    tmpCar.color = "brown"
+                    if (road[0].lightP == 1 or\
+                    road [0].lightP == 2):
+                        if tmpCar.t == 0:
+                            #future road is road you are going to and you want to turn onto the left road so find the road that goes from the left.
+                            futureRoad = self.roadFromListInDir (self.roadsEW, "P", self.roadsNS, road)
+                            d = "P"
+                        elif tmpCar.t == 1:
+                            futureRoad = self.roadFromListInDir (self.roadsEW, "N", self.roadsNS, road)
+                            d = "N"
+                        print (futureRoad[0].allFull (d, data))
+                        if not futureRoad[0].allFull (d, data):
+                            tmpCar.movable = True #allow car to move into intersec
+                            self.carsNS += [tmpCar]
+                            road[0].carsListP.remove (tmpCar)
+                        else: #if the futureRoad is full
+                            tmpCar.movable = False
+            elif road [1] == "N":
+                tmpCar = road[0].carOutN(data)
+                if tmpCar != None:
+                    tmpCar.color = "brown"
+                    if (road[0].lightN == 1 or\
+                    road [0].lightN == 2):
+                        if tmpCar.t == 0:
+                            futureRoad = self.roadFromListInDir (self.roadsEW, "P", self.roadsNS, road)
+                            d = "P"
+                        elif tmpCar.t == 1:
+                            futureRoad = self.roadFromListInDir (self.roadsEW, "N", self.roadsNS, road)
+                            d = "N"
+                        print (futureRoad[0].allFull (d, data))
+                        if not futureRoad[0].allFull (d, data):
+                            tmpCar.movable = True
+                            self.carsSN += [tmpCar]
+                            road[0].carsListN.remove (tmpCar)
+                        else:
+                            tmpCar.movable = False
+                        
+        for road in self.roadsEW:
+            if road [1] == "P":
+                tmpCar = road[0].carOutP(data)
+                if tmpCar != None:
+                    tmpCar.color = "brown"
+                    if (road[0].lightP == 1 or\
+                    road [0].lightP == 2):
+                        if tmpCar.t == 0:
+                            futureRoad = self.roadFromListInDir (self.roadsNS, "P", self.roadsEW, road)
+                            d = "P"
+                        elif tmpCar.t == 1:
+                            futureRoad = self.roadFromListInDir (self.roadsNS, "N", self.roadsEW, road)
+                            d = "N"
+                        print (futureRoad[0].allFull (d, data))
+                        if not futureRoad[0].allFull (d, data):
+                            tmpCar.movable = True
+                            self.carsWE += [tmpCar]
+                            road[0].carsListP.remove (tmpCar)
+                        else:
+                            tmpCar.movable = False
+            elif road [1] == "N":
+                tmpCar = road [0].carOutN (data)
+                if tmpCar != None:
+                    tmpCar.color = "brown"
+                    if (road[0].lightN == 1 or\
+                    road [0].lightN == 2):
+                        if tmpCar.t == 0:
+                            futureRoad = self.roadFromListInDir (self.roadsNS, "P", self.roadsEW, road)
+                            d = "P"
+                        elif tmpCar.t == 1:
+                            futureRoad = self.roadFromListInDir (self.roadsNS, "N", self.roadsEW, road)
+                            d = "N"
+                        print (futureRoad[0].allFull (d, data))
+                        if not futureRoad[0].allFull (d, data):
+                            tmpCar.movable = True
+                            self.carsEW += [tmpCar]
+                            road[0].carsListN.remove (tmpCar)
+                        else:
+                            tmpCar.movable = False
         #mebbe messed up bc tmpCar not defined -- make tmpCar into a data
-        if data.tmpCar != None:
-            #if i picked up a car, make it decide which way it wants to turn 
-            data.tmpCar.t = random.randint (0, 1)
+        # if data.tmpCar != None:
+        #     #if i picked up a car, make it decide which way it wants to turn 
+        #     data.tmpCar.t = random.randint (0, 1)
     
     def convertCar (self, car, dir):
         car.dir = dir
@@ -97,6 +184,7 @@ class ThreeWyIntersec (Intersection):
                     ###if self.carsNS != []:
                     for car in self.carsNS:
                         turningCar = car
+                        #0 corresponds to turning left
                         if turningCar.t == 0:
                             if turningCar.y >= self.y - Car.width//2:
                                 self.convertCar (turningCar, [-1,0])
@@ -179,6 +267,7 @@ class ThreeWyIntersec (Intersection):
                                         road[0].carsListP += [turningCar]
                                         turningCar.speedMax = road[0].speedLimit
                                         self.carsWE.remove(turningCar)
+                                        
                 
     def drawAllIntersec (self, data, canvas):
         super().drawAllIntersec(data, canvas)

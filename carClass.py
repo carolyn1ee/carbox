@@ -14,7 +14,7 @@ class Car(object):
     
     #direction is a list [x, y] ([1,0] means it goes from W to E; [0,1] means it goes from N to S)
     #t is the random variable that will store which direction this car decides to turn if it gets into an intersection.
-    def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = 1, decel = 1, t = None):
+    def __init__(self, data, speedLimit, curSpeed, direction, x, y, accel = 1, decel = 1, t = 0):
         self.speedMax = speedLimit
         self.curSpeed = curSpeed
         self.dir = direction
@@ -42,6 +42,10 @@ class Car(object):
         self.totalTime = 0
 
         self.decelerating = False
+        
+        #intersections will prevent car from moving or accelerating if there is no space in road ahead
+        self.movable = True
+        self.color =""
     def carCopy (self):
         car = Car (self.data, self.speedMax, self.curSpeed, self.dir, self.x, self.y, self.accel, self.decel, self.t)
         car.img = self.img
@@ -62,8 +66,9 @@ class Car(object):
         return str(self.dir) + "location: (" + str (self.x) + ", " + \
             str (self.y) +")" + "speed:" + str (self.curSpeed)
     def move (self):
-        self.x += self.curSpeed * self.dir[0]
-        self.y += self.curSpeed * self.dir[1]
+        if self.movable:
+            self.x += self.curSpeed * self.dir[0]
+            self.y += self.curSpeed * self.dir[1]
     #makes the car decelerate up until stopped
     def deceler (self):
         if self.curSpeed >= self.decel:
@@ -71,7 +76,13 @@ class Car(object):
         else:
             self.curSpeed = 0
     #makes the car's speed increase up until the max speed
-    
+    def acceler (self):
+        if self.movable:
+            if self.curSpeed <= self.speedMax - self.accel:
+                self.curSpeed +=  self.accel
+            else:
+                self.curSpeed = self.speedMax
+            
     def keepTrackOfTime (self, timer):
         if self.startTime == None and self.curSpeed == 0:
             self.startTime = timer
@@ -80,11 +91,7 @@ class Car(object):
             self.startTime = None
             
             
-    def acceler (self):
-        if self.curSpeed <= self.speedMax - self.accel:
-            self.curSpeed +=  self.accel
-        else:
-            self.curSpeed = self.speedMax
+
     def countTimeWaiting (self):
         t = 0
         
