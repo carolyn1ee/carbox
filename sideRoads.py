@@ -33,6 +33,26 @@ class SideRoad (Road):
     def timerFiredRoad (self, data, timer):
         super().timerFiredRoad (data, timer)
         self.addCarsPeriodically (data)
+    # def drawCars (self, canvas, data):
+    #     if self.dir == [0,1]:
+    #         color = "orange"
+    #     else:
+    #         color = "grey"
+    #     for car in self.carsListN:
+    #         car.draw(canvas)
+    #         canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = color)
+    #         if car is self.frontCarN:
+    #             canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+    #         if not car.movable:
+    #             canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
+    #     for car in self.carsListP:
+    #         car.draw(canvas)
+    #         canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = color)
+    #         if car is self.frontCarP:
+    #             canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+    #         if not car.movable:
+    #             canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
+        
     ####standard f'ns    
     def __eq__ (self, other):
         return isinstance(other, SideRoad) and other.xN == self.xN and other.yN == self.yN and other.xP == self.xP and other.yP == self.yP and other.dir == self.dir and other.secsBtCars == self.secsBtCars

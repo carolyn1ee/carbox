@@ -1,4 +1,4 @@
-#runs the setup and simulatore
+ #runs the setup and simulatore
 from Simulator import *
 import copy
 import random
@@ -24,7 +24,7 @@ def createTimes (intersecs, lights):
         lights [i][1] = random.choice ([3, 4, 5, 6])
 
 ##run
-
+ 
 def optimize (runs):
     r, i, err, errMsg = run(set=True, width=800, height=800, lights = None, roads = [], intersecs = {})
     lights =  [[None, None] for i in range (len (i))]

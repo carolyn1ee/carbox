@@ -66,9 +66,8 @@ class Car(object):
         return str(self.dir) + "location: (" + str (self.x) + ", " + \
             str (self.y) +")" + "speed:" + str (self.curSpeed)
     def move (self):
-        if self.movable:
-            self.x += self.curSpeed * self.dir[0]
-            self.y += self.curSpeed * self.dir[1]
+        self.x += self.curSpeed * self.dir[0]
+        self.y += self.curSpeed * self.dir[1]
     #makes the car decelerate up until stopped
     def deceler (self):
         if self.curSpeed >= self.decel:
@@ -77,11 +76,10 @@ class Car(object):
             self.curSpeed = 0
     #makes the car's speed increase up until the max speed
     def acceler (self):
-        if self.movable:
-            if self.curSpeed <= self.speedMax - self.accel:
-                self.curSpeed +=  self.accel
-            else:
-                self.curSpeed = self.speedMax
+        if self.curSpeed <= self.speedMax - self.accel:
+            self.curSpeed +=  self.accel
+        else:
+            self.curSpeed = self.speedMax
             
     def keepTrackOfTime (self, timer):
         if self.startTime == None and self.curSpeed == 0:

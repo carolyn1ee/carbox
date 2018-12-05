@@ -141,7 +141,6 @@ class Intersection (Road):
                     if data.tmpCar != None:
                         self.carsEW += [data.tmpCar]
                         road[0].carsListN.remove (data.tmpCar)
-            ######reading the fullness from the wrong road-- reading fullness from the road it is coming from not the road it is coming to
             ###may have issues because the road will continue to try to accelerate the front car....
             
             ###may have issues because threeway doesnt have an opposite car
@@ -190,9 +189,9 @@ class Intersection (Road):
                 car1.deceler()
             else:
                 car1.acceler()
+                car1.color = ""
         if carsList != []:
             carsList[0].acceler()
-            print (980988898797686765876587659876979877989)
     def changeAccelAllCars (self):
         self.changeAccelCarsH (self.carsEW)
         self.changeAccelCarsH (self.carsWE)
@@ -223,7 +222,7 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-                canvas.create_oval  (car.x - 20, car.y - 20, car.x +20, car.y + 20, fill = "yellow")
+                canvas.create_oval  (car.x - 30, car.y , car.x +30, car.y + 20, fill = "yellow")
                 
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)

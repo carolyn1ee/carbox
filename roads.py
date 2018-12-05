@@ -58,10 +58,12 @@ class Road (object):
 ##timerFiredF'ns:
     def moveCars (self, timer):
         for car in self.carsListN:
-            car.move()
+            if car.movable:
+                car.move()
             car.keepTrackOfTime(timer)
         for car in self.carsListP:
-            car.move()
+            if car.movable:
+                car.move()
             car.keepTrackOfTime(timer)
     def timerIsNSecs (self, data, m, n=0):
         #timerFired goes off 10 times per sec
@@ -76,6 +78,7 @@ class Road (object):
             for car in self.carsListP:
                 if not car.movable:
                     return car
+            for car in self.carsListP:
                 if car.y < self.yP - data.intersecRad - car.buffer():
                     return car
         elif dir ==[0,-1]:
@@ -146,22 +149,22 @@ class Road (object):
         margin = 100 #need a bit more room for the cars coming in to stop
         if self.dir == [0,1] and end == "P":
             for car in self.carsListN:
-                if car.y > self.yP - data.intersecRad - margin:
+                if car.y > self.yP - data.intersecRad - margin and car.curSpeed == 0:
                     car.color = "purple"
                     return True
         if self.dir == [0,1] and end == "N":
             for car in self.carsListP:
-                if car.y < self.yN + data.intersecRad+margin:
+                if car.y < self.yN + data.intersecRad+margin and car.curSpeed == 0:
                     car.color = "purple"
                     return True
         if self.dir == [1,0] and end == "P":
             for car in self.carsListN:
-                if car.x > self.xP - data.intersecRad-margin:
+                if car.x > self.xP - data.intersecRad-margin and car.curSpeed == 0:
                     car.color = "purple"
                     return True
         if self.dir == [1,0] and end == "N":
             for car in self.carsListP:
-                if car.x < self.xN + data.intersecRad+margin:
+                if car.x < self.xN + data.intersecRad+margin and car.curSpeed == 0:
                     car.color = "purple"
                     return True
         return False
@@ -178,9 +181,9 @@ class Road (object):
                     car1.decelerating = True
                     if car1.hasCrashed(car2):
                         data.crashes += 1
-            if not(car1 == self.frontCarN) and not car1.decelerating:
+            if not(car1 == self.frontCarN) and not car1.decelerating and car1.movable:
                 car1.acceler()
-        if self.carsListN != [] and not(self.carsListN [0] == self.frontCarN):
+        if self.carsListN != [] and not(self.carsListN [0] == self.frontCarN) and self.carsListN [0].movable:
             self.carsListN [0].acceler()
         for c in range(1, len(self.carsListP)):
             car1 = self.carsListP [c]
@@ -192,9 +195,9 @@ class Road (object):
                         data.crashes += 1
                     car1.deceler()
                     car1.decelerating = True
-            if not(car1 == self.frontCarP) and not car1.decelerating:
+            if not(car1 == self.frontCarP) and not car1.decelerating and car1.movable:
                 car1.acceler()
-        if self.carsListP != [] and not (self.carsListP [0] == self.frontCarP):
+        if self.carsListP != [] and not (self.carsListP [0] == self.frontCarP) and self.carsListP [0].movable:
             self.carsListP [0].acceler()
 ###some methods for intersection to call
 # intersection will call on this function in timerFired when the light is green to grab the 
@@ -204,38 +207,50 @@ class Road (object):
 #to the next road (adds car to next road)
     def carOutN (self, data):
         ## if self.carsListN != []:
-        for car in self.carsListN:
+            
             #vert road case
-            if self.dir == [0,1]:
+        if self.dir == [0,1]:
+            for car in self.carsListN:
                 if not car.movable:
+                    # car.color = "pink"
                     return car
+            for car in self.carsListN:
                 if car.y < self.yN + data.intersecRad:
                     car.t = random.randint (0,1)#assign a turning direction 
                     #even if not in a threeway
+                    # car.color = "pink"
                     return car
             #hor road case
-            elif self.dir == [1,0]:
+        elif self.dir == [1,0]:
+            for car in self.carsListN:
                 if not car.movable:
+                    # car.color = "pink"
                     return car
+            for car in self.carsListN:
                 if car.x < self.xN + data.intersecRad:
                     car.t = random.randint (0,1)
+                    # car.color = "pink"
                     return car
     def carOutP (self, data):
         ##if self.carsListP != []:
         #now is returning any car that isn't too far in the intersection
         # but it should be the first car that is too far anyways
-        for car in self.carsListP:
+        
             #vert road case
-            if self.dir == [0,1]:
-                if not car.movable: #if the car had gotten stuck by intersection, need to make sure it is given the opportunity to get out of the intersection
+        if self.dir == [0,1]:
+            for car in self.carsListP:
+                if not car.movable: #if the car had gotten stuck by intersection, need to make sure it is given the opportunity to get out of the intersection. want to check its movability before positioning because the ones that are stuck are going to block up all the ones behind
                     return car
+            for car in self.carsListP:
                 if car.y > self.yP - data.intersecRad:
                     car.t = random.randint (0,1) 
                     return car
             #hor road case
-            elif self.dir == [1,0]:
+        elif self.dir == [1,0]:
+            for car in self.carsListP:
                 if not car.movable:
                     return car
+            for car in self.carsListP:
                 if car.x > self.xP - data.intersecRad:
                     car.t = random.randint (0,1)
                     return car
@@ -281,7 +296,6 @@ class Road (object):
             self.decelP = False
         self.slowFrontIfYellRed (data)
         self.changeAccelCars (data)
-        #print (self.lightN, self.lightP)
         
 ##view functions    
     def drawRoad(self, canvas, data):
@@ -317,16 +331,16 @@ class Road (object):
             color = "blue"
         for car in self.carsListN:
             car.draw(canvas)
-            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = color)
-            if car is self.frontCarN:
-                canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
+            # if car is self.frontCarN:
+            #     canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
             if not car.movable:
                 canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
         for car in self.carsListP:
             car.draw(canvas)
-            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = color)
-            if car is self.frontCarP:
-                canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
+            # if car is self.frontCarP:
+            #     canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
             if not car.movable:
                 canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
                 
