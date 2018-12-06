@@ -33,6 +33,8 @@ def init(data, roads, intersecs, set, error, errorMsg):
     data.t = 0
     
     #syntax for imgs from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python and from course website
+    # images from https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjuxora1YrfAhXvwVkKHQXDCOkQjRx6BAgBEAU&url=https%3A%2F%2Fpixabay.com%2Fen%2Ftraffic-light-yellow-traffic-lights-149582%2F&psig=AOvVaw02XfkJTMU_gd2fvVC1QYNd&ust=1544167324032447
+    
     data.yellowLightImg = PhotoImage(file="imgs/yellowLight.gif")
     data.redLightImg = PhotoImage(file="imgs/redLight.gif")
     data.greenLightImg = PhotoImage(file="imgs/greenLight.gif")

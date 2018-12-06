@@ -7,6 +7,7 @@ from PIL import ImageTk,Image
     
 class Car(object): 
     #cite: syntax for images from https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python and from course website
+    #image from https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwi_86L_1YrfAhUoo1kKHUpMAFMQjRx6BAgBEAU&url=http%3A%2F%2Fwww.clker.com%2Fclipart-red-car-top-view-7.html&psig=AOvVaw3EnnEEippt4ZNXHDfM-f_y&ust=1544167399921836
     carImgNS = "imgs/imageCarNS.gif"
     carImgSN = "imgs/imageCarSN.gif"
     carImgEW = "imgs/imageCarEW.gif"
