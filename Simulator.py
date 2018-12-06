@@ -28,6 +28,7 @@ def init(data, roads, intersecs, set, error, errorMsg):
     
     data.tmpCar = None
     data.crashes = 0 #num times cars run into each other
+    data.maxBack = 0
     
     #timer
     data.t = 0
@@ -61,7 +62,15 @@ def avgTimeSpentWaiting ():
     if SideIntersection.totalCars == 0:
         return None
     return SideIntersection.totalTimeWaiting/SideIntersection.totalCars
-
+    
+def curMaxBackup (data):
+    m = 0
+    for road in data.roads:
+        roadBackup = road.backupNum()
+        if  roadBackup > m:
+            m = roadBackup
+    return m
+    
 def keyPressed(event, data):
     if data.set:
         if data.screen == "startScreen":
@@ -76,6 +85,9 @@ def keyPressed(event, data):
     
 
 def timerFired(data):
+    curMax = curMaxBackup (data) 
+    if curMax > data.maxBack:
+        data.maxBack = curMax #update the maximum backup 
     if not data.set:
         data.t += 1
         for road in data.roads:
@@ -148,8 +160,10 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python
     #function and button to close window from https://stackoverflow.com/questions/9987624/how-to-close-a-tkinter-window-by-pressing-a-button/9987684
     def close_window (): 
-        root.destroy()
-    
+        try:
+            root.destroy()
+        except:
+            pass
     root ["bg"] = "black"
     root.resizable(width=False, height=False) # prevents resizing window
     init(data, roads, intersecs, set, error, errorMsg)
@@ -197,7 +211,7 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     
     root.mainloop()  # blocks until window is closed
     if not data.set:
-        return (SideIntersection.totalTimeWaiting, SideIntersection.totalCars, avgTimeSpentWaiting())
+        return (SideIntersection.totalTimeWaiting, SideIntersection.totalCars, avgTimeSpentWaiting(), data.maxBack) 
     else:
         replaceIntersections(data)
         return (data.roads, data.intersecs, data.error, data.errorMsg)

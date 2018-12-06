@@ -9,7 +9,7 @@ def copyRoads (roads):
     for r in roads:
         l += [r.roadCopy()]
     return l
-def copyIntersecs (intersecs, roads):
+def copyIntersecs (intersecs, roads): 
     l={}
     for r in intersecs:
         l[r] = intersecs[r].intersecCopy(roads)  
@@ -28,7 +28,7 @@ def createTimes (intersecs, lights):
 def optimize (runs):
     r, i, err, errMsg = run(set=True, width=800, height=800, lights = None, roads = [], intersecs = {})
     lights =  [[None, None] for i in range (len (i))]
-    minAvg = 10**99
+    minBad = 10**99
     for y in range (runs):
         createTimes(i, lights)
         #print ("ROADS ORIGINAL" + str(r) + "\n\n\n\n")
@@ -37,16 +37,18 @@ def optimize (runs):
         intersecs = copyIntersecs (i, roads)
         print ("NEW INTERSECS" + str(intersecs) + "\n\n\n\n\n\n\n\n\n\n")
         
-        tmpAvg = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = err, errorMsg = errMsg)) [2]
+        tmpAvg, tmpMaxBack = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = err, errorMsg = errMsg)) [2:4]
         print ("AFTER SIMULATION" + str(intersecs) + "\n\n\n\n\n\n\n\n\n\n")
         
         if tmpAvg == None:
             #####
             print ("you need to let the thing run for a little bit so you get a bit of data" + 42/0)
-        if minAvg > tmpAvg:
+        if minBad > tmpAvg * tmpMaxBack:
+            minBad = tmpAvg * tmpMaxBack
             minAvg = tmpAvg
+            minBack = tmpMaxBack 
             minLights = lights
-    (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = True, errorMsg = "here is the minimum avg: "+ str(minAvg)+" and this is the timing \nfor the lights on the next screen."))
+    (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = True, errorMsg = "here is the minimum avg time waiting at the lights: "+ str(minAvg)+"\nand this is is the maximum number of cars that were backed up \nat an intersection in the best simulation: " + str (minBack) + "\nand this is the best timing \nfor the lights on the next screen."))
     roads = copyRoads (r)
     intersecs = copyIntersecs (i, roads)
     (run (set = False, width = 800, height = 800, lights = minLights, roads = roads, intersecs = intersecs, error = False, errorMsg = "", slow = True))

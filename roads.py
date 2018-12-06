@@ -1,4 +1,8 @@
 #handles cars in its road and sends cars into the connecting intersection
+
+
+##### need to set the front car if it gets red and there is a car that is way too far in the intersection already -- mebbe bc tried to go forward after being not movable and then try to move but then the light turned ....
+
 from carClass import *
 import random
 class Road (object):
@@ -56,15 +60,35 @@ class Road (object):
                         carsListN = None, carsListP = None, speedLimit = self.speedLimit)
     def __hash__(self):
         return hash((self.xN, self.yN, self.xP, self.yP, tuple(self.dir)))
+        
+## for optimizing:
+    #counts the number of cars stopped to find the max number of cars backed up at an intersection.
+    def backupNum(self):
+        numCarsN = 0
+        numCarsP = 0
+        if self.lightN == 0:
+            for car in self.carsListN:
+                if car.curSpeed == 0:
+                    numCarsN += 1
+        if self.lightP == 0:
+            for car in self.carsListP:
+                if car.curSpeed == 0:
+                    numCarsP += 1
+        return max (numCarsP, numCarsN)
+
 ##timerFiredF'ns:
     def moveCars (self, timer):
         for car in self.carsListN:
             if car.movable:
                 car.move()
+            else:
+                car.curSpeed = 0
             car.keepTrackOfTime(timer)
         for car in self.carsListP:
             if car.movable:
                 car.move()
+            else:
+                car.speed = 0 #if the car cannot move, set the car speed to 0
             car.keepTrackOfTime(timer)
     def timerIsNSecs (self, data, m, n=0):
         #timerFired goes off 10 times per sec
@@ -80,28 +104,28 @@ class Road (object):
                 if not car.movable:
                     return car
             for car in self.carsListP:
-                if car.y < self.yP - data.intersecRad - car.buffer():
+                if car.y < self.yP - data.intersecRad - car.buffer()//2:
                     return car
         elif dir ==[0,-1]:
             for car in self.carsListN:
                 if not car.movable:
                     return car
             for car in self.carsListN:
-                if car.y > self.yN + data.intersecRad + car.buffer():
+                if car.y > self.yN + data.intersecRad + car.buffer()//2:
                     return car
         elif dir == [-1,0]:
             for car in self.carsListN:
                 if not car.movable:
                     return car
             for car in self.carsListN:
-                if car.x > self.xN + data.intersecRad + car.buffer():
+                if car.x > self.xN + data.intersecRad + car.buffer()//2:
                     return car
         elif dir == [1,0]:
             for car in self.carsListP:
                 if not car.movable:
                     return car
             for car in self.carsListP:
-                if car.x < self.xP  - data.intersecRad - car.buffer():
+                if car.x < self.xP  - data.intersecRad - car.buffer()//2:
                     return car
 #checks if it is close enough to the intersection to start to slow down the car
     def inSlowArea (self, data, car):
@@ -115,7 +139,7 @@ class Road (object):
         elif car.dir == [1, 0]:
             return car.x > self.xP - buffer - data.intersecRad
         elif car.dir == [-1,0]:
-            return car.x < self.xN +buffer +data.intersecRad
+            return car.x < self.xN + buffer + data.intersecRad
        
        #when you get too far towards an intersection need to do a hard stop
     def tooFar (self, data, car):
@@ -129,7 +153,7 @@ class Road (object):
         elif car.dir == [1, 0]:
             return car.x > self.xP - buffer - data.intersecRad
         elif car.dir == [-1,0]:
-            return car.x < self.xN +buffer +data.intersecRad
+            return car.x < self.xN + buffer + data.intersecRad
 
 #control cars
     def setFrontCar(self, data):
@@ -230,24 +254,24 @@ class Road (object):
         if self.dir == [0,1]:
             for car in self.carsListN:
                 if not car.movable:
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
             for car in self.carsListN:
                 if car.y < self.yN + data.intersecRad:
                     car.t = random.randint (0,1)#assign a turning direction 
                     #even if not in a threeway
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
             #hor road case
         elif self.dir == [1,0]:
             for car in self.carsListN:
                 if not car.movable:
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
             for car in self.carsListN:
                 if car.x < self.xN + data.intersecRad:
                     car.t = random.randint (0,1)
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
     def carOutP (self, data):
         ##if self.carsListP != []:
@@ -258,23 +282,23 @@ class Road (object):
         if self.dir == [0,1]:
             for car in self.carsListP:
                 if not car.movable: #if the car had gotten stuck by intersection, need to make sure it is given the opportunity to get out of the intersection. want to check its movability before positioning because the ones that are stuck are going to block up all the ones behind
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
             for car in self.carsListP:
                 if car.y > self.yP - data.intersecRad:
                     car.t = random.randint (0,1) 
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
             #hor road case
         elif self.dir == [1,0]:
             for car in self.carsListP:
                 if not car.movable:
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
             for car in self.carsListP:
                 if car.x > self.xP - data.intersecRad:
                     car.t = random.randint (0,1)
-                    car.color = "pink"
+                    # car.color = "pink"
                     return car
     #add a car into the road going from P to N (ie a negative car) but it is
     # entering the positive side of the road.
@@ -309,8 +333,8 @@ class Road (object):
 #call this in simulation in timerFired
     def timerFiredRoad (self, data, timer):
         if data.t % 5 == 0:
-            self.moveCars(timer)
             self.changeAccelCars (data)
+            self.moveCars(timer)
         self.setFrontCar (data)
         if self.lightN == 1:
             self.frontCarN = None
@@ -355,15 +379,17 @@ class Road (object):
         for car in self.carsListN:
             car.draw(canvas)
             canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
-            # if car is self.frontCarN:
-            #     canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+            if car is self.frontCarN:
+                canvas.create_oval(car.x - 20, car.y - 30, car.x, car.y + 30, fill = "white")
+                car.color = "grey"
             if not car.movable:
                 canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
         for car in self.carsListP:
             car.draw(canvas)
             canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
-            # if car is self.frontCarP:
-            #     canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = "white")
+            if car is self.frontCarP:
+                canvas.create_oval(car.x - 20, car.y - 30, car.x, car.y + 30, fill = "white")
+                car.color = "grey"
             if not car.movable:
                 canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
                 

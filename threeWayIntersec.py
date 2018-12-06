@@ -46,7 +46,7 @@ class ThreeWyIntersec (Intersection):
         for road in self.roadsNS:
             if road [1] == "P":
                 tmpCar = road[0].carOutP(data)
-                if tmpCar != None:
+                if tmpCar != None and tmpCar != road[0].frontCarP:
                     # if (road[0].lightP == 1 or\
                     # road [0].lightP == 2):
                     if (not tmpCar.movable and (road[0].lightP == 1) or road [0].lightP == 2) or (tmpCar.movable): #if it isn't movable, then the light needs to be green. if it is movable, then you can just let it be accepted into the intersection (if the next road is green. otherwise, this car is notmovable and the light is red so you should just let it be
@@ -66,7 +66,7 @@ class ThreeWyIntersec (Intersection):
                             tmpCar.movable = False
             elif road [1] == "N":
                 tmpCar = road[0].carOutN(data)
-                if tmpCar != None:
+                if tmpCar != None and tmpCar != road[0].frontCarN:
                     # tmpCar.color = "brown"
                     # if (road[0].lightN == 1 or\
                     # road [0].lightN == 2):
@@ -85,7 +85,7 @@ class ThreeWyIntersec (Intersection):
         for road in self.roadsEW:
             if road [1] == "P":
                 tmpCar = road[0].carOutP(data)
-                if tmpCar != None:
+                if tmpCar != None and tmpCar != road[0].frontCarP:
                     #tmpCar.color = "brown"
                     # if (road[0].lightP == 1 or\
                     # road [0].lightP == 2):
@@ -104,7 +104,7 @@ class ThreeWyIntersec (Intersection):
                             tmpCar.movable = False
             elif road [1] == "N":
                 tmpCar = road [0].carOutN (data)
-                if tmpCar != None:
+                if tmpCar != None and tmpCar != road[0].frontCarN:
                     # tmpCar.color = "brown"
                     # if (road[0].lightN == 1 or\
                     # road [0].lightN == 2):

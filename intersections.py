@@ -113,41 +113,53 @@ class Intersection (Road):
             if road [1] == "P":
                 #check the road that is in the same direction but not this road isn't full
                 ## just em make a function that returns a undamaged list without a given element...
-                if not self.otherRoad(self.roadsNS, road)[0].allFull ("P", data) and (road[0].lightP == 1 or\
-                 road [0].lightP == 2):
-                    tmpCar = road[0].carOutP(data)
-                    if tmpCar != None:
-                        tmpCar.color = "red"
-                        self.carsNS += [tmpCar]
-                        road[0].carsListP.remove (tmpCar)
+                tmpCar = road[0].carOutP(data)
+                if tmpCar != None and tmpCar != road [0].frontCarP:
+                    if not self.otherRoad(self.roadsNS, road)[0].allFull ("P", data):
+                        if (not tmpCar.movable and (road[0].lightP == 1) or road [0].lightP == 2) or (tmpCar.movable):
+                            tmpCar.color = "red"
+                            tmpCar.movable = True
+                            self.carsNS += [tmpCar]
+                            road[0].carsListP.remove (tmpCar)
+                    else:
+                        tmpCar.movable = False
             elif road [1] == "N":
-                if not self.otherRoad(self.roadsNS, road)[0].allFull ("N", data) and (road[0].lightN == 1 or\
-                road [0].lightN == 2):
-                    tmpCar = road[0].carOutN(data)
-                    if tmpCar != None:
-                        tmpCar.color = "red"
-                        self.carsSN += [tmpCar]
-                        road[0].carsListN.remove (tmpCar)
+                tmpCar = road[0].carOutN(data)
+                if tmpCar != None and tmpCar != road [0].frontCarN:
+                    if not self.otherRoad(self.roadsNS, road)[0].allFull ("N", data):
+                        if (not tmpCar.movable and (road[0].lightN == 1) or road [0].lightN == 2) or (tmpCar.movable):
+                            tmpCar.color = "red"
+                            tmpCar.movable = True
+                            self.carsSN += [tmpCar]
+                            road[0].carsListN.remove (tmpCar)
+                    else:
+                        tmpCar.movable = False
         for road in self.roadsEW:
             if road [1] == "P":
-                if not self.otherRoad(self.roadsEW, road)[0].allFull ("P", data) and (road[0].lightP == 1 or\
-                road [0].lightP == 2):
-                    tmpCar = road[0].carOutP(data)
-                    if tmpCar != None:
-                        tmpCar.color = "red"
-                        self.carsWE += [tmpCar]
-                        road[0].carsListP.remove (tmpCar)
+                tmpCar = road[0].carOutP(data)
+                if tmpCar != None and tmpCar != road [0].frontCarP:
+                    if not self.otherRoad(self.roadsEW, road)[0].allFull ("P", data):
+                        if (not tmpCar.movable and (road[0].lightP == 1) or road [0].lightP == 2) or (tmpCar.movable):
+                            tmpCar.color = "red"
+                            tmpCar.movable = True
+                            self.carsWE += [tmpCar]
+                            road[0].carsListP.remove (tmpCar)
+                    else:
+                        tmpCar.movable = False
             elif road [1] == "N":
-                if not self.otherRoad(self.roadsEW, road)[0].allFull ("N", data) and (road[0].lightN == 1 or\
-                road [0].lightN == 2):
-                    tmpCar = road[0].carOutN(data)
-                    if tmpCar != None:
-                        tmpCar.color = "red"
-                        self.carsEW += [tmpCar]
-                        road[0].carsListN.remove (tmpCar)
+                tmpCar = road[0].carOutN(data)
+                if tmpCar != None and tmpCar != road [0].frontCarN:
+                    if not self.otherRoad(self.roadsEW, road)[0].allFull ("N", data):
+                        if (not tmpCar.movable and (road[0].lightN == 1) or road [0].lightN == 2) or (tmpCar.movable):
+                            tmpCar.color = "red"
+                            tmpCar.movable = True
+                            self.carsEW += [tmpCar]
+                            road[0].carsListN.remove (tmpCar)
+                    else:
+                        tmpCar.movable = False
             ###may have issues because the road will continue to try to accelerate the front car....
             
-            ###may have issues because threeway doesnt have an opposite car
+            ###may have issues because threeway doesnt have an opposite road prob fine
     def dropOffCars (self, data):
         for road in self.roadsNS:
             if road[1] =="N":
@@ -193,7 +205,6 @@ class Intersection (Road):
                 car1.deceler()
             else:
                 car1.acceler()
-                car1.color = ""
         if carsList != []:
             carsList[0].acceler()
     def changeAccelAllCars (self):
