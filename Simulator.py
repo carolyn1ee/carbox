@@ -135,7 +135,7 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
         redrawAll(canvas, data)
         canvas.update()  
     def inputRate ():
-        data.rate= int(inputRate.get())  
+        data.rate= int(inputR.get())  
     def inputSpeedLim ():
         data.speedLim = int(inputSpeedL.get())  
     def inputWeightBack ():
@@ -175,8 +175,10 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     
     #button and text syntax from Edward Lu (elu2) 
     rateFrame = Frame (root, borderwidth = 2, relief = "solid")
-    inputRate = Entry (rateFrame, borderwidth = 2, relief = "solid")
-    buttonRate = Button (rateFrame, command = inputRate, width = 20, height = 1,
+    
+    realRateFrame =  Frame (rateFrame, borderwidth = 2, relief = "solid")
+    inputR = Entry (realRateFrame, borderwidth = 2, relief = "solid")
+    buttonRate = Button (realRateFrame, command = inputRate, width = 20, height = 1,
         text = "secs between cars")
     speedFrame = Frame (rateFrame, borderwidth = 2, relief = "solid")
     inputSpeedL = Entry (speedFrame, borderwidth = 2, relief = "solid")
@@ -208,7 +210,8 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     canvas.pack(side = RIGHT)
     if data.set:
         rateFrame.pack (side = LEFT, fill = Y)
-        inputRate.pack (side = TOP)
+        realRateFrame.pack (side = TOP)
+        inputR.pack (side = TOP)
         buttonRate.pack (side = TOP)
         speedFrame.pack (side = TOP)
         inputSpeedL.pack (side = TOP)

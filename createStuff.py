@@ -82,6 +82,8 @@ def createRoad (data):
     if isASideRoad (data):
         road = SideRoad (data, dir = data.roadDir, xN = data.tmpStartX,\
             yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars = int(data.rate), speedLimit = int(data.speedLim))
+        print  (data.rate)
+            
             
     else:
         road = Road (data, dir = data.roadDir, xN = data.tmpStartX,

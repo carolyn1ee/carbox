@@ -3,10 +3,11 @@ from roads import *
 #from simulation import *
 class SideRoad (Road):
     def __init__ (self, data, dir, xN, yN, xP, yP,\
-                      secsBtCars, carsListN=None, carsListP=None, speedLimit = 5):
+                      secsBtCars, carsListN=None, carsListP=None, speedLimit = 10):
         super().__init__(data, dir, xN, yN, xP, yP,\
                     carsListN, carsListP, speedLimit)
         self.secsBtCars = secsBtCars
+        print (self.secsBtCars)
     def __hash__ (self):
             return hash((self.xN, self.yN, self.xP, self.yP, tuple(self.dir), self.secsBtCars))
 
