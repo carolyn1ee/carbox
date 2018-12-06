@@ -7,7 +7,6 @@ class SideRoad (Road):
         super().__init__(data, dir, xN, yN, xP, yP,\
                     carsListN, carsListP, speedLimit)
         self.secsBtCars = secsBtCars
-        print (self.secsBtCars)
     def __hash__ (self):
             return hash((self.xN, self.yN, self.xP, self.yP, tuple(self.dir), self.secsBtCars))
 
