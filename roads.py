@@ -372,26 +372,26 @@ class Road (object):
                             self.xP - xCarMargin - xIntersecMargin, 
                             self.yP - yCarMargin - yIntersecMargin, fill = "white")
     def drawCars (self, canvas, data):
-        if self.dir == [0,1]:
-            color = "red"
-        else:
-            color = "blue"
+        # if self.dir == [0,1]:
+        #     color = "red"
+        # else:
+        #     color = "blue"
         for car in self.carsListN:
             car.draw(canvas)
-            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
-            if car is self.frontCarN:
-                canvas.create_oval(car.x - 20, car.y - 30, car.x, car.y + 30, fill = "white")
-                car.color = "grey"
-            if not car.movable:
-                canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
+            # canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
+            # if car is self.frontCarN:
+            #     canvas.create_oval(car.x - 20, car.y - 30, car.x, car.y + 30, fill = "white")
+            #     car.color = "grey"
+            # if not car.movable:
+            #     canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
         for car in self.carsListP:
             car.draw(canvas)
-            canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
-            if car is self.frontCarP:
-                canvas.create_oval(car.x - 20, car.y - 30, car.x, car.y + 30, fill = "white")
-                car.color = "grey"
-            if not car.movable:
-                canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
+            # canvas.create_oval(car.x - 20, car.y - 20, car.x + 20, car.y + 20, fill = car.color)
+            # if car is self.frontCarP:
+            #     canvas.create_oval(car.x - 20, car.y - 30, car.x, car.y + 30, fill = "white")
+            #     car.color = "grey"
+            # if not car.movable:
+            #     canvas.create_rectangle  (car.x , car.y - 20, car.x +20, car.y + 20, fill = "green")
                 
     def drawAllRoad (self, canvas, data):
         self.drawRoad (canvas, data)

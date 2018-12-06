@@ -238,8 +238,8 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-                canvas.create_oval  (car.x - 20, car.y -20, car.x +30, car.y + 20, fill = car.color)
-                canvas.create_oval  (car.x - 30, car.y , car.x +30, car.y + 20, fill = "yellow")
+                # canvas.create_oval  (car.x - 20, car.y -20, car.x +30, car.y + 20, fill = car.color)
+                # canvas.create_oval  (car.x - 30, car.y , car.x +30, car.y + 20, fill = "yellow")
                 
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)
