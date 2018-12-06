@@ -1,6 +1,6 @@
 # carbox
 
-Run the realOptimizer.py file. Currently only optimizes on 3 simulation points.
+Run the realOptimizer.py file. 
 
 To create roads, click to begin a road and then use arrow keys to grow the road. Press enter when done drawing the road. If you want a particular road to have particular speed limit or rate for the cars to come in from off screen, put that number in the appropriate box and press the button before drawing that road. For speed, it should be between 1 and 20...
 
