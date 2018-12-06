@@ -1,5 +1,5 @@
-﻿Project description:
-Traffic light simulator: simulates cars going through intersection and finds optimal timing for the lights. Optimal timing will minimize values such as the average amount of time spent waiting at an intersection and the number of cars stopped at an intersection. User can add in new intersections that connect to preexisting intersections. Additionally, after running many simulations, the program will show a table of the different values (including how average time each car spent waiting for a light, number of cars stopped at an intersection, maximum amount of time a single car spent waiting for a light) for different timings of the lights.
+Project description:
+Traffic light simulator: simulates cars going through intersection and finds optimal timing for the lights. Optimal timing will minimize values such as the average amount of time spent waiting at an intersection and the number of cars stopped at an intersection. User can add in new intersections that connect to preexisting intersections. Additionally, after running many simulations, it shows how much time on average was spent at an intersection waiting for a green light and the max number of cars backed up in the best set of timings which minimized these two factors. 
 Competitive Analysis:
 Other traffic light simulators (https://ieeexplore.ieee.org/document/1371482) are able to do analysis on different traffic patterns such as when more or fewer cars turn left, how many cars come through at a certain and the traffic lights in the simulator are traffic actuated instead of timer based. My simulator will only do timer based simulations and find the ideal timing based off that. Intersections whose lights are timer based are much cheaper to install because the equipment to sense the cars is unnecessary. Unfortunately though, timer based light systems are less efficient than traffic actuated lights since the timer based lights cannot react to different situations. If I have time, it would be nice to make the cars turn.
         Another traffic simulator(http://www.traffic-simulation.de/) shows the graphics of the cars on a roundabout. It allows the user to decide where to put traffic lights and manually change the lights. The user can also decide the acceleration of the cars, which cars have priority, which direction all the cars turn and the number of cars coming in. My simulator also shows the graphics of the cars. My simulator also takes in the number of cars coming in as input from the user but allows the user to customize the rate of cars coming in from each of the roads, not just the total rate of cars coming in. This allows my simulator to have roads that are busier than others. My simulation does not use a roundabout, nor allow the user to input acceleration for the cars nor allow the cars to turn, nor allow the user to manually change the lights. Instead, the lights are on a timer -- the user can change the rate that the lights change, but also the simulator will be able to find the ideal timing for the lights. 
@@ -95,4 +95,38 @@ Not going to go all wiggly --- can only go vert or horiz. Intersections can only
 TP3 update:
 
 
-Now I have almost made it so that the cars never run into each other-- even when the road they are going to is full the cars will wait in their own intersection and not create grid lock. I still have to add more features to optimize off of and create an optimizer….. D:
+Now I have almost made it so that the cars never run into each other-- even when the road they are going to is full the cars will wait in their own intersection and not create grid lock. 
+
+The optimizer now takes into account the avg waiting time as well as the maximum number of cars backed up at a light. User can input weights for two much they care about the factors.
+
+
+The most algorithmically complex part of my project now is controlling the cars as they travel through roads and intersections. I reorganized my code so that the roads and intersections now do different things than before, since the intersections and roads have to be able to be created by the user.
+
+
+
+
+Roads class:
+1. data:
+   1. Has a list of cars that are in the road
+   2. Knows where itself is
+   3. Has a speed limit
+1. Timerfired:
+   1. Checks through all of the cars and if there is space for a car to move forward or accelerate, then it accelerates that car. Otherwise, if there is a car that is in front of the car and it is too close, the road will slow down the car so that they don’t crash
+   2. Checks to see if the cars are too close the edge of the road and if the light is red, it will slow and stop the cars so they don’t run the red light.
+   3. If the cars are close to edge of the road and green light, the road will output the car to the intersection which will then handle the car.
+        Also:
+        Finds the car that is too close to the intersection and stops if it is red light
+        Determines whether or not its self is full of cars
+1. Draw:
+   1. Draws all the cars
+Intersection class:
+1. Data:
+   1. Has a list of roads connected to it
+   2. Has a location
+   3. List of the cars that are going through the intersection
+1. Timerfired:
+   1. Moves the cars through intersection
+   2. If cars get close to edge of the intersection, outputs the cars to the road
+   3. If it is a three-way intersection, turns cars
+   4. If a car is trying to go into an intersection but the road it is going to is full, intersection will stop the car and make it wait for the next road to become empty before letting the car move into the intersection. This way there is no gridlock and the cars don’t run into each other
+   5. Handles the lights so that they change periodically depending on how much time is dictated for them to be green.

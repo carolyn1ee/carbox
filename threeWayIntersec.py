@@ -41,6 +41,7 @@ class ThreeWyIntersec (Intersection):
         else: 
             otherRoad = self.otherRoad (curRoadsList, curRoad)
             return (otherRoad, otherRoad[1])
+    #grabs cars as they come out of the roads
 ##all i wanted was to stop the roads from picking up the cars when there isn't any room for the cars to go to...
     def pickUpCars (self, data):
         for road in self.roadsNS:

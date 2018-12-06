@@ -217,7 +217,7 @@ class Intersection (Road):
     def timerFiredIntersec (self, data):
         self.pickUpCars (data)
         self.dropOffCars(data)
-        if data.t % 5 == 0:
+        if data.t % 2 == 0:
             self.changeAccelAllCars()
             self.moveCars()
         self.checkLights(data)

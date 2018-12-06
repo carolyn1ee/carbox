@@ -25,11 +25,13 @@ def init(data, roads, intersecs, set, error, errorMsg):
     data.tmpEndY = data.tmpStartY
     data.tmpDir = None
     data.rate = 4
+    data.speedLim = 5
     
     data.tmpCar = None
     data.crashes = 0 #num times cars run into each other
     data.maxBack = 0
-    
+    data.weightBack = 1
+    data.weightAvgWait = 1
     #timer
     data.t = 0
     
@@ -135,6 +137,12 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
         canvas.update()  
     def inputRate ():
         data.rate= int(inputRate.get())  
+    def inputSpeedLim ():
+        data.speedLim = int(inputSpeedL.get())  
+    def inputWeightBack ():
+        data.weightBack = int(inputWeightB.get())  
+    def inputWeightAvgWait ():
+        data.weightAvgWait = int(inputWeightW.get())  
 
     def mousePressedWrapper(event, canvas, data):
         mousePressed(event, data)
@@ -155,15 +163,13 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     data.width = width
     data.height = height
     if not slow: data.timerDelay = 1 # milliseconds
-    if slow: data.timerDelay = 20
+    if slow: data.timerDelay = 20 # wtf this is faster teehee.... try making delay just increase m?
     root = Tk()
     #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python
     #function and button to close window from https://stackoverflow.com/questions/9987624/how-to-close-a-tkinter-window-by-pressing-a-button/9987684
     def close_window (): 
-        try:
-            root.destroy()
-        except:
-            pass
+        root.destroy()
+        
     root ["bg"] = "black"
     root.resizable(width=False, height=False) # prevents resizing window
     init(data, roads, intersecs, set, error, errorMsg)
@@ -173,13 +179,26 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     inputRate = Entry (rateFrame, borderwidth = 2, relief = "solid")
     buttonRate = Button (rateFrame, command = inputRate, width = 20, height = 1,
         text = "secs between cars")
+    speedFrame = Frame (rateFrame, borderwidth = 2, relief = "solid")
+    inputSpeedL = Entry (speedFrame, borderwidth = 2, relief = "solid")
+    buttonSpeed = Button (speedFrame, command = inputSpeedLim, width = 20, height = 1,
+        text = "speed limit")
+    weightBFrame = Frame (rateFrame, borderwidth = 2, relief = "solid")
+    inputWeightB= Entry (weightBFrame, borderwidth = 2, relief = "solid")
+    buttonWeightB = Button (weightBFrame, command = inputWeightBack, width = 20, height = 1,
+        text = "weight # backup")   
+    weightWFrame = Frame (rateFrame, borderwidth = 2, relief = "solid")
+    inputWeightW = Entry (weightWFrame, borderwidth = 2, relief = "solid")
+    buttonWeightW = Button (weightWFrame, command = inputWeightAvgWait, width = 20, height = 1,
+        text = "weight avg waitTime") 
+    
     
     if data.set:
         text = "done drawing roads"
     else:
         text = "new simulation"
     
-    button = Button (rateFrame, text = text, command = close_window)
+    button = Button (rateFrame, text = text, width = 20, command = close_window)
     
     if not data.set:
         setTheLights(data, lights)
@@ -192,6 +211,15 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
         rateFrame.pack (side = LEFT, fill = Y)
         inputRate.pack (side = TOP)
         buttonRate.pack (side = TOP)
+        speedFrame.pack (side = TOP)
+        inputSpeedL.pack (side = TOP)
+        buttonSpeed.pack (side = TOP)
+        weightBFrame.pack (side = TOP)
+        inputWeightB.pack (side = TOP)
+        buttonWeightB.pack (side = TOP)
+        weightWFrame.pack (side = TOP)
+        inputWeightW.pack (side = TOP)
+        buttonWeightW.pack (side = TOP)
     
     rateFrame.pack (side = LEFT, fill = Y)
     button.pack (side = LEFT)
@@ -214,6 +242,6 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
         return (SideIntersection.totalTimeWaiting, SideIntersection.totalCars, avgTimeSpentWaiting(), data.maxBack) 
     else:
         replaceIntersections(data)
-        return (data.roads, data.intersecs, data.error, data.errorMsg)
+        return (data.roads, data.intersecs, data.error, data.errorMsg, data.weightBack, data.weightAvgWait)
     print("bye!")
 

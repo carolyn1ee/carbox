@@ -91,7 +91,7 @@ class Road (object):
                 car.speed = 0 #if the car cannot move, set the car speed to 0
             car.keepTrackOfTime(timer)
     def timerIsNSecs (self, data, m, n=0):
-        #timerFired goes off 10 times per sec
+        #timerFired goes off 100 times per sec??? eh.... it's all relative anyway
         firesPerSec = 100
         return data.t % (firesPerSec * m) == (n*firesPerSec) % (firesPerSec * m)
     ##intersections:
@@ -332,7 +332,7 @@ class Road (object):
 
 #call this in simulation in timerFired
     def timerFiredRoad (self, data, timer):
-        if data.t % 5 == 0:
+        if data.t % 2 == 0:
             self.changeAccelCars (data)
             self.moveCars(timer)
         self.setFrontCar (data)

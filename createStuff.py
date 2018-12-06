@@ -81,11 +81,11 @@ def createRoad (data):
     findDir (data)
     if isASideRoad (data):
         road = SideRoad (data, dir = data.roadDir, xN = data.tmpStartX,\
-            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars = int(data.rate))
+            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, secsBtCars = int(data.rate), speedLimit = int(data.speedLim))
             
     else:
         road = Road (data, dir = data.roadDir, xN = data.tmpStartX,
-            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY)
+            yN = data.tmpStartY, xP = data.tmpEndX, yP = data.tmpEndY, speedLimit = int(data.speedLim))
     return road
 
 #makes sure the intersections are the right type once you are done drawing them 
