@@ -115,32 +115,36 @@ class Intersection (Road):
                 ## just em make a function that returns a undamaged list without a given element...
                 if not self.otherRoad(self.roadsNS, road)[0].allFull ("P", data) and (road[0].lightP == 1 or\
                  road [0].lightP == 2):
-                    data.tmpCar = road[0].carOutP(data)
-                    if data.tmpCar != None:
-                        self.carsNS += [data.tmpCar]
-                        road[0].carsListP.remove (data.tmpCar)
+                    tmpCar = road[0].carOutP(data)
+                    if tmpCar != None:
+                        tmpCar.color = "red"
+                        self.carsNS += [tmpCar]
+                        road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
                 if not self.otherRoad(self.roadsNS, road)[0].allFull ("N", data) and (road[0].lightN == 1 or\
                 road [0].lightN == 2):
-                    data.tmpCar = road[0].carOutN(data)
-                    if data.tmpCar != None:
-                        self.carsSN += [data.tmpCar]
-                        road[0].carsListN.remove (data.tmpCar)
+                    tmpCar = road[0].carOutN(data)
+                    if tmpCar != None:
+                        tmpCar.color = "red"
+                        self.carsSN += [tmpCar]
+                        road[0].carsListN.remove (tmpCar)
         for road in self.roadsEW:
             if road [1] == "P":
-                if not self.otherRoad(self.roadsEW, road)[0].allFull ("N", data) and (road[0].lightP == 1 or\
+                if not self.otherRoad(self.roadsEW, road)[0].allFull ("P", data) and (road[0].lightP == 1 or\
                 road [0].lightP == 2):
-                    data.tmpCar = road[0].carOutP(data)
-                    if data.tmpCar != None:
-                        self.carsWE += [data.tmpCar]
-                        road[0].carsListP.remove (data.tmpCar)
+                    tmpCar = road[0].carOutP(data)
+                    if tmpCar != None:
+                        tmpCar.color = "red"
+                        self.carsWE += [tmpCar]
+                        road[0].carsListP.remove (tmpCar)
             elif road [1] == "N":
                 if not self.otherRoad(self.roadsEW, road)[0].allFull ("N", data) and (road[0].lightN == 1 or\
                 road [0].lightN == 2):
-                    data.tmpCar = road[0].carOutN(data)
-                    if data.tmpCar != None:
-                        self.carsEW += [data.tmpCar]
-                        road[0].carsListN.remove (data.tmpCar)
+                    tmpCar = road[0].carOutN(data)
+                    if tmpCar != None:
+                        tmpCar.color = "red"
+                        self.carsEW += [tmpCar]
+                        road[0].carsListN.remove (tmpCar)
             ###may have issues because the road will continue to try to accelerate the front car....
             
             ###may have issues because threeway doesnt have an opposite car
@@ -202,8 +206,9 @@ class Intersection (Road):
     def timerFiredIntersec (self, data):
         self.pickUpCars (data)
         self.dropOffCars(data)
-        self.moveCars()
-        self.changeAccelAllCars()
+        if data.t % 5 == 0:
+            self.changeAccelAllCars()
+            self.moveCars()
         self.checkLights(data)
         #snag cars coming into intersec
         #have some way to draw the cars... pretty similar to the road:
@@ -222,8 +227,8 @@ class Intersection (Road):
         for carsList in [self.carsNS, self.carsSN, self.carsEW, self.carsWE]:
             for car in carsList:
                 car.draw(canvas)
-                #canvas.create_oval  (car.x - 20, car.y -20, car.x +30, car.y + 20, fill = car.color)
-                #canvas.create_oval  (car.x - 30, car.y , car.x +30, car.y + 20, fill = "yellow")
+                canvas.create_oval  (car.x - 20, car.y -20, car.x +30, car.y + 20, fill = car.color)
+                canvas.create_oval  (car.x - 30, car.y , car.x +30, car.y + 20, fill = "yellow")
                 
     def drawAllIntersec (self, data, canvas):
         self.drawIntersecCars (canvas)

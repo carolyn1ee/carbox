@@ -1,6 +1,6 @@
  #runs the setup and simulator
 from Simulator import *
-import copy
+import copy 
 import random
 import intersections
 import roads
@@ -12,14 +12,14 @@ def copyRoads (roads):
 def copyIntersecs (intersecs, roads):
     l={}
     for r in intersecs:
-        l[r] = intersecs[r].intersecCopy(roads)
+        l[r] = intersecs[r].intersecCopy(roads)  
     return l
 
 ###create times
 #can make it better by only setting the lights for the nonside intersections
 
 def createTimes (intersecs, lights):
-    for i in range(len(intersecs)):
+    for i in range(len(intersecs)): 
         lights [i][0] = random.choice ([3, 4, 5, 6])
         lights [i][1] = random.choice ([3, 4, 5, 6])
 

@@ -23,7 +23,6 @@ def init(data, roads, intersecs, set, error, errorMsg):
     data.tmpStartY = 0
     data.tmpEndX = data.tmpStartX
     data.tmpEndY = data.tmpStartY
-    #only start when user done with drawing when they press space
     data.tmpDir = None
     data.rate = 4
     
@@ -78,11 +77,10 @@ def timerFired(data):
     if not data.set:
         data.t += 1
         for road in data.roads:
-            # timer fires
+        # timer fires #potentially gotta somehow interleave the road and intersection timers. .... somehow it isn't getting run at the same time.... 
             road.timerFiredRoad(data, time.time())
         for i in data.intersecs:
             data.intersecs[i].timerFiredIntersec (data)
-
         
         
 
@@ -142,7 +140,7 @@ def run(set, width=300, height=300, lights = None, roads = [], intersecs = {}, e
     data = Struct()
     data.width = width
     data.height = height
-    if not slow: data.timerDelay = 20 # milliseconds
+    if not slow: data.timerDelay = 1 # milliseconds
     if slow: data.timerDelay = 20
     root = Tk()
     #syntax for the background color from https://stackoverflow.com/questions/2744795/background-color-for-tk-in-python

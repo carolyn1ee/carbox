@@ -102,4 +102,4 @@ class Car(object):
     def buffer (self):
         #used some nice physics to find out what distance ought to be to 
         #give the car enough space to stop
-        return .5*self.curSpeed**2/self.decel + self.length
+        return .5*self.curSpeed**2/self.decel + 2*self.length

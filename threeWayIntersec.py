@@ -1,5 +1,8 @@
 #acts same as intersection but when it has cars, if there is no destination road, 
 #it sends the cars to one of the other roads. 
+
+#######only works with three way!! need to implement the check in intersections to make sure the light is green or yellow if it is not movable
+#create a way to see how many cars have been backed up-- for any given red light, you can count th enum of cars in that intersectionwill count in simulator -- go thru each road and count num of cars that are red lighted.
 from intersections import *
 import random
 class ThreeWyIntersec (Intersection):
@@ -44,19 +47,19 @@ class ThreeWyIntersec (Intersection):
             if road [1] == "P":
                 tmpCar = road[0].carOutP(data)
                 if tmpCar != None:
-                    # tmpCar.color = "brown"
-                    if (road[0].lightP == 1 or\
-                    road [0].lightP == 2):
+                    # if (road[0].lightP == 1 or\
+                    # road [0].lightP == 2):
+                    if (not tmpCar.movable and (road[0].lightP == 1) or road [0].lightP == 2) or (tmpCar.movable): #if it isn't movable, then the light needs to be green. if it is movable, then you can just let it be accepted into the intersection (if the next road is green. otherwise, this car is notmovable and the light is red so you should just let it be
                         if tmpCar.t == 0:
                             #future road is road you are going to and you want to turn onto the left road so find the road that goes from the left.
                             futureRoad, d = self.roadFromListInDir (self.roadsEW, "P", self.roadsNS, road)
-                            d = "P"
                         elif tmpCar.t == 1:
                             futureRoad, d = self.roadFromListInDir (self.roadsEW, "N", self.roadsNS, road)
                         # print (futureRoad[0].allFull (d, data), d, futureRoad)
+                        
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True #allow car to move into intersec
-                            tmpCar.color = "grey"
+                            # tmpCar.color = "grey"
                             self.carsNS += [tmpCar]
                             road[0].carsListP.remove (tmpCar)
                         else: #if the futureRoad is full
@@ -65,28 +68,28 @@ class ThreeWyIntersec (Intersection):
                 tmpCar = road[0].carOutN(data)
                 if tmpCar != None:
                     # tmpCar.color = "brown"
-                    if (road[0].lightN == 1 or\
-                    road [0].lightN == 2):
+                    # if (road[0].lightN == 1 or\
+                    # road [0].lightN == 2):
+                    if (not tmpCar.movable and (road[0].lightN == 1) or road [0].lightN == 2) or (tmpCar.movable):
                         if tmpCar.t == 0:
                             futureRoad, d = self.roadFromListInDir (self.roadsEW, "P", self.roadsNS, road)
                         elif tmpCar.t == 1:
                             futureRoad, d = self.roadFromListInDir (self.roadsEW, "N", self.roadsNS, road)
-                        # print (futureRoad[0].allFull (d, data), d, futureRoad)
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True
                             self.carsSN += [tmpCar]
-                            tmpCar.color = "grey"
+                            # tmpCar.color = "grey"
                             road[0].carsListN.remove (tmpCar)
                         else:
                             tmpCar.movable = False
-                        
         for road in self.roadsEW:
             if road [1] == "P":
                 tmpCar = road[0].carOutP(data)
                 if tmpCar != None:
                     #tmpCar.color = "brown"
-                    if (road[0].lightP == 1 or\
-                    road [0].lightP == 2):
+                    # if (road[0].lightP == 1 or\
+                    # road [0].lightP == 2):
+                    if (not tmpCar.movable and (road[0].lightP == 1) or road [0].lightP == 2) or (tmpCar.movable):
                         if tmpCar.t == 0:
                             futureRoad, d = self.roadFromListInDir (self.roadsNS, "P", self.roadsEW, road)
                         elif tmpCar.t == 1:
@@ -95,7 +98,7 @@ class ThreeWyIntersec (Intersection):
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True
                             self.carsWE += [tmpCar]
-                            tmpCar.color = "grey"
+                            # tmpCar.color = "grey"
                             road[0].carsListP.remove (tmpCar)
                         else:
                             tmpCar.movable = False
@@ -103,8 +106,9 @@ class ThreeWyIntersec (Intersection):
                 tmpCar = road [0].carOutN (data)
                 if tmpCar != None:
                     # tmpCar.color = "brown"
-                    if (road[0].lightN == 1 or\
-                    road [0].lightN == 2):
+                    # if (road[0].lightN == 1 or\
+                    # road [0].lightN == 2):
+                    if (not tmpCar.movable and (road[0].lightN == 1) or road [0].lightN == 2) or (tmpCar.movable):
                         if tmpCar.t == 0:
                             futureRoad, d = self.roadFromListInDir (self.roadsNS, "P", self.roadsEW, road)
                         elif tmpCar.t == 1:
@@ -113,11 +117,11 @@ class ThreeWyIntersec (Intersection):
                         if not futureRoad[0].allFull (d, data):
                             tmpCar.movable = True
                             self.carsEW += [tmpCar]
-                            tmpCar.color = "grey"
+                            # tmpCar.color = "grey"
                             road[0].carsListN.remove (tmpCar)
                         else:
                             tmpCar.movable = False
- 
+
     
     def convertCar (self, car, dir):
         car.dir = dir
