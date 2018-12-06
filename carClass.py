@@ -1,3 +1,5 @@
+#has functions to move itself forward which are called by the containers that hold the car
+#tkinter stuff from course website
 import random 
 from tkinter import *
 from image_util import *

@@ -1,3 +1,4 @@
+#adds cars in periodically from off screen
 from roads import *
 #from simulation import *
 class SideRoad (Road):

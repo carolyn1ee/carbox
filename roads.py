@@ -1,3 +1,4 @@
+#handles cars in its road and sends cars into the connecting intersection
 from carClass import *
 import random
 class Road (object):

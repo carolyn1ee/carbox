@@ -1,3 +1,5 @@
+#handles the user input to create new roads and intersections where user wants them
+#event based tkinter from course website
 from roads import *
 from sideRoads import *
 from intersections import *

@@ -1,4 +1,4 @@
-Project description:
+﻿Project description:
 Traffic light simulator: simulates cars going through intersection and finds optimal timing for the lights. Optimal timing will minimize values such as the average amount of time spent waiting at an intersection and the number of cars stopped at an intersection. User can add in new intersections that connect to preexisting intersections. Additionally, after running many simulations, the program will show a table of the different values (including how average time each car spent waiting for a light, number of cars stopped at an intersection, maximum amount of time a single car spent waiting for a light) for different timings of the lights.
 Competitive Analysis:
 Other traffic light simulators (https://ieeexplore.ieee.org/document/1371482) are able to do analysis on different traffic patterns such as when more or fewer cars turn left, how many cars come through at a certain and the traffic lights in the simulator are traffic actuated instead of timer based. My simulator will only do timer based simulations and find the ideal timing based off that. Intersections whose lights are timer based are much cheaper to install because the equipment to sense the cars is unnecessary. Unfortunately though, timer based light systems are less efficient than traffic actuated lights since the timer based lights cannot react to different situations. If I have time, it would be nice to make the cars turn.
@@ -88,3 +88,11 @@ Modifications or whatnot:
 
 
 Not going to go all wiggly --- can only go vert or horiz. Intersections can only be three or four roads coming together. Cars don’t turn unless they are at a three-way.
+
+
+
+
+TP3 update:
+
+
+Now I have almost made it so that the cars never run into each other-- even when the road they are going to is full the cars will wait in their own intersection and not create grid lock. I still have to add more features to optimize off of and create an optimizer….. D:

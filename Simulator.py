@@ -1,4 +1,4 @@
-# Updated Animation Starter Code
+# Updated Animation Starter Code from cs website
 import time
 from createStuff import *
 from tkinter import *

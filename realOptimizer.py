@@ -1,4 +1,4 @@
- #runs the setup and simulatore
+ #runs the setup and simulator
 from Simulator import *
 import copy
 import random
