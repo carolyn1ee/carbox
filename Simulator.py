@@ -91,12 +91,11 @@ def timerFired(data):
     if curMax > data.maxBack:
         data.maxBack = curMax #update the maximum backup 
     if not data.set:
-        data.t += 1
         for road in data.roads:
-        # timer fires #potentially gotta somehow interleave the road and intersection timers. .... somehow it isn't getting run at the same time.... 
             road.timerFiredRoad(data, time.time())
         for i in data.intersecs:
             data.intersecs[i].timerFiredIntersec (data)
+        data.t += 1 
         
         
 
