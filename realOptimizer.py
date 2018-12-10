@@ -14,7 +14,7 @@ def copyIntersecs (intersecs, roads):
     for r in intersecs:
         l[r] = intersecs[r].intersecCopy(roads)  
     return l
-
+ 
 ###create times
 #can make it better by only setting the lights for the nonside intersections
 
@@ -36,9 +36,9 @@ def optimize (runs):
         
         tmpAvg, tmpMaxBack = (run (set = False, width = 800, height = 800, lights = lights, roads = roads, intersecs = intersecs, error = err, errorMsg = errMsg)) [2:4]
         
-        # if tmpAvg == None:
-        #     #####
-        #     print ("you need to let the thing run for a little bit so you get a bit of data" + 42/0)
+        if tmpAvg == None:
+            #####
+            print ("you need to let the thing run for a little bit so you get a bit of data" + 42/0)
         if minBad > tmpAvg * weightTime +  tmpMaxBack * weightBackup:
             minBad = tmpAvg * weightTime +  tmpMaxBack * weightBackup
             minAvg = tmpAvg

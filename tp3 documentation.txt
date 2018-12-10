@@ -130,3 +130,6 @@ Intersection class:
    3. If it is a three-way intersection, turns cars
    4. If a car is trying to go into an intersection but the road it is going to is full, intersection will stop the car and make it wait for the next road to become empty before letting the car move into the intersection. This way there is no gridlock and the cars don’t run into each other
    5. Handles the lights so that they change periodically depending on how much time is dictated for them to be green.
+
+
+It was also pretty difficult to copy the roads that the user created so that I could run the simulation multiple times because there was a lot of aliasing since roads and intersect need to have lists so you can move the cars thru.
